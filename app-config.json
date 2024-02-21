@@ -1,13 +1,13 @@
 {
   "app": {
-    "title": "Milk",
-    "headerTitle": "Milk",
+    "title": "",
+    "headerTitle": "",
     "headerColor": "#1843EF",
     "textColor": "white",
     "statusBarColor": "#1843EF",
     "leftButton": "back",
     "statusBar": "normal",
-    "actionBarHidden": false,
+    "actionBarHidden": true,
     "hideAndroidBottomNavigationBar": false,
     "hideIOSSafeAreaBottom": false
   },
