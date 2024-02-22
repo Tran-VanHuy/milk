@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, ImageViewer, Page, Swiper, Sheet, Text, Button } from "zmp-ui";
 import { Header } from "../components/headers/header";
 import { MinusOutlined, PlusOutlined, RightOutlined, StarOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
+interface AppcontentType {
+
+    setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>
+}
 export const ProductDetail = () => {
+
+    const { setShowBottomTab }: AppcontentType = useContext(AppContext);
+
+    const nav = useNavigate()
+
     const images = [
         {
             src: "https://stc-zmp.zadn.vn/zmp-zaui/images/e2e10aa1a6087a5623192.jpg",
@@ -30,7 +40,13 @@ export const ProductDetail = () => {
     const [visible, setVisible] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const [sheetVisible, setSheetVisible] = useState(false);
-    const nav = useNavigate()
+
+
+
+    useEffect(() => {
+
+        setShowBottomTab(false)
+    }, [])
     return (
         <Page className="pb-[100px]">
             <Header showNav={true} />
@@ -248,28 +264,40 @@ export const ProductDetail = () => {
                         <RightOutlined className="text-[12px] text-gray-500" />
                     </div>
                     <div className="flex gap-[15px] overflow-x-scroll">
-                        <div className="">
-                            <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl" />
+                        <div>
+                            <div className="w-[75px] h-[75px]">
+                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
+                            </div>
                             <span className="text-[14px] font-bold">100.000đ</span>
                         </div>
-                        <div className="">
-                            <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl" />
+                        <div>
+                            <div className="w-[75px] h-[75px]">
+                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
+                            </div>
                             <span className="text-[14px] font-bold">100.000đ</span>
                         </div>
-                        <div className="">
-                            <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl" />
+                        <div>
+                            <div className="w-[75px] h-[75px]">
+                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
+                            </div>
                             <span className="text-[14px] font-bold">100.000đ</span>
                         </div>
-                        <div className="">
-                            <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl" />
+                        <div>
+                            <div className="w-[75px] h-[75px]">
+                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
+                            </div>
                             <span className="text-[14px] font-bold">100.000đ</span>
                         </div>
-                        <div className="">
-                            <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl" />
+                        <div>
+                            <div className="w-[75px] h-[75px]">
+                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
+                            </div>
                             <span className="text-[14px] font-bold">100.000đ</span>
                         </div>
-                        <div className="">
-                            <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl" />
+                        <div>
+                            <div className="w-[75px] h-[75px]">
+                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
+                            </div>
                             <span className="text-[14px] font-bold">100.000đ</span>
                         </div>
                     </div>

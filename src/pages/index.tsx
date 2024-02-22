@@ -1,15 +1,30 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Page, Swiper } from 'zmp-ui';
 import { ShoppingCartOutlined, MessageOutlined, SearchOutlined, QrcodeOutlined, WalletOutlined, DollarOutlined, ScanOutlined } from "@ant-design/icons";
 import { Product } from '../components/products/product';
 import { Header } from '../components/headers/header';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../context/AppContext';
+
+interface AppcontentType {
+
+  setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 const HomePage: React.FunctionComponent = () => {
 
+  const { setShowBottomTab }: AppcontentType = useContext(AppContext);
+
   const nav = useNavigate()
+
+  useEffect(() => {
+
+    setShowBottomTab(true)
+  }, [])
+
+  useEffect
   return (
-    <Page>
+    <Page className='pb-[50px]'>
       <Header showNav={false} />
       <Swiper>
         <Swiper.Slide>
