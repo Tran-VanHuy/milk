@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import { Page } from "zmp-ui";
 import { AppContext } from "../context/AppContext";
-import { AccountBookOutlined, ArrowRightOutlined, ContainerOutlined, MessageOutlined, RightOutlined, ShoppingCartOutlined, StarOutlined, TruckOutlined, WalletOutlined, WarningOutlined } from "@ant-design/icons";
+import { AccountBookOutlined, ArrowRightOutlined, ContainerOutlined, EnvironmentOutlined, HeartOutlined, MessageOutlined, RightOutlined, ShoppingCartOutlined, StarOutlined, TruckOutlined, WalletOutlined, WarningOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 interface AppcontentType {
 
@@ -10,12 +11,13 @@ interface AppcontentType {
 
 export const Profile = () => {
     const { setShowBottomTab }: AppcontentType = useContext(AppContext);
+    const nav = useNavigate()
     useEffect(() => {
 
         setShowBottomTab(true)
     }, [])
     return (
-        <Page>
+        <Page className="pb-[65px]">
             <div className="pt-[65px] pb-3 px-3 bg-orange-500 flex gap-2 relative" style={{ background: "#f53d2d" }}>
                 <img src="https://i.pinimg.com/736x/78/90/e1/7890e13d8985d3a5360e3e62831575fd.jpg" alt="" className="rounded-full w-[60px] h-[60px]" />
                 <div className="text-white">
@@ -79,7 +81,7 @@ export const Profile = () => {
                         <RightOutlined className="text-[10px] text-gray-600 pt-1" />
                     </div>
                 </div>
-                <div className="flex overflow-x-scroll gap-[10px] px-2 pb-2">
+                <div className="flex overflow-x-scroll gap-[10px] px-2 pb-2 mb-3">
                     <div className="">
                         <div className="w-[110px] h-[100px] border">
                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdyc3I3u0PNW741NK2HcNY4TfaXwWPgd1jSA&usqp=CAU" alt="" className="w-full h-full" />
@@ -108,7 +110,16 @@ export const Profile = () => {
                         <p className="text-[12px] text-gray-500">Đã mua 1 lần</p>
                         <b>250.000đ</b>
                     </div>
-
+                </div>
+            </div>
+            <div className="bg-white p-2">
+                <div className="flex items-center gap-2 border-b-[1px] pb-2 mb-2" onClick={() => nav("/address")}>
+                    <EnvironmentOutlined />
+                    <div className="text-[14px]">Địa chỉ</div>
+                </div>
+                <div className="flex items-center gap-2 border-b-[1px] pb-2 mb-2"  onClick={() => nav("/favourite")}>
+                    <HeartOutlined />
+                    <div className="text-[14px]">Đã thích</div>
                 </div>
             </div>
         </Page>

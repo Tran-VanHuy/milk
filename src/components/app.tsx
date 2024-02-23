@@ -10,6 +10,9 @@ import { AppProvider } from '../context/AppContext';
 import { Profile } from '../pages/profile';
 import { Address } from '../pages/address';
 import { NewAddress } from '../pages/new-address';
+import { Notificaiton } from '../pages/notification';
+import { Favourite } from '../pages/favourite';
+import { News } from '../pages/news';
 
 
 
@@ -27,6 +30,9 @@ const MyApp = () => {
                 <Route path="/profile" element={<Profile></Profile>}></Route>
                 <Route path="/address" element={<Address></Address>}></Route>
                 <Route path="/new-address" element={<NewAddress></NewAddress>}></Route>
+                <Route path="/notification" element={<Notificaiton></Notificaiton>}></Route>
+                <Route path="/favourite" element={<Favourite></Favourite>}></Route>
+                <Route path="/news" element={<News></News>}></Route>
               </AnimationRoutes>
               <BottomNavigationPage />
             </ZMPRouter>

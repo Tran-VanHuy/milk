@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Header, Page } from "zmp-ui";
+import { Box, Header, Page, Sheet } from "zmp-ui";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import { CaretDownOutlined, HeartOutlined, ShareAltOutlined } from "@ant-design/icons";
 
 interface AppcontentType {
 
@@ -12,6 +13,8 @@ export const NewAddress = () => {
     const nav = useNavigate();
 
     const [enabled, setEnabled] = useState(false);
+    const [sheetVisible, setSheetVisible] = useState(false);
+
     useEffect(() => {
 
         setShowBottomTab(false)
@@ -34,7 +37,19 @@ export const NewAddress = () => {
                 </div>
                 <div className="mb-1">
                     <div className="p-2 text-[14px] text-gray-500">Địa chỉ</div>
-                    <div className="bg-white">
+                    <div className="bg-white"> 
+                        <div className="p-2 border-b-[1px] flex items-center justify-between" onClick={() => setSheetVisible(true)}>
+                            <span className="px-2 py-1 text-[14px] font-[500] text-gray-500">Tỉnh/ TP</span>
+                            <CaretDownOutlined className="text-[14px] font-[500] text-gray-500 pr-2"/>
+                        </div>
+                        <div className="p-2 border-b-[1px] flex items-center justify-between" onClick={() => setSheetVisible(true)}>
+                            <span className="px-2 py-1 text-[14px] font-[500] text-gray-500">Quận/ Huyện</span>
+                            <CaretDownOutlined className="text-[14px] font-[500] text-gray-500 pr-2"/>
+                        </div>
+                        <div className="p-2 border-b-[1px] flex items-center justify-between" onClick={() => setSheetVisible(true)}>
+                            <span className="px-2 py-1 text-[14px] font-[500] text-gray-500">Xã/ Phường</span>
+                            <CaretDownOutlined className="text-[14px] font-[500] text-gray-500 pr-2"/>
+                        </div>
                         <div className="p-2 border-b-[1px]">
                             <input type="text" className="w-full border-none px-2 py-1 text-[14px] font-[500]" placeholder="Địa chỉ cụ thể" />
                         </div>
@@ -64,6 +79,26 @@ export const NewAddress = () => {
                 </div>
                 <div className="p-2 font-[500] text-center bg-gray-300 mx-2 text-gray-600 text-[14px]">HOÀN THÀNH</div>
             </div>
+            <Sheet
+                visible={sheetVisible}
+                onClose={() => setSheetVisible(false)}
+                autoHeight
+                mask
+                handler
+                swipeToClose
+            >
+                <Box>
+                    <div className="px-2 pb-[30px]">
+                        <div className="text-center text-[16px] font-bold mb-4">Tỉnh/ Thành phố</div>
+                        <div className="border-b-[1px] pb-4 mb-4" onClick={() => setSheetVisible(false)}>
+                            <span className="text-[16px] font-[500]">Hà Nội</span>
+                        </div>
+                        <div className="border-b-[1px] pb-4 mb-4"  onClick={() => setSheetVisible(false)}>
+                            <span className="text-[16px] font-[500]">Hồ Chí Minh</span>
+                        </div>
+                    </div>
+                </Box>
+            </Sheet>
         </Page>
     )
 }

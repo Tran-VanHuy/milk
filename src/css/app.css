@@ -11,7 +11,20 @@
     }  
     
     .zaui-swiper {
-
       border-radius: unset !important;
+    }
+
+    .overflow-x-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .overflow-x-scroll {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
+    input, textarea {
+
+      outline: none;
     }
     

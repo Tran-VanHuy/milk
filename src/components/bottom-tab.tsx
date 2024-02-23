@@ -12,7 +12,7 @@ const BottomNavigationPage = () => {
 
     const { showBottomTab }: AppcontentType = useContext(AppContext);
     const nav = useNavigate()
-    const [activeTab, setActiveTab] = useState("chat");
+    const [activeTab, setActiveTab] = useState("home");
     return (
         <>
             {showBottomTab === true && <div>
@@ -22,29 +22,33 @@ const BottomNavigationPage = () => {
                     onChange={(key) => setActiveTab(key)}
                 >
                     <BottomNavigation.Item
-                        key="chat"
+                        key="home"
                         label="Trang chủ"
                         icon={<Icon icon="zi-home" />}
                         activeIcon={<Icon icon="zi-home" />}
                         onClick={() => nav("/")}
                     />
                     <BottomNavigation.Item
-                        label="Danh bạ"
-                        key="contact"
-                        icon={<Icon icon="zi-call" />}
-                        activeIcon={<Icon icon="zi-call" />}
+                        label="Yêu thích"
+                        key="favourite"
+                        icon={<Icon icon="zi-heart" />}
+                        activeIcon={<Icon icon="zi-heart" />}
+                        onClick={() => nav("/favourite")}
+
                     />
                     <BottomNavigation.Item
                         label="Khám phá"
                         key="discovery"
                         icon={<Icon icon="zi-more-grid" />}
                         activeIcon={<Icon icon="zi-more-grid" />}
+                        onClick={() => nav("/news")}
                     />
                     <BottomNavigation.Item
-                        key="timeline"
+                        key="notification"
                         label="Thông báo"
                         icon={<Icon icon="zi-notif" />}
                         activeIcon={<Icon icon="zi-notif" />}
+                        onClick={() => nav("/notification")}
                     />
                     <BottomNavigation.Item
                         key="me"

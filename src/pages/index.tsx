@@ -81,7 +81,7 @@ const HomePage: React.FunctionComponent = () => {
         </div>
         <div className='overflow-hidden overflow-x-auto'>
           <div className='pb-2'>
-            <div className='pt-[70px] grid grid-cols-12 gap-2  overflow-x-auto'>
+            <div className='pt-[70px] grid grid-cols-12 gap-2  overflow-x-auto '>
               <div className='col-span-3 text-center flex justify-center flex-col items-center'>
                 <img src="https://cf.shopee.vn/file/vn-50009109-fbc98cb6dcc514259ff797e1b63c5937_xhdpi" alt="" className='w-[45px] h-[45px]' />
                 <p className='text-[14px] text-white px-1'>0 - 2 tuổi</p>

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, ImageViewer, Page, Swiper, Sheet, Text, Button } from "zmp-ui";
 import { Header } from "../components/headers/header";
-import { MinusOutlined, PlusOutlined, RightOutlined, StarOutlined } from "@ant-design/icons";
+import { HeartOutlined, MinusOutlined, PlusOutlined, RightOutlined, StarOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 
@@ -96,13 +96,14 @@ export const ProductDetail = () => {
                             <div className="bg-red-500 bg-opacity-20 inline px-2 text-[11px] text-red-600 font-[500]"> Tiết kiệm tới 47%</div>
                         </div>
                         <p className="font-[500] text-[16px]">Bọt vệ sinh nam giới Oniiz - Dung dịch vệ sinh nam tạo bọt 100ml</p>
-                        <div className="pt-1">
+                        <div className="pt-1 flex justify-between items-center">
                             <div className="flex items-center gap-2">
                                 <StarOutlined className="text-[12px] text-yellow-500" />
                                 <span className="text-[12px] font-[500]">4.8 /5 <span className="text-blue-600 font-normal">(10.6k)</span></span>
                                 <div className="text-[8px]">|</div>
                                 <p className="text-[14px] text-gray-500">Đã bán <span className="text-black font-[500]">105.7k</span></p>
                             </div>
+                            <HeartOutlined />
                         </div>
                     </div>
                 </div>
@@ -111,7 +112,7 @@ export const ProductDetail = () => {
                         <span className="text-[16px] font-[700]">Voucher & khuyến mãi</span>
                         <RightOutlined className="text-[12px] text-gray-500" />
                     </div>
-                    <div className="flex gap-[20px] overflow-x-scroll">
+                    <div className="flex gap-[20px] overflow-x-scroll scroll">
                         <div className="flex items-center justify-between gap-[15px] bg-[#fca5a5] bg-opacity-30 p-3 rounded-lg">
                             <div>
                                 <b className="text-[14px]">Giảm 40k</b>
