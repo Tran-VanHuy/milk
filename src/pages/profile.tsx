@@ -1,29 +1,74 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Page } from "zmp-ui";
 import { AppContext } from "../context/AppContext";
-import { AccountBookOutlined, ArrowRightOutlined, ContainerOutlined, EnvironmentOutlined, HeartOutlined, MessageOutlined, RightOutlined, ShoppingCartOutlined, StarOutlined, TruckOutlined, WalletOutlined, WarningOutlined } from "@ant-design/icons";
+import { AccountBookOutlined, ContainerOutlined, EnvironmentOutlined, HeartOutlined, MessageOutlined, RightOutlined, ShoppingCartOutlined, StarOutlined, TruckOutlined, WalletOutlined, WarningOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { AddressDto, UserDto } from "../api/user/type";
 
 interface AppcontentType {
 
-    setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>
+    setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>,
+    user: UserDto
 }
 
 export const Profile = () => {
-    const { setShowBottomTab }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, user }: AppcontentType = useContext(AppContext);
     const nav = useNavigate()
+
+    const [addressDefault, setAddressDefault] = useState<AddressDto>();
+
+    const fileInputRef: any = useRef(null);
+
+    const handleDivClick = () => {
+        // Kích thích sự kiện click của input type="file"
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+
+        }
+    };
+
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+
+        // Xử lý file tại đây (ví dụ: mở file)
+        console.log('Selected File:', selectedFile);
+    };
+    const profile = () => {
+
+        console.log(user);
+        if (user && user.address && user.address.length > 0) {
+
+            const find = user.address.find(item => item.default === true)
+            setAddressDefault(find)
+        }
+    }
+
     useEffect(() => {
 
         setShowBottomTab(true)
+        profile()
+
     }, [])
     return (
         <Page className="pb-[65px]">
             <div className="pt-[65px] pb-3 px-3 bg-orange-500 flex gap-2 relative" style={{ background: "#f53d2d" }}>
-                <img src="https://i.pinimg.com/736x/78/90/e1/7890e13d8985d3a5360e3e62831575fd.jpg" alt="" className="rounded-full w-[60px] h-[60px]" />
+                <div className="relative overflow-hidden">
+                    <img src={addressDefault?.avatar} alt="" className="rounded-full w-[60px] h-[60px]" onClick={handleDivClick}/>
+
+                    <div className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-30 text-center" >
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                style={{ display: 'none' }}
+                                onChange={handleFileChange}
+                                className="text-white text-[12px]"
+                            />
+                    </div>
+                </div>
                 <div className="text-white">
-                    <p className="font-bold text-[17px]">Trần Văn Huy</p>
-                    <p className="text-[14px]">0327448785</p>
-                    <p className="text-[14px]">Tân Hội - Đan Phượng - Hà Nội</p>
+                    <p className="font-bold text-[17px]">{addressDefault?.name || "Chưa cập nhật"}</p>
+                    <p className="text-[14px]">{addressDefault?.phone}</p>
+                    <p className="text-[14px] pr-5">{addressDefault?.commune}, {addressDefault?.district}, {addressDefault?.city}</p>
                 </div>
                 <div className="absolute right-3 top-2">
                     <ShoppingCartOutlined className='pr-[10px] text-white text-[16px]' />
@@ -117,7 +162,7 @@ export const Profile = () => {
                     <EnvironmentOutlined />
                     <div className="text-[14px]">Địa chỉ</div>
                 </div>
-                <div className="flex items-center gap-2 border-b-[1px] pb-2 mb-2"  onClick={() => nav("/favourite")}>
+                <div className="flex items-center gap-2 border-b-[1px] pb-2 mb-2" onClick={() => nav("/favourite")}>
                     <HeartOutlined />
                     <div className="text-[14px]">Đã thích</div>
                 </div>
