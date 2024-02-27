@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Page } from "zmp-ui";
 import { AppContext } from "../context/AppContext";
-import { AccountBookOutlined, ContainerOutlined, EnvironmentOutlined, HeartOutlined, MessageOutlined, RightOutlined, ShoppingCartOutlined, StarOutlined, TruckOutlined, WalletOutlined, WarningOutlined } from "@ant-design/icons";
+import { AccountBookOutlined, ContainerOutlined, EnvironmentOutlined, HeartOutlined, MessageOutlined, RightOutlined, SettingOutlined, ShoppingCartOutlined, StarOutlined, TruckOutlined, WalletOutlined, WarningOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { AddressDto, UserDto } from "../api/user/type";
 
@@ -53,7 +53,7 @@ export const Profile = () => {
         <Page className="pb-[65px]">
             <div className="pt-[65px] pb-3 px-3 bg-orange-500 flex gap-2 relative" style={{ background: "#f53d2d" }}>
                 <div className="relative overflow-hidden">
-                    <img src={addressDefault?.avatar} alt="" className="rounded-full w-[60px] h-[60px]" onClick={handleDivClick}/>
+                    <img src={user?.avatar} alt="" className="rounded-full w-[60px] h-[60px] object-cover" onClick={handleDivClick}/>
 
                     <div className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-30 text-center" >
                             <input
@@ -68,7 +68,7 @@ export const Profile = () => {
                 <div className="text-white">
                     <p className="font-bold text-[17px]">{addressDefault?.name || "Chưa cập nhật"}</p>
                     <p className="text-[14px]">{addressDefault?.phone}</p>
-                    <p className="text-[14px] pr-5">{addressDefault?.commune}, {addressDefault?.district}, {addressDefault?.city}</p>
+                    <p className="text-[14px] pr-5 line-clamp-1">{addressDefault?.commune}, {addressDefault?.district}, {addressDefault?.city}</p>
                 </div>
                 <div className="absolute right-3 top-2">
                     <ShoppingCartOutlined className='pr-[10px] text-white text-[16px]' />
@@ -165,6 +165,10 @@ export const Profile = () => {
                 <div className="flex items-center gap-2 border-b-[1px] pb-2 mb-2" onClick={() => nav("/favourite")}>
                     <HeartOutlined />
                     <div className="text-[14px]">Đã thích</div>
+                </div>
+                <div className="flex items-center gap-2 pb-2" onClick={() => nav("/setting")}>
+                    <SettingOutlined />
+                    <div className="text-[14px]">Cài đặt</div>
                 </div>
             </div>
         </Page>

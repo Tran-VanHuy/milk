@@ -14,12 +14,6 @@ export const findOneUser = async (userId: string) => {
     return res;
 }
 
-export const createAddress = async (data: UserDto) => {
-
-    const res = await axios.post(`${USER.CREATE_ADDRESS}`, data)
-    return res;
-}
-
 export const getAllProvince = async (title: string, id?: string) => {
     let data = [];
     if(title === "Tỉnh/ TP"){

@@ -1,17 +1,29 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Header, Page, Sheet } from "zmp-ui";
 import { AppContext } from "../context/AppContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CaretDownOutlined } from "@ant-design/icons";
-import { AddressDto, UserDto, addressVN } from "../api/user/type";
-import { createAddress, getAllProvince } from "../api/user/user";
+import { UserDto, addressVN } from "../api/user/type";
+import { getAllProvince } from "../api/user/user";
+import { createAddress } from "../api/address/api";
+import { AddressDto } from "../api/address/type";
+import axios from "axios";
+import { ADDRESS } from "../api/api";
 
 interface AppcontentType {
 
     setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>,
     user: UserDto
 }
+
+type Props = {
+
+    _id?: string,
+    userId?: string
+}
 export const NewAddress = () => {
+    const { _id, userId }: Props = useParams()
+
     const { setShowBottomTab, user }: AppcontentType = useContext(AppContext);
     const [titleAddress, setTitleAddress] = useState("")
     const [address, setAddress] = useState<AddressDto>();
@@ -58,20 +70,41 @@ export const NewAddress = () => {
     const submit = async () => {
 
         if (address?.name && address.phone && address.city && address.district && address.commune) {
-            const newAddress: AddressDto[] = [...user.address!, address];
-            const body: UserDto = {
-                ...user,
-                address: newAddress
+
+            const body : AddressDto = {
+                ...address,
+                userId: user.userId
             }
-            await createAddress(body)
+            if(!_id){
+                await createAddress(body)
+
+            } else {
+                await axios.post(`${ADDRESS.UPDATE}/${_id}`, address)
+            }
             nav("/address")
         } else {
             setError(true)
         }
     }
+
+    const detail = async () => {
+
+        try {
+            const res = await axios.post(ADDRESS.DETAIL, { userId, _id })
+            console.log(res.data);
+            setAddress(res.data.data)
+            setEnabled(res.data.data.default)
+        } catch (error) {
+            console.log({ error });
+
+        }
+    }
     useEffect(() => {
 
         setShowBottomTab(false)
+        if (userId && _id) {
+            detail()
+        }
     }, [])
 
     return (
@@ -82,11 +115,11 @@ export const NewAddress = () => {
                     <div className="p-2 text-[14px] text-gray-500">Liên hệ</div>
                     <div className="bg-white">
                         <div className="p-2 border-b-[1px]">
-                            <input type="text" className="w-full border-none px-2 py-1 text-[14px] font-[500]" placeholder="Họ và tên (*)" onChange={(e) => setAddress({ ...address!, name: e.target.value })} />
+                            <input type="text" className="w-full border-none px-2 py-1 text-[14px] font-[500]" value={address?.name} placeholder="Họ và tên (*)" onChange={(e) => setAddress({ ...address!, name: e.target.value })} />
                             {error && !address?.name && <p className="text-[12px] text-[red]">Chưa nhập họ và tên</p>}
                         </div>
                         <div className="p-2 border-b-[1px]">
-                            <input type="tel" className="w-full border-none px-2 py-1 text-[14px] font-[500]" placeholder="Số điện thoại (*)" onChange={(e) => setAddress({ ...address!, phone: e.target.value })} />
+                            <input type="tel" className="w-full border-none px-2 py-1 text-[14px] font-[500]" value={address?.phone} placeholder="Số điện thoại (*)" onChange={(e) => setAddress({ ...address!, phone: e.target.value })} />
                             {error && !address?.phone && <p className="text-[12px] text-[red]">Chưa nhập số điện thoại</p>}
                         </div>
                     </div>
@@ -117,7 +150,7 @@ export const NewAddress = () => {
                             {error && !address?.phone && <p className="px-2 text-[12px] text-[red]">Chưa nhập Xã/ Phường</p>}
                         </div>
                         <div className="p-2 border-b-[1px]">
-                            <input type="text" className="w-full border-none px-2 py-1 text-[14px] font-[500]" placeholder="Địa chỉ cụ thể" onChange={(e) => setAddress({ ...address!, specificAddress: e.target.value })} />
+                            <input type="text" className="w-full border-none px-2 py-1 text-[14px] font-[500]" value={address?.specificAddress} placeholder="Địa chỉ cụ thể" onChange={(e) => setAddress({ ...address!, specificAddress: e.target.value })} />
                         </div>
                     </div>
                 </div>
@@ -144,7 +177,7 @@ export const NewAddress = () => {
                         </div>
                     </div>
                 </div>
-                <div className="p-2 font-[500] text-center bg-gray-300 mx-2 text-gray-600 text-[14px]" onClick={() => submit()}>HOÀN THÀNH</div>
+                <div className="p-2 font-[500] text-center bg-red-500 mx-2 text-white text-[14px]" onClick={() => submit()}>HOÀN THÀNH</div>
             </div>
             <Sheet
                 visible={sheetVisible}

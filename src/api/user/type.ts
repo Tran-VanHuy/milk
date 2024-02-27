@@ -9,8 +9,8 @@ export type UserDto = {
 }
 
 export type AddressDto = {
-
-    avatar?: string,
+    _id?: string,
+    userId?: string,
     name: string,
     phone: string,
     city: string,
