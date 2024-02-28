@@ -5,10 +5,24 @@ export const USER = {
     FIND_ONE: API_URI + "/user/findOne"
 }
 
-export const ADDRESS =  {
+export const ADDRESS = {
 
     CREATE: API_URI + "/address",
     DELETE: API_URI + "/delete/address",
     DETAIL: API_URI + "/detail/address",
     UPDATE: API_URI + "/update/address"
+}
+
+export const CATEGORY_PRODUCT = {
+
+    GET_ALL: API_URI + "/category-products"
+}
+
+export const PRODUCT = {
+    GET_ALL: API_URI + "/products",
+    CREATE: API_URI + "/products"
+}
+
+export const UPLOAD = {
+    CREATE: API_URI + "/upload-photo"
 }

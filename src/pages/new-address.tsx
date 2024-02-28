@@ -91,7 +91,6 @@ export const NewAddress = () => {
 
         try {
             const res = await axios.post(ADDRESS.DETAIL, { userId, _id })
-            console.log(res.data);
             setAddress(res.data.data)
             setEnabled(res.data.data.default)
         } catch (error) {

@@ -35,7 +35,6 @@ export const Profile = () => {
     };
     const profile = () => {
 
-        console.log(user);
         if (user && user.address && user.address.length > 0) {
 
             const find = user.address.find(item => item.default === true)

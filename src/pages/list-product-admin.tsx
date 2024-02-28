@@ -1,22 +1,29 @@
-import { DeleteOutlined, EllipsisOutlined, EyeOutlined, HeartOutlined, SearchOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EllipsisOutlined, EyeOutlined, FormOutlined, HeartOutlined, SearchOutlined, ShareAltOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Header, Page, Sheet } from "zmp-ui";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import { ProductType } from "../api/products/type";
+import moment from "moment"
 
 interface AppcontentType {
 
     setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>
+    products: (limit: number, skip: number, status: string) => void
+    dataProducts: ProductType[]
 }
 
 export const ListProductAdmin = () => {
-    const { setShowBottomTab }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, products, dataProducts }: AppcontentType = useContext(AppContext);
+    console.log({ dataProducts });
+
     const nav = useNavigate();
 
     const [sheetVisible, setSheetVisible] = useState(false);
 
     useEffect(() => {
 
+        products(10, 0, "")
         setShowBottomTab(false)
     }, [])
     return (
@@ -35,24 +42,28 @@ export const ListProductAdmin = () => {
             </div>
             <button className="bg-red-500 px-2 rounded text-white py-2 mb-2" onClick={() => nav("create")}>Thêm mới</button>
 
+
             <div>
-                <div className="bg-white  p-2">
-                    <div className="flex justify-between">
-                        <div className="flex gap-2">
-                            <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" className="w-[90px] h-[90px] rounded-xl" />
-                            <div className="flex flex-col justify-between">
-                                <div>
-                                    <p className="font-medium mb line-clamp-2">Giày chunky low second sunday</p>
-                                    <span className="text-[12px] text-gray-[400]">Ngày tạo: 01/12/200</span>
+                {dataProducts && dataProducts.length > 0 ? dataProducts.map(item => (
+                    <div className="bg-white  p-2 mb-2" key={item._id}>
+                        <div className="flex justify-between">
+                            <div className="flex gap-2">
+                                <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" className="w-[90px] h-[90px] rounded-xl" />
+                                <div className="flex flex-col justify-between">
+                                    <div>
+                                        <p className="font-medium mb line-clamp-2">{item.name}</p>
+                                        <span className="text-[12px] text-gray-[400]">Ngày tạo: {moment(item.createdAt).format('DD-MM-YYYY')}</span>
+                                    </div>
+                                    <b>190.000đ</b>
                                 </div>
-                                <b>190.000đ</b>
+                            </div>
+                            <div onClick={() => { setSheetVisible(true) }}>
+                                <EllipsisOutlined />
                             </div>
                         </div>
-                        <div onClick={() => { setSheetVisible(true) }}>
-                            <EllipsisOutlined />
-                        </div>
                     </div>
-                </div>
+                )) : null}
+
             </div>
             <Sheet
                 visible={sheetVisible}
@@ -71,6 +82,10 @@ export const ListProductAdmin = () => {
                         <div className="flex items-center gap-2 border-b-[1px] pb-4 mb-4" onClick={() => setSheetVisible(false)}>
                             <DeleteOutlined className="text-[16px] font-[500]" />
                             <span className="text-[16px] font-[500]">Xóa sản phẩm</span>
+                        </div>
+                        <div className="flex items-center gap-2 border-b-[1px] pb-4 mb-4" onClick={() => setSheetVisible(false)}>
+                            <FormOutlined className="text-[16px] font-[500]" />
+                            <span className="text-[16px] font-[500]">Chỉnh sửa</span>
                         </div>
                         <div className="flex items-center gap-2" onClick={() => setSheetVisible(false)}>
                             <EyeOutlined className="text-[16px] font-[500]" />
