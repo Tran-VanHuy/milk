@@ -2,17 +2,23 @@ import React, { useContext, useEffect, useState } from "react";
 import { Box, ImageViewer, Page, Swiper, Sheet, Text, Button } from "zmp-ui";
 import { Header } from "../components/headers/header";
 import { HeartOutlined, MinusOutlined, PlusOutlined, RightOutlined, StarOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import { ProductType } from "../api/products/type";
+import { formatPrice } from "../components/format-price";
 
 interface AppcontentType {
 
-    setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>
+    setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>,
+    productDetail: (_id: string) => void,
+    dataProductDetail: ProductType
 }
 export const ProductDetail = () => {
 
-    const { setShowBottomTab }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, productDetail, dataProductDetail }: AppcontentType = useContext(AppContext);
+    console.log({ dataProductDetail });
 
+    const { id } = useParams()
     const nav = useNavigate()
 
     const images = [
@@ -46,62 +52,42 @@ export const ProductDetail = () => {
     useEffect(() => {
 
         setShowBottomTab(false)
+        if (id) {
+            productDetail(id)
+        }
     }, [])
     return (
         <Page className="pb-[100px]">
             <Header showNav={true} />
             <div className="pt-[52px]">
                 <Swiper>
-                    <Swiper.Slide>
-                        <img
-                            className="slide-img h-[350px]"
-                            src="https://stc-zmp.zadn.vn/zmp-zaui/images/0e05d63a7a93a6cdff826.jpg"
-                            alt="slide-1"
-                        />
-                    </Swiper.Slide>
-                    <Swiper.Slide>
-                        <img
-                            className="slide-img h-[350px]"
-                            src="https://stc-zmp.zadn.vn/zmp-zaui/images/0f7c061caab576eb2fa45.jpg"
-                            alt="slide-2"
-                        />
-                    </Swiper.Slide>
-                    <Swiper.Slide>
-                        <img
-                            className="slide-img h-[350px]"
-                            src="https://stc-zmp.zadn.vn/zmp-zaui/images/321fb45f18f6c4a89de78.jpg"
-                            alt="slide-3"
-                        />
-                    </Swiper.Slide>
-                    <Swiper.Slide>
-                        <img
-                            className="slide-img h-[350px]"
-                            src="https://stc-zmp.zadn.vn/zmp-zaui/images/4f417921d58809d650997.jpg"
-                            alt="slide-4"
-                        />
-                    </Swiper.Slide>
-                    <Swiper.Slide>
-                        <img
-                            className="slide-img h-[350px]"
-                            src="https://stc-zmp.zadn.vn/zmp-zaui/images/677fad2e0187ddd984969.jpg"
-                            alt="slide-5"
-                        />
-                    </Swiper.Slide>
+                    {dataProductDetail?.images?.map((item) => (
+                        <Swiper.Slide key={item.uid}>
+                            <img
+                                className="slide-img h-[350px] w-full object-cover"
+                                src={item.name}
+                                alt="slide-1"
+                            />
+                        </Swiper.Slide>
+                    ))}
                 </Swiper>
                 <div className="bg-white py-3 mb-2">
                     <div className="px-2">
-                        <b className="text-red-500 text-[16px]">80.000đ - 290.000đ</b>
-                        <div className="flex gap-2 items-center pt-1 mb-1">
-                            <del className="text-[12px] text-gray-500">150.000 - 450.000đ</del>
-                            <div className="bg-red-500 bg-opacity-20 inline px-2 text-[11px] text-red-600 font-[500]"> Tiết kiệm tới 47%</div>
+                        <div className="mb-1">
+                            <b className="text-red-500 text-[16px]">{dataProductDetail?.priceTitle}</b>
                         </div>
-                        <p className="font-[500] text-[16px]">Bọt vệ sinh nam giới Oniiz - Dung dịch vệ sinh nam tạo bọt 100ml</p>
+                        {!dataProductDetail?.checkDiscount && <div className="flex gap-2 items-center mb-1">
+                            <del className="text-[12px] text-gray-500">{formatPrice(dataProductDetail?.price)}</del>
+                            <div className="bg-red-500 bg-opacity-20 inline px-2 text-[11px] text-red-600 font-[500]"> Tiết kiệm tới {dataProductDetail?.discount}%</div>
+                        </div>}
+
+                        <p className="font-[500] text-[16px]">{dataProductDetail?.name}</p>
                         <div className="pt-1 flex justify-between items-center">
                             <div className="flex items-center gap-2">
                                 <StarOutlined className="text-[12px] text-yellow-500" />
-                                <span className="text-[12px] font-[500]">4.8 /5 <span className="text-blue-600 font-normal">(10.6k)</span></span>
+                                <span className="text-[12px] font-[500]">{dataProductDetail?.point} /5 <span className="text-blue-600 font-normal">(10.6k)</span></span>
                                 <div className="text-[8px]">|</div>
-                                <p className="text-[14px] text-gray-500">Đã bán <span className="text-black font-[500]">105.7k</span></p>
+                                <p className="text-[14px] text-gray-500">Đã bán <span className="text-black font-[500]">{dataProductDetail?.sale || 0}</span></p>
                             </div>
                             <HeartOutlined />
                         </div>

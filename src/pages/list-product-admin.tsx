@@ -5,6 +5,7 @@ import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { ProductType } from "../api/products/type";
 import moment from "moment"
+import { formatPrice } from "../components/format-price";
 
 interface AppcontentType {
 
@@ -28,7 +29,7 @@ export const ListProductAdmin = () => {
     }, [])
     return (
         <Page className="px-2">
-            <Header title="Danh sách sản phẩm" />
+            <Header title="Danh sách sản phẩm" onBackClick={() => nav("/setting")} />
             <div className="pt-[50px] mb-3">
                 <div className="bg-white flex gap-2 justify-between">
                     <div className='relative'>
@@ -48,13 +49,13 @@ export const ListProductAdmin = () => {
                     <div className="bg-white  p-2 mb-2" key={item._id}>
                         <div className="flex justify-between">
                             <div className="flex gap-2">
-                                <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" className="w-[90px] h-[90px] rounded-xl" />
+                                <img src={item.images[0].name} alt="" className="w-[90px] h-[90px] rounded-xl" />
                                 <div className="flex flex-col justify-between">
                                     <div>
                                         <p className="font-medium mb line-clamp-2">{item.name}</p>
                                         <span className="text-[12px] text-gray-[400]">Ngày tạo: {moment(item.createdAt).format('DD-MM-YYYY')}</span>
                                     </div>
-                                    <b>190.000đ</b>
+                                    <b>{formatPrice(item.price)}</b>
                                 </div>
                             </div>
                             <div onClick={() => { setSheetVisible(true) }}>

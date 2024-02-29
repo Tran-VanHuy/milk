@@ -10,6 +10,9 @@ export type ProductType = {
     info: InfoType
     categories: CategoriesProductType[]
     createdAt: string
+    sale: number
+    priceTitle?: string
+    checkDiscount?: boolean
 }
 
 export type ListImagesType = {

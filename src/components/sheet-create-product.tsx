@@ -55,11 +55,11 @@ export const SheetCreateProduct = ({ sheetVisible, setSheetVisible, ms, sz, setA
                         <div className="">
                             <div className="grid grid-cols-2 gap-2 mb-2">
                                 <input type="text" placeholder="Vd: Đen" className="col-span-1 py-2 px-2 bg-gray-100 w-full" onChange={(e) => setDataFormSheet({ ...dataFormSheet!, name: e.target.value })} />
-                                <input type="number" placeholder="Số lượng" className="col-span-1 py-2 px-2 bg-gray-100 w-full" onChange={(e) => setDataFormSheet({ ...dataFormSheet!, quantity: Number(e.target.value) })} />
+                                <input type="number" placeholder="Số lượng" className="col-span-1 py-2 px-2 bg-gray-100 w-full" onChange={(e) => setDataFormSheet({ ...dataFormSheet!, quantity: Number(e.target.value || 0) })} />
                             </div>
                             <div className="grid grid-cols-2 gap-2">
-                                <input type="text" placeholder="Giá tiền (VNĐ)" className="col-span-1 py-2 px-2 bg-gray-100 w-full" onChange={(e) => setDataFormSheet({ ...dataFormSheet!, price: Number(e.target.value) })} />
-                                <input type="text" placeholder="Giảm giá (%)" className="col-span-1 py-2 px-2 bg-gray-100 w-full" onChange={(e) => setDataFormSheet({ ...dataFormSheet!, discount: Number(e.target.value) })} />
+                                <input type="text" placeholder="Giá tiền (VNĐ)" className="col-span-1 py-2 px-2 bg-gray-100 w-full" onChange={(e) => setDataFormSheet({ ...dataFormSheet!, price: Number(e.target.value || 0) })} />
+                                <input type="text" placeholder="Giảm giá (%)" className="col-span-1 py-2 px-2 bg-gray-100 w-full" onChange={(e) => setDataFormSheet({ ...dataFormSheet!, discount: Number(e.target.value || 0) })} />
                             </div>
                         </div>
                     </div>

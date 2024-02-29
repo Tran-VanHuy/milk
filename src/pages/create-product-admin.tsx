@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 export type infoProductType = {
 
     name: string,
+    ms?: string,
+    sz?: string,
     itemMS: formSheet[]
 }
 
@@ -60,13 +62,13 @@ export const CreateProductAdmin = () => {
     const [sheetVisible, setSheetVisible] = useState(false);
     const [formProduct, setFormProduct] = useState<formProductType>()
     const [multiSelect, setMultiSelect] = useState<string[]>()
-    const [allDataFormSheet, setAllDataFromSheet] = useState<any>([])    
+    const [allDataFormSheet, setAllDataFromSheet] = useState<any>([])
     const [listImages, setListImages] = useState<ListImages[]>();
 
-    
+
     const onSubmit = async () => {
 
-        const newData = { ...formProduct, images: listImages, categories: multiSelect || [], info: { ms: formProduct?.ms, itemMS: allDataFormSheet.flat() } }
+        const newData = { ...formProduct, images: listImages, categories: multiSelect || [], info: formProduct?.ms && formProduct?.ms && { ms: formProduct?.ms, sz: formProduct?.sz, itemMS: allDataFormSheet.flat() } }
 
         try {
             const res = await axios.post(PRODUCT.CREATE, newData)
@@ -122,7 +124,7 @@ export const CreateProductAdmin = () => {
                     <textarea name="" id="" rows={5} className="w-full rounded-lg bg-gray-100 p-2" placeholder="Nhập mô tả sản phẩm"></textarea>
                 </div>
 
-                <div className="px-2">
+                <div className="px-2 pb-[40px]">
                     <button className="w-full py-2 bg-red-500 text-white" onClick={() => onSubmit()}>Lưu</button>
                 </div>
             </div>

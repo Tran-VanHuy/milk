@@ -5,7 +5,7 @@ import { UserDto } from "../api/user/type";
 import { CategoryProducts } from "../api/category-product/type";
 import { getAllCategoryProduct } from "../api/category-product/api";
 import { ProductType } from "../api/products/type";
-import { getAllProducts } from "../api/products/api";
+import { findByIdProduct, getAllProducts } from "../api/products/api";
 
 export const AppContext: any = createContext({});
 
@@ -15,6 +15,8 @@ export const AppProvider = ({ children }) => {
     const [dataCategoryProducts, setDataCategoryProducts] = useState<CategoryProducts[]>();
     const [user, setUser] = useState<UserDto>();
     const [dataProducts, setDataProducts] = useState<ProductType>()
+    const [dataProductDetail, setDataProductDetail] = useState<ProductType>()
+
 
 
     const getUser = async () => {
@@ -58,7 +60,7 @@ export const AppProvider = ({ children }) => {
 
         try {
             const res = await getAllProducts(limit, skip, status)
-            
+
             setDataProducts(res.data)
         } catch (error) {
 
@@ -66,6 +68,19 @@ export const AppProvider = ({ children }) => {
 
         }
     }
+
+    const productDetail = async (_id: string) => {
+
+        try {
+            const res = await findByIdProduct(_id)
+            setDataProductDetail(res)
+        } catch (error) {
+
+            console.log({ error });
+
+        }
+    }
+
 
     useEffect(() => {
         getUser()
@@ -79,7 +94,9 @@ export const AppProvider = ({ children }) => {
             categoryProducts,
             dataCategoryProducts,
             products,
-            dataProducts
+            dataProducts,
+            productDetail,
+            dataProductDetail
         }}>
             {children}
         </AppContext.Provider>

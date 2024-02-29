@@ -7,3 +7,9 @@ export const getAllProducts = async (skip: number, limit: number, status) => {
     const res = await axios.get(`${PRODUCT.GET_ALL}?limit=${limit}&skip=${skip}${checkStatus}`)
     return res.data
 }
+
+export const findByIdProduct = async (_id: string) => {
+
+    const res = await axios.get(`${PRODUCT.FIND_BY_ID}/${_id}`);
+    return res.data.data
+}

@@ -5,21 +5,28 @@ import { Product } from '../components/products/product';
 import { Header } from '../components/headers/header';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
+import { ProductType } from '../api/products/type';
+import { formatPrice } from '../components/format-price';
 
 interface AppcontentType {
 
-  setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>
+  setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>,
+  products: (limit: number, skip: number, status: string | boolean) => void
+  dataProducts: ProductType[]
 }
 
 const HomePage: React.FunctionComponent = () => {
 
-  const { setShowBottomTab }: AppcontentType = useContext(AppContext);
+  const { setShowBottomTab, products, dataProducts }: AppcontentType = useContext(AppContext);
+  console.log({ dataProducts });
+
 
   const nav = useNavigate()
 
   useEffect(() => {
 
     setShowBottomTab(true)
+    products(0, 10, true)
   }, [])
 
   useEffect
@@ -134,18 +141,13 @@ const HomePage: React.FunctionComponent = () => {
       </div>
       <div className='px-2 pb-2'>
         <div className='grid grid-cols-2 gap-2'>
-          <div className='col-span-1 bg-white' onClick={() => nav(`product/1`)}>
-            <Product img='https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270' title='Giày chunky low second sunday' price='đ2.000' sale='Đã bán 12k' />
-          </div>
-          <div className='col-span-1 bg-white' onClick={() => nav(`product/1`)}>
-            <Product img='https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270' title='Giày chunky low second sunday' price='đ2.000' sale='Đã bán 12k' />
-          </div>
-          <div className='col-span-1 bg-white' onClick={() => nav(`product/1`)}>
-            <Product img='https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270' title='Giày chunky low second sunday' price='đ2.000' sale='Đã bán 12k' />
-          </div>
-          <div className='col-span-1 bg-white' onClick={() => nav(`product/1`)}>
-            <Product img='https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270' title='Giày chunky low second sunday' price='đ2.000' sale='Đã bán 12k' />
-          </div>
+          {dataProducts && dataProducts.length > 0 ? dataProducts.map((item) => (
+            <div className='col-span-1 bg-white' key={item._id} onClick={() => nav(`product/${item._id}`)}>
+              <Product img={item.images[0].name} title={item.name} price={formatPrice(item.price)} sale={`Đã bán ${item?.sale || 0}`} discount={item.discount} />
+            </div>
+          )) : null}
+
+
         </div>
       </div>
     </Page>

@@ -20,7 +20,8 @@ export const CATEGORY_PRODUCT = {
 
 export const PRODUCT = {
     GET_ALL: API_URI + "/products",
-    CREATE: API_URI + "/products"
+    CREATE: API_URI + "/products",
+    FIND_BY_ID: API_URI + "/products"
 }
 
 export const UPLOAD = {
