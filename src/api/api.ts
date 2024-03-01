@@ -1,4 +1,4 @@
-const API_URI = "http://192.168.1.10:3001/v1";
+const API_URI = "http://192.168.1.12:3001/v1";
 
 export const USER = {
     CREATE: API_URI + "/user",
@@ -26,4 +26,10 @@ export const PRODUCT = {
 
 export const UPLOAD = {
     CREATE: API_URI + "/upload-photo"
+}
+
+export const VOUCHER = {
+
+    GET_ALL: API_URI + "/voucher",
+    CREATE: API_URI + "/voucher"
 }

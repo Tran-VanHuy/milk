@@ -6,6 +6,8 @@ import { CategoryProducts } from "../api/category-product/type";
 import { getAllCategoryProduct } from "../api/category-product/api";
 import { ProductType } from "../api/products/type";
 import { findByIdProduct, getAllProducts } from "../api/products/api";
+import { VoucherType } from "../api/voucher/type";
+import { getAllVoucher } from "../api/voucher/api";
 
 export const AppContext: any = createContext({});
 
@@ -16,8 +18,23 @@ export const AppProvider = ({ children }) => {
     const [user, setUser] = useState<UserDto>();
     const [dataProducts, setDataProducts] = useState<ProductType>()
     const [dataProductDetail, setDataProductDetail] = useState<ProductType>()
+    const [dataVoucher, setDataVoucher] = useState<VoucherType[]>()
+
+    const voucher = async (product?: string, status?: string) => {
+
+        try {
+
+            const res = await getAllVoucher(product || "", status)
+            if (res.status === 200) {
+
+                setDataVoucher(res.data)
+            }
+        } catch (error) {
+            console.log({ error });
 
 
+        }
+    }
 
     const getUser = async () => {
         try {
@@ -96,7 +113,9 @@ export const AppProvider = ({ children }) => {
             products,
             dataProducts,
             productDetail,
-            dataProductDetail
+            dataProductDetail,
+            voucher,
+            dataVoucher
         }}>
             {children}
         </AppContext.Provider>

@@ -20,18 +20,21 @@ export const Setting = () => {
 
     return (
         <Page>
-            <Header title="Cài đặt"></Header>
-         <div className="pt-[44px]">
-         <div className="p-2 text-[14px] text-gray-500">Sản phẩm</div>
-            <div className="bg-white p-2">
-                <div className="border-b-[1px] pb-2 mb-2" onClick={() => nav('list-product-admin')}>
-                    <div className="text-[14px]">Danh sách</div>
-                </div>
-                <div className="gap-2 pb-2" >
-                    <div className="text-[14px]">Danh mục sản phẩm</div>
+            <Header title="Cài đặt" onBackClick={() => nav("/profile")}></Header>
+            <div className="pt-[44px]">
+                <div className="p-2 text-[14px] text-gray-500">Sản phẩm</div>
+                <div className="bg-white p-2">
+                    <div className="border-b-[1px] pb-2 mb-2" onClick={() => nav('list-product-admin')}>
+                        <div className="text-[14px]">Danh sách</div>
+                    </div>
+                    <div className="border-b-[1px] pb-2 mb-2" >
+                        <div className="text-[14px]">Danh mục sản phẩm</div>
+                    </div>
+                    <div className="gap-2 pb-2" onClick={() => nav('list-voucher')}>
+                        <div className="text-[14px]">Khuyến mãi (Voucher)</div>
+                    </div>
                 </div>
             </div>
-         </div>
         </Page>
     )
 }

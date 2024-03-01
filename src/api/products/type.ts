@@ -13,6 +13,8 @@ export type ProductType = {
     sale: number
     priceTitle?: string
     checkDiscount?: boolean
+    type: number
+    transportFee: number
 }
 
 export type ListImagesType = {
@@ -24,6 +26,7 @@ export type ListImagesType = {
 export type InfoType = {
     _id?: string
     ms: string
+    sz: string
     itemMS: ItemMsType[]
 }
 
@@ -35,16 +38,17 @@ export type CategoriesProductType = {
 
 export type ItemMsType = {
 
-    _id: string
+    _id?: string
     name: string,
     price: number,
     discount: number,
     quantity: number,
-    itemSZ: ItemSZType[]
+    itemSZ?: ItemSZType[]
+    image?: string
 }
 
 export type ItemSZType = {
-    _id: string
+    _id?: string
     name: string
     price: number,
     discount: number,

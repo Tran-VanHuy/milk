@@ -165,7 +165,7 @@ export const Profile = () => {
                     <HeartOutlined />
                     <div className="text-[14px]">Đã thích</div>
                 </div>
-                <div className="flex items-center gap-2 pb-2" onClick={() => nav("/setting")}>
+                <div className="flex items-center gap-2" onClick={() => nav("/setting")}>
                     <SettingOutlined />
                     <div className="text-[14px]">Cài đặt</div>
                 </div>

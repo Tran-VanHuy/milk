@@ -3,7 +3,8 @@ import { Box, Input, Sheet } from "zmp-ui";
 import UploadFile from "./upload";
 import { Button, Form } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { formSheet } from "../pages/create-product-admin";
+import { ListImages, formSheet } from "../pages/create-product-admin";
+import UpLoadMulti from "./upload-multi";
 
 type props = {
 
@@ -15,14 +16,16 @@ type props = {
     allDataFormSheet: any
 }
 
+
+
 export const SheetCreateProduct = ({ sheetVisible, setSheetVisible, ms, sz, setAllDataFromSheet, allDataFormSheet }: props) => {
 
     const [dataFormSheet, setDataFormSheet] = useState<formSheet>()
-
+    const [listImages, setListImages] = useState<ListImages[]>();
 
     const onFinish = (values: any) => {
 
-        const newData: formSheet = { ...dataFormSheet!, itemSZ: values.infos }
+        const newData: formSheet = { ...dataFormSheet!, image: listImages && listImages.length > 0 ? listImages[0].name! : "", itemSZ: values.infos }
 
         setDataFormSheet(newData)
 
@@ -47,7 +50,7 @@ export const SheetCreateProduct = ({ sheetVisible, setSheetVisible, ms, sz, setA
         >
             <Box p={4} className="custom-bottom-sheet" flex flexDirection="column">
                 <div className="bottom-sheet-cover">
-                    <UploadFile />
+                    <UpLoadMulti setListImages={setListImages} count={1} />
                 </div>
                 <Box mt={2} mb={5}>
                     <div className="mb-3">
@@ -63,6 +66,7 @@ export const SheetCreateProduct = ({ sheetVisible, setSheetVisible, ms, sz, setA
                             </div>
                         </div>
                     </div>
+
                     <div>
                         <Form
                             name="dynamic_form_nest_item"
@@ -70,7 +74,7 @@ export const SheetCreateProduct = ({ sheetVisible, setSheetVisible, ms, sz, setA
                             style={{ maxWidth: 600 }}
                             autoComplete="off"
                         >
-                            <Form.List name="infos">
+                            {sz && <Form.List name="infos">
                                 {(fields, { add, remove }) => (
                                     <>
                                         <Form.Item>
@@ -122,7 +126,8 @@ export const SheetCreateProduct = ({ sheetVisible, setSheetVisible, ms, sz, setA
 
                                     </>
                                 )}
-                            </Form.List>
+                            </Form.List>}
+
                             <div className="pb-4 mt-4">
                                 <Button type="primary" htmlType="submit" className="bg-red-500 text-white font-medium text-center rounded w-full">Lưu</Button>
                             </div>

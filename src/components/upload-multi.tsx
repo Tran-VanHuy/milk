@@ -7,18 +7,12 @@ import { ListImages } from '../pages/create-product-admin';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-const getBase64 = (file: FileType): Promise<string> =>
-    new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-    });
 
 type Props = {
     setListImages: React.Dispatch<React.SetStateAction<ListImages[]>>;
+    count: number
 };
-const UpLoadMulti = ({ setListImages }: Props) => {
+const UpLoadMulti = ({ setListImages, count }: Props) => {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -30,9 +24,6 @@ const UpLoadMulti = ({ setListImages }: Props) => {
     const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
 
         setLoading(true)
-        const listImages = fileList.map((item) => ({
-            name: item.url
-        }))
 
         setFileList(newFileList);
         setTimeout(() => {
@@ -72,7 +63,7 @@ const UpLoadMulti = ({ setListImages }: Props) => {
                 fileList={fileList}
                 onChange={handleChange}
             >
-                {fileList.length >= 8 ? null : uploadButton}
+                {fileList.length >= (count || 1) ? null : uploadButton}
             </Upload>
             <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />

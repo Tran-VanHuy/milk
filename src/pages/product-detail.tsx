@@ -4,19 +4,21 @@ import { Header } from "../components/headers/header";
 import { HeartOutlined, MinusOutlined, PlusOutlined, RightOutlined, StarOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import { ProductType } from "../api/products/type";
+import { ItemMsType, ItemSZType, ProductType } from "../api/products/type";
 import { formatPrice } from "../components/format-price";
+import { VoucherType } from "../api/voucher/type";
 
 interface AppcontentType {
 
     setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>,
     productDetail: (_id: string) => void,
-    dataProductDetail: ProductType
+    dataProductDetail: ProductType,
+    voucher: (product: string, status: string) => void,
+    dataVoucher: VoucherType[]
 }
 export const ProductDetail = () => {
 
-    const { setShowBottomTab, productDetail, dataProductDetail }: AppcontentType = useContext(AppContext);
-    console.log({ dataProductDetail });
+    const { setShowBottomTab, productDetail, dataProductDetail, voucher, dataVoucher }: AppcontentType = useContext(AppContext);
 
     const { id } = useParams()
     const nav = useNavigate()
@@ -46,14 +48,57 @@ export const ProductDetail = () => {
     const [visible, setVisible] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const [sheetVisible, setSheetVisible] = useState(false);
+    const [dataItemSZ, setDataItemSZ] = useState<ItemSZType[]>()
+    const [nameProductSheet, setNameProductSheet] = useState<string>("");
+    const [dataItemSZProduct, setDataItemSZProduct] = useState<ItemSZType>();
+    const [imageMS, setImageMS] = useState<string>()
+    console.log(dataItemSZ);
 
 
 
+    console.log({ dataItemSZ });
+
+
+
+    const onItemMS = (data: ItemMsType) => {
+
+        setImageMS(data.image)
+        setDataItemSZ(data.itemSZ)
+        setNameProductSheet(data.name)
+        if (dataProductDetail?.type === 2) {
+
+            const dataType2: ItemMsType = {
+                name: data.name,
+                price: data.price,
+                discount: data.discount,
+                quantity: data.quantity
+            }
+            setDataItemSZProduct(dataType2)
+        }
+    }
+
+    const onItemSZ = (data: ItemSZType) => {
+
+        setDataItemSZProduct(data);
+
+    }
+
+    const onBuyProducts = (action: string) => {
+        if (dataProductDetail?.type !== 3) {
+            setSheetVisible(true)
+        }
+
+        if (action === "BUY") {
+
+            nav(`/order-review`)
+        }
+    }
     useEffect(() => {
 
         setShowBottomTab(false)
         if (id) {
             productDetail(id)
+            voucher(id, "true")
         }
     }, [])
     return (
@@ -93,32 +138,29 @@ export const ProductDetail = () => {
                         </div>
                     </div>
                 </div>
-                <div className="p-2 bg-white mb-3">
-                    <div className="px-2 flex justify-between items-center mb-2">
-                        <span className="text-[16px] font-[700]">Voucher & khuyến mãi</span>
-                        <RightOutlined className="text-[12px] text-gray-500" />
-                    </div>
-                    <div className="flex gap-[20px] overflow-x-scroll scroll">
-                        <div className="flex items-center justify-between gap-[15px] bg-[#fca5a5] bg-opacity-30 p-3 rounded-lg">
-                            <div>
-                                <b className="text-[14px]">Giảm 40k</b>
-                                <p className="text-gray-500 text-[12px] whitespace-nowrap">Đối với đơn trên 80k</p>
-                            </div>
-                            <div>
-                                <button className="text-[12px] bg-[#ef4444] text-white font-bold px-[10px] rounded whitespace-nowrap" >Sử dụng </button>
-                            </div>
+                {
+                    dataVoucher && dataVoucher.length > 0 &&
+                    <div className="p-2 bg-white mb-3">
+                        <div className="px-2 flex justify-between items-center mb-2">
+                            <span className="text-[16px] font-[700]">Voucher & khuyến mãi</span>
+                            <RightOutlined className="text-[12px] text-gray-500" />
                         </div>
-                        <div className="flex items-center justify-between gap-[15px] bg-[#fca5a5] bg-opacity-30 p-3 rounded-lg">
-                            <div>
-                                <b className="text-[14px]">Giảm 40k</b>
-                                <p className="text-gray-500 text-[12px] whitespace-nowrap">Đối với đơn trên 80k</p>
-                            </div>
-                            <div>
-                                <button className="text-[12px] bg-[#ef4444] text-white font-bold px-[10px] rounded whitespace-nowrap" >Sử dụng </button>
-                            </div>
+                        <div className="flex gap-[20px] overflow-x-scroll scroll">
+                            {dataVoucher.map((item) => (
+                                <div className="flex items-center justify-between gap-[15px] bg-[#fca5a5] bg-opacity-30 p-3 rounded-lg" key={item._id}>
+                                    <div>
+                                        <b className="text-[14px]">{item.name}</b>
+                                        <p className="text-gray-500 text-[12px] whitespace-nowrap">{item.content}</p>
+                                    </div>
+                                    <div>
+                                        <button className="text-[12px] bg-[#ef4444] text-white font-bold px-[10px] rounded whitespace-nowrap" >Sử dụng </button>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                </div>
+                }
+
                 <div className="p-2 bg-white mb-3">
                     <div className="px-2">
                         <span className="text-[16px] font-[700]">Hình thức thanh toán</span>
@@ -128,7 +170,7 @@ export const ProductDetail = () => {
                         </div>
                         <div className="flex justify-between mb-2">
                             <span className="font-bold text-[16px]">Vận chuyển</span>
-                            <span className="text-[14px] text-gray-500 font-[500]">10.000đ</span>
+                            <span className="text-[14px] text-gray-500 font-[500]">{formatPrice(dataProductDetail?.transportFee || 0)}</span>
                         </div>
                         <div className="text-[14px] font-[500]">Từ Đan Phượng đến Hồ Chí Minh</div>
                         <div className="text-[14px] font-[500]">Ngày giao hàng dự kiến: Feb 24 - Feb 26</div>
@@ -291,14 +333,10 @@ export const ProductDetail = () => {
                 </div>
             </div>
             <div className="px-2 grid grid-cols-2 gap-2 bg-white absolute bottom-0 w-full pb-[40px] pt-[20px] border-t-[1px]">
-                <div className="border-[2px] border-red-500 text-center py-2 rounded text-red-500 font-bold" onClick={() => {
-                    setSheetVisible(true);
-                }}>Thêm vào giỏ hàng</div>
-                <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => {
-                    setSheetVisible(true);
-                }}>Mua ngay</div>
+                <div className="border-[2px] border-red-500 text-center py-2 rounded text-red-500 font-bold" onClick={() => onBuyProducts("CART")}>Thêm vào giỏ hàng</div>
+                <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onBuyProducts("BUY")}>Mua ngay</div>
             </div>
-            <Sheet
+            {dataProductDetail?.type !== 3 ? <Sheet
                 visible={sheetVisible}
                 onClose={() => setSheetVisible(false)}
                 autoHeight
@@ -308,66 +346,43 @@ export const ProductDetail = () => {
             >
                 <Box p={4} className="custom-bottom-sheet" flex flexDirection="column">
                     <div className="bottom-sheet-cover flex gap-3">
-                        <img alt="Bottom Sheet" src={"https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270"} width={90} height={90} className="rounded" />
+                        <img alt="Bottom Sheet" src={imageMS || dataProductDetail?.images[0].name} width={90} height={90} className="rounded" />
+                        {/* <img alt="Bottom Sheet" src={imageMS} width={90} height={90} className="rounded" /> */}
                         <div className="flex flex-col justify-between">
                             <div>
-                                <div className="text-[18px] font-bold">80.000đ</div>
-                                <del className="text-[14px] text-gray-500 font-[400]">150.000đ</del>
+                                {dataItemSZProduct?.price && dataItemSZProduct?.price !== undefined && <div className="text-[18px] font-bold">{formatPrice(dataItemSZProduct?.price)}</div>}
+                                {dataItemSZProduct?.discount !== 0 && dataItemSZProduct?.price !== undefined && <del className="text-[14px] text-gray-500 font-[400]">150.000đ</del>}
                             </div>
-                            <div className="text-[14px] text-gray-500 font-[500]">Màu ghi, 2xl</div>
+                            <div className="text-[14px] text-gray-500 font-[500]">{nameProductSheet}{dataItemSZProduct?.name && dataProductDetail.type === 1 ? `, ${dataItemSZProduct?.name}` : null}</div>
                         </div>
                     </div>
                     <Box mt={4} mb={5}>
                         <div className="mb-3">
-                            <span className="text-[14px] text-gray-500 font-[500]">Màu sắc</span>
+                            <span className="text-[14px] text-gray-500 font-[500]">{dataProductDetail?.info?.ms}</span>
                             <div className="flex flex-wrap gap-3">
-                                <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded">
-                                    <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} />
-                                    <p className="text-[14px] font-[500]">be</p>
-                                </div>
-                                <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded">
-                                    <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} />
-                                    <p className="text-[14px] font-[500]">Ghi</p>
-                                </div>
-                                <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded">
-                                    <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} />
-                                    <p className="text-[14px] font-[500]">Đen</p>
-                                </div>
-                                <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded">
-                                    <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} />
-                                    <p className="text-[14px] font-[500]">Xám</p>
-                                </div>
-                                <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded">
-                                    <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} />
-                                    <p className="text-[14px] font-[500]">Trắng</p>
-                                </div>
+                                {dataProductDetail?.info?.itemMS?.map(item => (
+                                    <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded" key={item._id} onClick={() => onItemMS(item)}>
+                                        {item?.image && <img src={item.image} alt="" width={20} height={20} />}
+                                        <p className="text-[14px] font-[500] active:text-red">{item.name}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                        <div>
-                            <span className="text-[14px] text-gray-500 font-[500]">Kích cỡ</span>
+                        {dataProductDetail?.type === 1 && dataItemSZ && dataItemSZ.length && <div>
+                            <span className="text-[14px] text-gray-500 font-[500]">{dataProductDetail?.info?.sz}</span>
                             <div className="flex flex-wrap gap-3">
-                                <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded">
-                                    <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} />
-                                    <p className="text-[14px] font-[500]">X</p>
-                                </div>
-                                <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded">
-                                    <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} />
-                                    <p className="text-[14px] font-[500]">M</p>
-                                </div>
-                                <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded">
-                                    <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} />
-                                    <p className="text-[14px] font-[500]">L</p>
-                                </div>
-                                <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded">
-                                    <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} />
-                                    <p className="text-[14px] font-[500]">XL</p>
-                                </div>
-                                <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded">
-                                    <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} />
-                                    <p className="text-[14px] font-[500]">XXL</p>
-                                </div>
+                                {
+                                    dataItemSZ.map(item => (
+                                        <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded" key={item._id} onClick={() => onItemSZ(item)}>
+                                            {/* <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} /> */}
+                                            <p className="text-[14px] font-[500]">{item.name}</p>
+                                        </div>
+                                    ))
+                                }
                             </div>
                         </div>
+                        }
+
                     </Box>
                     <div className="mb-5">
                         <Box className="bottom-sheet-body" style={{ overflowY: "auto" }}>
@@ -385,7 +400,8 @@ export const ProductDetail = () => {
                         <div className="bg-red-500 text-white font-medium text-center py-2 rounded-lg" onClick={() => nav(`/order-review`)}>Mua Ngay</div>
                     </div>
                 </Box>
-            </Sheet>
+            </Sheet> : null}
+
         </Page>
     )
 }

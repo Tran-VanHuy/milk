@@ -16,6 +16,8 @@ import { News } from '../pages/news';
 import { Setting } from '../pages/setting';
 import { ListProductAdmin } from '../pages/list-product-admin';
 import { CreateProductAdmin } from '../pages/create-product-admin';
+import { ListVoucherAdmin } from '../pages/voucher';
+import { CreateVoucherAdmin } from '../pages/create-voucher-admin';
 
 
 
@@ -40,6 +42,9 @@ const MyApp = () => {
                 <Route path="/setting" element={<Setting></Setting>}></Route>
                 <Route path="/setting/list-product-admin" element={<ListProductAdmin></ListProductAdmin>}></Route>
                 <Route path="/setting/list-product-admin/create" element={<CreateProductAdmin></CreateProductAdmin>}></Route>
+                <Route path="/setting/list-voucher" element={<ListVoucherAdmin></ListVoucherAdmin>}></Route>
+                <Route path="/setting/list-voucher/create" element={<CreateVoucherAdmin></CreateVoucherAdmin>}></Route>
+
               </AnimationRoutes>
               <BottomNavigationPage />
             </ZMPRouter>

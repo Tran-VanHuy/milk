@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Header, Page } from "zmp-ui";
-import SelecMulti from "../components/select";
+import SelecMulti, { dataSelectType } from "../components/select";
 import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { SheetCreateProduct } from "../components/sheet-create-product";
 import axios from "axios";
 import { PRODUCT } from "../api/api";
 import UpLoadMulti from "../components/upload-multi";
 import { useNavigate } from "react-router-dom";
+import { ProductType } from "../api/products/type";
+import { CategoryProducts } from "../api/category-product/type";
+import { AppContext } from "../context/AppContext";
 
 export type infoProductType = {
 
@@ -26,7 +29,7 @@ export type itemFormSheet = {
 
 export type formSheet = {
 
-    // image?: string
+    image?: string
     name?: string
     quantity?: number
     price?: number
@@ -47,16 +50,29 @@ export type formProductType = {
     info?: infoProductType[]
     ms: string
     sz: string
+    transportFee: number
 }
 
 export type ListImages = {
-    uid: string
+    uid?: string
     name: string
 }
 
+export type CategoryProductsType = {
 
+    label: string
+    value: string
+}
+
+interface AppcontentType {
+
+    categoryProducts: () => void
+    dataCategoryProducts: CategoryProducts[]
+
+}
 export const CreateProductAdmin = () => {
 
+    const { categoryProducts, dataCategoryProducts }: AppcontentType = useContext(AppContext);
     const nav = useNavigate();
 
     const [sheetVisible, setSheetVisible] = useState(false);
@@ -64,7 +80,7 @@ export const CreateProductAdmin = () => {
     const [multiSelect, setMultiSelect] = useState<string[]>()
     const [allDataFormSheet, setAllDataFromSheet] = useState<any>([])
     const [listImages, setListImages] = useState<ListImages[]>();
-
+    const [dataSelect, setDataSelect] = useState<dataSelectType[]>()
 
     const onSubmit = async () => {
 
@@ -81,14 +97,30 @@ export const CreateProductAdmin = () => {
 
         }
     }
+
+    useEffect(() => {
+        categoryProducts()
+    }, [])
+
+    useEffect(() => {
+        if (dataCategoryProducts) {
+            console.log(dataCategoryProducts);
+            
+            const data = dataCategoryProducts.map((item) => ({
+                label: item.name,
+                value: item._id,
+            }))
+            setDataSelect(data)
+        }
+    }, [dataCategoryProducts])
     return (
         <Page>
-            <Header title="Thêm sản phẩm" />
+            <Header title="Thêm sản phẩm" onBackClick={() => nav("/setting")} />
             <div className="pt-[50px]">
                 <div className="bg-white p-2 mb-3">
                     <input type="text" placeholder="Tên sản phẩm (*)" className="py-2 px-2 mb-2 w-full bg-gray-100" onChange={(e) => setFormProduct({ ...formProduct!, name: e.target.value })} />
                     <div className="mb-2">
-                        <SelecMulti setMultiSelect={setMultiSelect} />
+                        <SelecMulti setMultiSelect={setMultiSelect} dataSelect = {dataSelect!} />
                     </div>
                     <div className="grid grid-cols-3 gap-2">
                         <input type="number" placeholder="Giá tiền (VND) (*)" className="col-span-1 py-2 px-2 bg-gray-100" onChange={(e) => setFormProduct({ ...formProduct!, price: Number(e.target.value) })} />
@@ -97,7 +129,7 @@ export const CreateProductAdmin = () => {
                     </div>
                 </div>
                 <div className="bg-white p-2 mb-3">
-                    <UpLoadMulti setListImages={setListImages} />
+                    <UpLoadMulti setListImages={setListImages} count={10} />
                 </div>
                 <div className="bg-white p-2 mb-3">
                     <div className="flex  mb-3 justify-between items-center gap-3">
@@ -122,6 +154,9 @@ export const CreateProductAdmin = () => {
 
                 <div className="p-2 bg-white mb-2">
                     <textarea name="" id="" rows={5} className="w-full rounded-lg bg-gray-100 p-2" placeholder="Nhập mô tả sản phẩm"></textarea>
+                </div>
+                <div className="p-2 bg-white mb-2">
+                    <input type="number" placeholder="Phí vận chuyển (VND) (*)" className="w-full py-2 px-2 bg-gray-100" onChange={(e) => setFormProduct({ ...formProduct!, transportFee: Number(e.target.value) })} />
                 </div>
 
                 <div className="px-2 pb-[40px]">
