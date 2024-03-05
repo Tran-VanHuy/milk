@@ -3,16 +3,15 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Upload } from 'antd';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { UPLOAD } from '../api/api';
-import { ListImages } from '../pages/create-product-admin';
 
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
 
 type Props = {
-    setListImages: React.Dispatch<React.SetStateAction<ListImages[]>>;
+    setListImages: React.Dispatch<React.SetStateAction<UploadFile[]>>;
     count: number
+    listImages?: UploadFile[]
 };
-const UpLoadMulti = ({ setListImages, count }: Props) => {
+const UpLoadMulti = ({ setListImages, count, listImages }: Props) => {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -50,11 +49,19 @@ const UpLoadMulti = ({ setListImages, count }: Props) => {
 
             setListImages(fileList.map((item) => ({
                 uid: item?.uid,
+                url: item?.response?.data?.path || item.url,
                 name: item?.response?.data?.path || item.url
             })))
         }
     }, [loading])
 
+    useEffect(() => {
+
+        if (listImages && listImages.length > 0) {
+
+            setFileList(listImages)
+        }
+    }, [listImages])
     return (
         <>
             <Upload

@@ -3,7 +3,7 @@ import { Box, Input, Sheet } from "zmp-ui";
 import UploadFile from "./upload";
 import { Button, Form } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { ListImages, formSheet } from "../pages/create-product-admin";
+import { ListImages, formSheet } from "../pages/products/create-product-admin";
 import UpLoadMulti from "./upload-multi";
 
 type props = {

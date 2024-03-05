@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Header, Page, Sheet } from "zmp-ui";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../context/AppContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { CaretDownOutlined } from "@ant-design/icons";
-import { UserDto, addressVN } from "../api/user/type";
-import { getAllProvince } from "../api/user/user";
-import { createAddress } from "../api/address/api";
-import { AddressDto } from "../api/address/type";
+import { UserDto, addressVN } from "../../api/user/type";
+import { getAllProvince } from "../../api/user/user";
+import { createAddress } from "../../api/address/api";
+import { AddressDto } from "../../api/address/type";
 import axios from "axios";
-import { ADDRESS } from "../api/api";
+import { ADDRESS } from "../../api/api";
 
 interface AppcontentType {
 

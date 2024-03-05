@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Header, Page } from "zmp-ui";
-import { AppContext } from "../context/AppContext";
-import { ProductType } from "../api/products/type";
-import SelecMulti, { dataSelectType } from "../components/select";
-import { VoucherType } from "../api/voucher/type";
+import { AppContext } from "../../context/AppContext";
+import { ProductType } from "../../api/products/type";
+import SelecMulti, { dataSelectType } from "../../components/select";
+import { VoucherType } from "../../api/voucher/type";
 import { useNavigate } from "react-router-dom";
-import { createVoucher } from "../api/voucher/api";
+import { createVoucher } from "../../api/voucher/api";
 
 interface AppcontentType {
 
@@ -31,8 +31,9 @@ export const CreateVoucherAdmin = () => {
                 ...formVoucher!,
                 products: multiSelect || []
             }
-            console.log(body);
+
             await createVoucher(body)
+
             nav("/setting/list-voucher")
         } catch (error) {
 
@@ -47,7 +48,6 @@ export const CreateVoucherAdmin = () => {
 
     useEffect(() => {
         if (dataProducts && dataProducts.length > 0) {
-            console.log(dataProducts);
 
             const data = dataProducts.map((item) => ({
                 label: item.name,

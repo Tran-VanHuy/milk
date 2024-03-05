@@ -15,6 +15,7 @@ export type ProductType = {
     checkDiscount?: boolean
     type: number
     transportFee: number
+    deliveryDate: number
 }
 
 export type ListImagesType = {

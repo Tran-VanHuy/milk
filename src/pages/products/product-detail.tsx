@@ -1,12 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, ImageViewer, Page, Swiper, Sheet, Text, Button } from "zmp-ui";
-import { Header } from "../components/headers/header";
+import { Header } from "../../components/headers/header";
 import { HeartOutlined, MinusOutlined, PlusOutlined, RightOutlined, StarOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
-import { ItemMsType, ItemSZType, ProductType } from "../api/products/type";
-import { formatPrice } from "../components/format-price";
-import { VoucherType } from "../api/voucher/type";
+import { AppContext } from "../../context/AppContext";
+import { ItemMsType, ItemSZType, ProductType } from "../../api/products/type";
+import { formatPrice } from "../../components/format-price";
+import { VoucherType } from "../../api/voucher/type";
+import { UserDto } from "../../api/user/type";
+import axios from "axios";
+import { ADDRESS } from "../../api/api";
+import { AddressDto } from "../../api/address/type";
 
 interface AppcontentType {
 
@@ -14,11 +18,13 @@ interface AppcontentType {
     productDetail: (_id: string) => void,
     dataProductDetail: ProductType,
     voucher: (product: string, status: string) => void,
-    dataVoucher: VoucherType[]
+    dataVoucher: VoucherType[],
+    user: UserDto,
+    dataProducts: ProductType[]
 }
 export const ProductDetail = () => {
 
-    const { setShowBottomTab, productDetail, dataProductDetail, voucher, dataVoucher }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, productDetail, dataProductDetail, voucher, dataVoucher, user, dataProducts }: AppcontentType = useContext(AppContext);
 
     const { id } = useParams()
     const nav = useNavigate()
@@ -52,13 +58,7 @@ export const ProductDetail = () => {
     const [nameProductSheet, setNameProductSheet] = useState<string>("");
     const [dataItemSZProduct, setDataItemSZProduct] = useState<ItemSZType>();
     const [imageMS, setImageMS] = useState<string>()
-    console.log(dataItemSZ);
-
-
-
-    console.log({ dataItemSZ });
-
-
+    const [address, setAddress] = useState<AddressDto>()
 
     const onItemMS = (data: ItemMsType) => {
 
@@ -93,9 +93,22 @@ export const ProductDetail = () => {
             nav(`/order-review`)
         }
     }
+
+    const addressDefault = async () => {
+
+        try {
+
+            const res = await axios.get(`${ADDRESS.ADDRESS_DEFAULT}?userId=${user.userId}`)
+            setAddress(res.data.data);
+
+        } catch (error) {
+
+        }
+    }
     useEffect(() => {
 
         setShowBottomTab(false)
+        addressDefault()
         if (id) {
             productDetail(id)
             voucher(id, "true")
@@ -172,8 +185,8 @@ export const ProductDetail = () => {
                             <span className="font-bold text-[16px]">Vận chuyển</span>
                             <span className="text-[14px] text-gray-500 font-[500]">{formatPrice(dataProductDetail?.transportFee || 0)}</span>
                         </div>
-                        <div className="text-[14px] font-[500]">Từ Đan Phượng đến Hồ Chí Minh</div>
-                        <div className="text-[14px] font-[500]">Ngày giao hàng dự kiến: Feb 24 - Feb 26</div>
+                        <div className="text-[14px] font-[500]">Từ Đan Phượng đến {address?.commune}</div>
+                        <div className="text-[14px] font-[500]">Ngày giao hàng dự kiến: {dataProductDetail?.deliveryDate === 0 ? "Trong ngày" : `${dataProductDetail?.deliveryDate} ngày  `} <span className="text-[10px] text-red-500">(có thể thay đổi)</span></div>
                     </div>
                 </div>
                 <div className="p-2 bg-white mb-3">
@@ -293,42 +306,16 @@ export const ProductDetail = () => {
                         <RightOutlined className="text-[12px] text-gray-500" />
                     </div>
                     <div className="flex gap-[15px] overflow-x-scroll">
-                        <div>
-                            <div className="w-[75px] h-[75px]">
-                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
-                            </div>
-                            <span className="text-[14px] font-bold">100.000đ</span>
-                        </div>
-                        <div>
-                            <div className="w-[75px] h-[75px]">
-                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
-                            </div>
-                            <span className="text-[14px] font-bold">100.000đ</span>
-                        </div>
-                        <div>
-                            <div className="w-[75px] h-[75px]">
-                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
-                            </div>
-                            <span className="text-[14px] font-bold">100.000đ</span>
-                        </div>
-                        <div>
-                            <div className="w-[75px] h-[75px]">
-                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
-                            </div>
-                            <span className="text-[14px] font-bold">100.000đ</span>
-                        </div>
-                        <div>
-                            <div className="w-[75px] h-[75px]">
-                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
-                            </div>
-                            <span className="text-[14px] font-bold">100.000đ</span>
-                        </div>
-                        <div>
-                            <div className="w-[75px] h-[75px]">
-                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" className="rounded-xl w-full h-full" />
-                            </div>
-                            <span className="text-[14px] font-bold">100.000đ</span>
-                        </div>
+                        {dataProducts && dataProducts.length > 0 ?
+                            dataProducts.map(item => (
+                                <div key={item._id} onClick={() => nav(`/product/${item._id}`)}>
+                                    <div className="w-[75px] h-[75px]">
+                                        <img src={item.images[0].name} alt="" className="rounded-xl w-full h-full" />
+                                    </div>
+                                    <span className="text-[14px] font-bold">{formatPrice(item.price)}</span>
+                                </div>
+                            ))
+                            : null}
                     </div>
                 </div>
             </div>

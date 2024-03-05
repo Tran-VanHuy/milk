@@ -10,12 +10,18 @@ export const ADDRESS = {
     CREATE: API_URI + "/address",
     DELETE: API_URI + "/delete/address",
     DETAIL: API_URI + "/detail/address",
-    UPDATE: API_URI + "/update/address"
+    UPDATE: API_URI + "/update/address",
+    ADDRESS_DEFAULT: API_URI + "/address/default"
 }
 
 export const CATEGORY_PRODUCT = {
 
-    GET_ALL: API_URI + "/category-products"
+    GET_ALL: API_URI + "/category-products",
+    CREATE: API_URI + "/category-products",
+    DETAIL: API_URI + "/category-products",
+    UPDATE: API_URI + "/category-products",
+    DELETE: API_URI + "/category-products"
+
 }
 
 export const PRODUCT = {
@@ -32,4 +38,13 @@ export const VOUCHER = {
 
     GET_ALL: API_URI + "/voucher",
     CREATE: API_URI + "/voucher"
+}
+
+export const BANNER = {
+
+    GET_ALL: API_URI + "/banner",
+    CREATE: API_URI + "/banner",
+    DELETE: API_URI + "/banner",
+    DETAIL: API_URI + "/banner",
+    UPDATE: API_URI + "/banner"
 }

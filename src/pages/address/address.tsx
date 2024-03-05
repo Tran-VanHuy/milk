@@ -2,9 +2,9 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header, Page } from "zmp-ui";
-import { AppContext } from "../context/AppContext";
-import { UserDto } from "../api/user/type";
-import { deleteAddress } from "../api/address/api";
+import { AppContext } from "../../context/AppContext";
+import { UserDto } from "../../api/user/type";
+import { deleteAddress } from "../../api/address/api";
 
 interface AppcontentType {
 

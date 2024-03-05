@@ -8,6 +8,8 @@ import { ProductType } from "../api/products/type";
 import { findByIdProduct, getAllProducts } from "../api/products/api";
 import { VoucherType } from "../api/voucher/type";
 import { getAllVoucher } from "../api/voucher/api";
+import { BannerDto } from "../api/banner/type";
+import { getAllBanner } from "../api/banner/api";
 
 export const AppContext: any = createContext({});
 
@@ -19,6 +21,21 @@ export const AppProvider = ({ children }) => {
     const [dataProducts, setDataProducts] = useState<ProductType>()
     const [dataProductDetail, setDataProductDetail] = useState<ProductType>()
     const [dataVoucher, setDataVoucher] = useState<VoucherType[]>()
+    const [dataBanner, setDataBanner] = useState<BannerDto[]>()
+
+    const banner = async (skip: number, limit: number, status: string) => {
+
+        try {
+
+            const res = await getAllBanner(skip, limit, status)
+            setDataBanner(res.data);
+        } catch (error) {
+
+            console.log({ error });
+
+        }
+    }
+
 
     const voucher = async (product?: string, status?: string) => {
 
@@ -61,11 +78,11 @@ export const AppProvider = ({ children }) => {
         }
     };
 
-    const categoryProducts = async () => {
+    const categoryProducts = async (skip: number, limit: number, status: string) => {
 
         try {
 
-            const res = await getAllCategoryProduct();
+            const res = await getAllCategoryProduct(skip, limit, status);
             setDataCategoryProducts(res.data.data)
         } catch (error) {
 
@@ -115,7 +132,9 @@ export const AppProvider = ({ children }) => {
             productDetail,
             dataProductDetail,
             voucher,
-            dataVoucher
+            dataVoucher,
+            banner,
+            dataBanner
         }}>
             {children}
         </AppContext.Provider>

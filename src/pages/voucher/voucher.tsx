@@ -1,10 +1,10 @@
 import { DeleteOutlined, EllipsisOutlined, EyeOutlined, FormOutlined, HeartOutlined, SearchOutlined, ShareAltOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Header, Page, Sheet } from "zmp-ui";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
-import { formatPrice } from "../components/format-price";
-import { VoucherType } from "../api/voucher/type";
+import { formatPrice } from "../../components/format-price";
+import { VoucherType } from "../../api/voucher/type";
 
 interface AppcontentType {
 
@@ -43,7 +43,7 @@ export const ListVoucherAdmin = () => {
 
 
             {dataVoucher && dataVoucher.length > 0 && dataVoucher.map(item => (
-                <div className="bg-white  p-2 mb-2">
+                <div className="bg-white  p-2 mb-2" key={item._id}>
                     <div className="flex justify-between">
                         <div className="flex gap-2">
                             <div className="flex flex-col justify-between">

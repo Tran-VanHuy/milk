@@ -1,11 +1,11 @@
 import { DeleteOutlined, EllipsisOutlined, EyeOutlined, FormOutlined, HeartOutlined, SearchOutlined, ShareAltOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Header, Page, Sheet } from "zmp-ui";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
-import { ProductType } from "../api/products/type";
+import { ProductType } from "../../api/products/type";
 import moment from "moment"
-import { formatPrice } from "../components/format-price";
+import { formatPrice } from "../../components/format-price";
 
 interface AppcontentType {
 
@@ -16,7 +16,6 @@ interface AppcontentType {
 
 export const ListProductAdmin = () => {
     const { setShowBottomTab, products, dataProducts }: AppcontentType = useContext(AppContext);
-    console.log({ dataProducts });
 
     const nav = useNavigate();
 
