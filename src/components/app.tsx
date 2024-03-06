@@ -22,6 +22,9 @@ import { CategoriesAdmin } from '../pages/categories/categories-admin';
 import { CreateCategoryAdmin } from '../pages/categories/create-categories-admin';
 import { BannerAdmin } from '../pages/banner/banner-admin';
 import { CreateBannerAdmin } from '../pages/banner/create-banner-admin';
+import { AdsAdmin } from '../pages/ads/ads-admin';
+import { CreateAdsAdmin } from '../pages/ads/create-ads-admin';
+import { Cart } from '../pages/cart';
 
 
 
@@ -54,6 +57,10 @@ const MyApp = () => {
                 <Route path="/setting/banner-admin" element={<BannerAdmin></BannerAdmin>}></Route>
                 <Route path="/setting/banner-admin/create" element={<CreateBannerAdmin></CreateBannerAdmin>}></Route>
                 <Route path="/setting/banner-admin/update/:id" element={<CreateBannerAdmin></CreateBannerAdmin>}></Route>
+                <Route path="/setting/ads-admin" element={<AdsAdmin></AdsAdmin>}></Route>
+                <Route path="/setting/ads-admin/create/:id" element={<CreateAdsAdmin></CreateAdsAdmin>}></Route>
+                <Route path="/setting/ads-admin/update/:id" element={<CreateAdsAdmin></CreateAdsAdmin>}></Route>
+                <Route path="/cart" element={<Cart></Cart>}></Route>
               </AnimationRoutes>
               <BottomNavigationPage />
             </ZMPRouter>

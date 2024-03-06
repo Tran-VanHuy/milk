@@ -10,6 +10,13 @@ export const createAddress = async (body: AddressDto) => {
 
 export const deleteAddress = async (userId: string, _id: string) => {
 
-    const res = await axios.post(ADDRESS.DELETE, {userId, _id})
+    const res = await axios.post(ADDRESS.DELETE, { userId, _id })
     return res;
+}
+
+export const getAddressDefault = async (userId: string) => {
+
+    const res = await axios.get(`${ADDRESS.ADDRESS_DEFAULT}?userId=${userId}`)
+
+    return res.data;
 }

@@ -3,14 +3,30 @@ import React, { useContext, useEffect, useState } from "react";
 import { Page, Header, Sheet, Box } from "zmp-ui";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import { AddressDto } from "../api/address/type";
+import { UserDto } from "../api/user/type";
+import { BodyInfo, InfoOrder } from "../api/order/type";
+import axios from "axios";
+import { ORDER } from "../api/api";
+import { formatPrice } from "../components/format-price";
 
 interface AppcontentType {
 
     setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>
+    dataAddressDefault: AddressDto,
+    addressDefault: (userId: string) => void,
+    user: UserDto,
+    dataInfoOrder: BodyInfo,
+    setDataInfoOrder: React.Dispatch<React.SetStateAction<BodyInfo>>
 }
 
 export const OverReview = () => {
-    const { setShowBottomTab }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataInfoOrder, setDataInfoOrder }: AppcontentType = useContext(AppContext);
+    console.log({ dataInfoOrder });
+
+    const [dataInfo, setDataInfo] = useState<InfoOrder>()
+    const [quantity, setQuantity] = useState<number>(1)
+
     const nav = useNavigate()
 
     const [sheetVisible, setSheetVisible] = useState(false);
@@ -19,6 +35,63 @@ export const OverReview = () => {
 
         setShowBottomTab(false)
     }, [])
+
+    const infoOrder = async () => {
+
+        try {
+
+            const res = await axios.post(ORDER.INFO, dataInfoOrder)
+            console.log(res.data.data);
+            setDataInfo(res.data.data);
+            setQuantity(dataInfoOrder.quantity)
+        } catch (error) {
+
+            console.log({ error });
+
+        }
+    }
+
+    const onQuantity = async (action: string) => {
+        let totalQuantity = quantity;
+
+
+        if (action === "PLUS") {
+
+            totalQuantity = quantity + 1
+            setQuantity(totalQuantity)
+
+        } else {
+
+
+            if (quantity === 1) {
+                totalQuantity = 1
+                setQuantity(totalQuantity)
+            } else {
+                totalQuantity = quantity - 1
+                setQuantity(totalQuantity)
+            }
+        }
+        
+        const body = {
+            productId: dataInfoOrder.productId,
+            quantity: totalQuantity,
+            type: 3
+        }
+        const res = await axios.post(ORDER.INFO, body)
+        setDataInfo(res.data.data);
+    }
+
+    useEffect(() => {
+        if (user) {
+
+            addressDefault(user.userId)
+        }
+    }, [user])
+
+    useEffect(() => {
+
+        infoOrder()
+    }, [])
     return (
         <Page className="pb-[125px]">
             <Header title="Tổng quan đơn hàng" />
@@ -26,11 +99,12 @@ export const OverReview = () => {
                 <div className="bg-white p-2 flex justify-between mb-2" onClick={() => nav("/address")}>
                     <div className="flex gap-2">
                         <EnvironmentOutlined className="mt-1" />
-                        <div>
-                            <p className="font-[500] mb-1">Trần Văn Huy (+84)03*****85</p>
-                            <p className="text-gray-500 text-[14px] font-[400]">172 D.Phan Xích</p>
-                            <p className="text-gray-500 text-[14px] font-[400]">Tân Hội, Đan Phượng, Hà Nội, Việt Nam</p>
-                        </div>
+                        {dataAddressDefault ? <div>
+                            <p className="font-[500] mb-1">{dataAddressDefault.name} (+84){dataAddressDefault.phone}</p>
+                            <p className="text-gray-500 text-[14px] font-[400] line-clamp-1">{dataAddressDefault.specificAddress}</p>
+                            <p className="text-gray-500 text-[14px] font-[400] line-clamp-1">{dataAddressDefault.commune}, {dataAddressDefault.district}, {dataAddressDefault.city}</p>
+                        </div> : <span className="text-[12px] text-red-500">Chưa cập nhật địa chỉ</span>}
+
                     </div>
                     <RightOutlined className="text-[12px] text-gray-500 mt-1" />
                 </div>
@@ -39,18 +113,18 @@ export const OverReview = () => {
                         <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" width={85} height={85} className="rounded" />
                         <div className="flex flex-col justify-between">
                             <div>
-                                <p className="line-clamp-1 text-gray-600 font-[400]">JOFANNY tất vớ cao cổ thể thao nam nữ</p>
-                                <p className="line-clamp-1 text-gray-500 font-[400] text-[14px]">Tất cổ thấp - xám</p>
+                                <p className="line-clamp-1 text-gray-600 font-[400]">{dataInfo?.name}</p>
+                                {/* <p className="line-clamp-1 text-gray-500 font-[400] text-[14px]">Tất cổ thấp - xám</p> */}
                             </div>
                             <div className="flex justify-between">
                                 <div>
-                                    <p className="font-bold">4.230đ</p>
-                                    <del className="text-[14px] text-gray-500">9.400đ</del>
+                                    <p className="font-bold">{formatPrice(dataInfo?.priceDiscount1)}</p>
+                                    <del className="text-[14px] text-gray-500">{formatPrice(dataInfo?.price)}</del>
                                 </div>
                                 <div className="flex items-center">
-                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center"><MinusOutlined className="text-[12px]" /></div>
-                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center text-[14px] font-[500]">1</div>
-                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center"><PlusOutlined className="text-[12px]" /></div>
+                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center" onClick={() => onQuantity("MINUS")}><MinusOutlined className="text-[12px]" /></div>
+                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center text-[14px] font-[500]">{quantity}</div>
+                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center" onClick={() => onQuantity("PLUS")}><PlusOutlined className="text-[12px]" /></div>
                                 </div>
                             </div>
                         </div>
@@ -64,10 +138,10 @@ export const OverReview = () => {
                             </div>
                             <div className="flex items-center gap-1">
                                 <FieldTimeOutlined className="text-gray-600" />
-                                <span className="text-[12px] text-gray-600">Ngày giao hàng dự kiến: Feb 23 - Feb 25</span>
+                                <span className="text-[12px] text-gray-600">Ngày giao hàng dự kiến: {dataInfo?.deliveryDate !== 0 ? `${dataInfo?.deliveryDate} ngày` : "trong ngày"}</span>
                             </div>
                         </div>
-                        <span className="text-[12px] text-gray-600 ">22.400đ</span>
+                        <span className="text-[12px] text-gray-600 ">{formatPrice(dataInfo?.transportFee)}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-[14px] text-gray-700 font-[400]">Tin nhắn</span>
@@ -82,15 +156,15 @@ export const OverReview = () => {
                     <div className="flex flex-col gap-2 text-[14px]">
                         <div className="flex justify-between text-gray-600">
                             <span>Tổng phụ</span>
-                            <span>4.230đ</span>
+                            <span>{formatPrice(dataInfo?.subtotal)}</span>
                         </div>
                         <div className="flex justify-between text-gray-600">
                             <span>Vận chuyển</span>
-                            <span>10.000đ</span>
+                            <span>{formatPrice(dataInfo?.transportFee)}</span>
                         </div>
                         <div className="flex justify-between text-gray-600">
                             <span>Tổng</span>
-                            <span className="font-[500] text-black">26.630đ</span>
+                            <span className="font-[500] text-black">{formatPrice(dataInfo?.priceDiscount)}</span>
                         </div>
                     </div>
                 </div>
@@ -108,7 +182,7 @@ export const OverReview = () => {
             <div className="px-2 grid grid-cols-1 gap-2 bg-white absolute bottom-0 w-full pb-[40px] pt-[20px] border-t-[1px]">
                 <div className="flex justify-between text-[16px]">
                     <b>Tổng</b>
-                    <b>26.630đ</b>
+                    <b>{formatPrice(dataInfo?.priceDiscount)}</b>
                 </div>
                 <div className=" bg-red-500 text-center py-2 rounded text-white font-bold">Đặt hàng</div>
             </div>

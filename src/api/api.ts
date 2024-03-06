@@ -1,4 +1,4 @@
-const API_URI = "http://192.168.1.12:3001/v1";
+const API_URI = "http://192.168.1.5:3001/v1";
 
 export const USER = {
     CREATE: API_URI + "/user",
@@ -47,4 +47,24 @@ export const BANNER = {
     DELETE: API_URI + "/banner",
     DETAIL: API_URI + "/banner",
     UPDATE: API_URI + "/banner"
+}
+
+export const ADS = {
+
+    GET_ALL: API_URI + "/ads",
+    CREATE: API_URI + "/ads",
+    DETAIL: API_URI + "/ads",
+    UPDATE: API_URI + "/ads",
+    DELETE: API_URI + "/ads"
+}
+
+export const ORDER = {
+
+    INFO: API_URI + "/order/info"
+}
+
+export const CART = {
+
+    CREATE: API_URI + "/cart",
+    GET_ALL: API_URI + "/cart"
 }

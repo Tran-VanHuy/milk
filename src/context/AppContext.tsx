@@ -10,6 +10,11 @@ import { VoucherType } from "../api/voucher/type";
 import { getAllVoucher } from "../api/voucher/api";
 import { BannerDto } from "../api/banner/type";
 import { getAllBanner } from "../api/banner/api";
+import { AdsDto } from "../api/ads/type";
+import { getAllAds } from "../api/ads/api";
+import { AddressDto } from "../api/address/type";
+import { getAddressDefault } from "../api/address/api";
+import { BodyInfo } from "../api/order/type";
 
 export const AppContext: any = createContext({});
 
@@ -22,6 +27,32 @@ export const AppProvider = ({ children }) => {
     const [dataProductDetail, setDataProductDetail] = useState<ProductType>()
     const [dataVoucher, setDataVoucher] = useState<VoucherType[]>()
     const [dataBanner, setDataBanner] = useState<BannerDto[]>()
+    const [dataAds, setDataAds] = useState<AdsDto[]>()
+    const [dataAddressDefault, setAddressDefault] = useState<AddressDto>()
+    const [dataInfoOrder, setDataInfoOrder] = useState<BodyInfo>();
+
+    const addressDefault = async (userId: string) => {
+
+        try {
+            const res = await getAddressDefault(userId);
+            setAddressDefault(res.data)
+        } catch (error) {
+
+            console.log({ error });
+
+        }
+    }
+
+    const ads = async (skip: number, limit: number, status: string) => {
+
+        try {
+
+            const res = await getAllAds(skip, limit, status);
+            setDataAds(res.data)
+        } catch (error) {
+
+        }
+    }
 
     const banner = async (skip: number, limit: number, status: string) => {
 
@@ -134,7 +165,13 @@ export const AppProvider = ({ children }) => {
             voucher,
             dataVoucher,
             banner,
-            dataBanner
+            dataBanner,
+            ads,
+            dataAds,
+            dataAddressDefault,
+            addressDefault,
+            setDataInfoOrder,
+            dataInfoOrder
         }}>
             {children}
         </AppContext.Provider>

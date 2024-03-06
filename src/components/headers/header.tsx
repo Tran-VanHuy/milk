@@ -19,8 +19,8 @@ export const Header = ({ showNav, typeNav }: Props) => {
                 <input type="text" placeholder="Tìm kiếm sản phẩm" className='py-2 pl-[30px] pr-2 w-full bg-gray-200' />
             </div>
             <div>
-                <ShoppingCartOutlined className='pr-[10px] text-red-500 text-[16px]' />
-                <MessageOutlined className='text-red-500 text-[16px]' />
+                <ShoppingCartOutlined className='pr-[10px] text-red-500 text-[16px]' onClick={() => nav("/cart")}/>
+                {/* <MessageOutlined className='text-red-500 text-[16px]' /> */}
             </div>
         </div>
     )

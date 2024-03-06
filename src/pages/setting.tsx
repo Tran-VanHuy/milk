@@ -42,7 +42,7 @@ export const Setting = () => {
                 </div>
                 <div className="p-2 text-[14px] text-gray-500">Quảng cáo</div>
                 <div className="bg-white p-2">
-                    <div>
+                    <div onClick={() => nav('ads-admin')}>
                         <div className="text-[14px]">Danh sách</div>
                     </div>
                 </div>

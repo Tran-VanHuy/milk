@@ -9,8 +9,10 @@ import { formatPrice } from "../../components/format-price";
 import { VoucherType } from "../../api/voucher/type";
 import { UserDto } from "../../api/user/type";
 import axios from "axios";
-import { ADDRESS } from "../../api/api";
+import { ADDRESS, CART } from "../../api/api";
 import { AddressDto } from "../../api/address/type";
+import { BodyInfo } from "../../api/order/type";
+import { BodyCart } from "../../api/cart/type";
 
 interface AppcontentType {
 
@@ -20,11 +22,12 @@ interface AppcontentType {
     voucher: (product: string, status: string) => void,
     dataVoucher: VoucherType[],
     user: UserDto,
-    dataProducts: ProductType[]
+    dataProducts: ProductType[],
+    setDataInfoOrder: React.Dispatch<React.SetStateAction<BodyInfo>>
 }
 export const ProductDetail = () => {
 
-    const { setShowBottomTab, productDetail, dataProductDetail, voucher, dataVoucher, user, dataProducts }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, productDetail, dataProductDetail, voucher, dataVoucher, user, dataProducts, setDataInfoOrder }: AppcontentType = useContext(AppContext);
 
     const { id } = useParams()
     const nav = useNavigate()
@@ -57,11 +60,20 @@ export const ProductDetail = () => {
     const [dataItemSZ, setDataItemSZ] = useState<ItemSZType[]>()
     const [nameProductSheet, setNameProductSheet] = useState<string>("");
     const [dataItemSZProduct, setDataItemSZProduct] = useState<ItemSZType>();
+    console.log({ dataItemSZProduct });
+
     const [imageMS, setImageMS] = useState<string>()
     const [address, setAddress] = useState<AddressDto>()
+    const [quantity, setQuantity] = useState<number>(1)
+    const [typeBuy, setTypeBuy] = useState<string>("BUY")
+    const [idMS, setIdMS] = useState<string>();
+    const [idSZ, setIdSZ] = useState<string>();
+
+
 
     const onItemMS = (data: ItemMsType) => {
 
+        setIdMS(data._id)
         setImageMS(data.image)
         setDataItemSZ(data.itemSZ)
         setNameProductSheet(data.name)
@@ -78,7 +90,7 @@ export const ProductDetail = () => {
     }
 
     const onItemSZ = (data: ItemSZType) => {
-
+        setIdSZ(data._id);
         setDataItemSZProduct(data);
 
     }
@@ -86,11 +98,17 @@ export const ProductDetail = () => {
     const onBuyProducts = (action: string) => {
         if (dataProductDetail?.type !== 3) {
             setSheetVisible(true)
-        }
+        } else {
 
-        if (action === "BUY") {
-
-            nav(`/order-review`)
+            if (action === "BUY") {
+                setDataInfoOrder({
+                    productId: id!,
+                    type: 3,
+                    quantity: quantity
+                }
+                )
+                nav(`/order-review`)
+            }
         }
     }
 
@@ -103,6 +121,59 @@ export const ProductDetail = () => {
 
         } catch (error) {
 
+        }
+    }
+
+    const onQuantity = (action: string) => {
+
+        let totalQuantity = quantity;
+        if (action === "PLUS") {
+
+            totalQuantity = quantity + 1;
+            setQuantity(totalQuantity)
+        } else {
+
+            if (quantity === 1) {
+                setQuantity(1)
+            } else {
+
+                totalQuantity = quantity - 1;
+                setQuantity(totalQuantity)
+            }
+        }
+
+        setDataInfoOrder({
+            productId: id!,
+            type: 3,
+            quantity: totalQuantity
+        })
+    }
+
+
+    const onBuyCart = async () => {
+
+        if (typeBuy === "BUY") {
+            nav(`/order-review`)
+        } else {
+            if (dataProductDetail?.type === 1) {
+                console.log(idMS, idSZ);
+                const body: BodyCart = {
+                    product: id!,
+                    productId: id!,
+                    msId: idMS,
+                    szId: idSZ,
+                    type: dataProductDetail.type,
+                    userId: user.userId,
+                    image: imageMS!,
+                    quantity
+                }
+
+                const res = await axios.post(CART.CREATE, body)
+
+                if (res.data.status === 200) {
+                    setSheetVisible(false)
+                }
+            }
         }
     }
     useEffect(() => {
@@ -151,6 +222,20 @@ export const ProductDetail = () => {
                         </div>
                     </div>
                 </div>
+
+                {dataProductDetail?.type === 3 && <div className="bg-white py-3 mb-2 px-2">
+                    <Box className="bottom-sheet-body" style={{ overflowY: "auto" }}>
+                        <div className="flex justify-between">
+                            <div className="font-medium">Số lượng</div>
+                            <div className="flex items-center">
+                                <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center" onClick={() => onQuantity("MINUS")}><MinusOutlined /></div>
+                                <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center text-[14px] font-[500]">{quantity}</div>
+                                <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center" onClick={() => onQuantity("PLUS")}><PlusOutlined /></div>
+                            </div>
+                        </div>
+                    </Box>
+                </div>}
+
                 {
                     dataVoucher && dataVoucher.length > 0 &&
                     <div className="p-2 bg-white mb-3">
@@ -320,8 +405,8 @@ export const ProductDetail = () => {
                 </div>
             </div>
             <div className="px-2 grid grid-cols-2 gap-2 bg-white absolute bottom-0 w-full pb-[40px] pt-[20px] border-t-[1px]">
-                <div className="border-[2px] border-red-500 text-center py-2 rounded text-red-500 font-bold" onClick={() => onBuyProducts("CART")}>Thêm vào giỏ hàng</div>
-                <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onBuyProducts("BUY")}>Mua ngay</div>
+                <div className="border-[2px] border-red-500 text-center py-2 rounded text-red-500 font-bold" onClick={() => { onBuyProducts("CART"); setTypeBuy("CART") }}>Thêm vào giỏ hàng</div>
+                <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => { onBuyProducts("BUY"); setTypeBuy("BUY") }}>Mua ngay</div>
             </div>
             {dataProductDetail?.type !== 3 ? <Sheet
                 visible={sheetVisible}
@@ -337,8 +422,8 @@ export const ProductDetail = () => {
                         {/* <img alt="Bottom Sheet" src={imageMS} width={90} height={90} className="rounded" /> */}
                         <div className="flex flex-col justify-between">
                             <div>
-                                {dataItemSZProduct?.price && dataItemSZProduct?.price !== undefined && <div className="text-[18px] font-bold">{formatPrice(dataItemSZProduct?.price)}</div>}
-                                {dataItemSZProduct?.discount !== 0 && dataItemSZProduct?.price !== undefined && <del className="text-[14px] text-gray-500 font-[400]">150.000đ</del>}
+                                {dataItemSZProduct?.price && dataItemSZProduct?.price !== undefined && <div className="text-[18px] font-bold">{formatPrice(dataItemSZProduct?.price - (dataItemSZProduct?.price * (dataItemSZProduct?.discount / 100)))}</div>}
+                                {dataItemSZProduct?.discount !== 0 && dataItemSZProduct?.price !== undefined && <del className="text-[14px] text-gray-500 font-[400]">{formatPrice(dataItemSZProduct?.price)}</del>}
                             </div>
                             <div className="text-[14px] text-gray-500 font-[500]">{nameProductSheet}{dataItemSZProduct?.name && dataProductDetail.type === 1 ? `, ${dataItemSZProduct?.name}` : null}</div>
                         </div>
@@ -376,15 +461,15 @@ export const ProductDetail = () => {
                             <div className="flex justify-between">
                                 <div className="text-gray-600 font-medium">Số lượng</div>
                                 <div className="flex items-center">
-                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center"><MinusOutlined /></div>
-                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center text-[14px] font-[500]">1</div>
-                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center"><PlusOutlined /></div>
+                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center" onClick={() => { quantity !== 1 && setQuantity(quantity - 1) }}><MinusOutlined /></div>
+                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center text-[14px] font-[500]">{quantity}</div>
+                                    <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center" onClick={() => { setQuantity(quantity + 1) }}><PlusOutlined /></div>
                                 </div>
                             </div>
                         </Box>
                     </div>
                     <div className="pb-4">
-                        <div className="bg-red-500 text-white font-medium text-center py-2 rounded-lg" onClick={() => nav(`/order-review`)}>Mua Ngay</div>
+                        <div className="bg-red-500 text-white font-medium text-center py-2 rounded-lg" onClick={() => onBuyCart()}>{typeBuy === "BUY" ? "Mua Ngay" : "Thêm Vào Giỏ Hàng"}</div>
                     </div>
                 </Box>
             </Sheet> : null}
