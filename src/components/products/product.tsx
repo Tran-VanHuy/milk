@@ -1,4 +1,5 @@
 import React from "react";
+import { API_URI } from "../../api/api";
 
 type Props = {
 
@@ -14,7 +15,7 @@ export const Product = ({ img, title, price, sale, discount }: Props) => {
     return (
         <div className="flex flex-col h-full">
             <div className='relative'>
-                <img src={img} alt="" className="h-[175px] w-full" />
+                <img src={`${API_URI}/${img}`} alt="" className="h-[175px] w-full" />
             </div>
             <div className='flex-1 p-2 flex flex-col justify-between'>
                 <div>

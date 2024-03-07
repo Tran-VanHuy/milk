@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { DeleteOutlined, EllipsisOutlined, EyeOutlined, FormOutlined, SearchOutlined } from "@ant-design/icons";
 import { CategoryProducts } from "../../api/category-product/type";
 import axios from "axios";
-import { CATEGORY_PRODUCT } from "../../api/api";
+import { API_URI, CATEGORY_PRODUCT } from "../../api/api";
 
 interface AppcontentType {
 
@@ -63,7 +63,7 @@ export const CategoriesAdmin = () => {
                 {dataCategoryProducts && dataCategoryProducts.length > 0 && dataCategoryProducts.map(item => (
                     <div className="flex justify-between bg-white mb-2 p-2" key={item._id}>
                         <div className="flex gap-2" onClick={() => nav(`update/${item._id}`)}>
-                            <img src={item.image} alt="" className="w-[90px] h-[90px] rounded-xl" />
+                            <img src={`${API_URI}/${item.image}`} alt="" className="w-[90px] h-[90px] rounded-xl" />
                             <div className="flex flex-col justify-between">
                                 <div>
                                     <p className="font-medium mb line-clamp-2">{item?.name}</p>

@@ -5,7 +5,7 @@ import { Box, Header, Page, Sheet } from "zmp-ui";
 import { AppContext } from "../../context/AppContext";
 import { BannerDto } from "../../api/banner/type";
 import axios from "axios";
-import { BANNER } from "../../api/api";
+import { API_URI, BANNER } from "../../api/api";
 
 interface AppcontentType {
 
@@ -49,7 +49,7 @@ export const BannerAdmin = () => {
                 <button className="bg-red-500 px-2 rounded text-white py-2 mb-2" onClick={() => nav("create")}>Thêm mới</button>
                 {dataBanner && dataBanner.length > 0 && dataBanner.map(item => (
                     <div className="bg-white p-2 relative mb-2" key={item._id}>
-                        <img src={item.name} alt="" className="w-full h-[200px] rounded-xl" onClick={() => nav(`update/${item._id}`)} />
+                        <img src={`${API_URI}/${item.name}`} alt="" className="w-full h-[200px] rounded-xl" onClick={() => nav(`update/${item._id}`)} />
                         <div onClick={() => { setSheetVisible(true); setIdBanner(item._id) }} className="bg-white absolute top-0 right-[20px] px-2 py-1 rounded-lg bg-opacity-90">
                             <EllipsisOutlined className="text-[16px]" />
                         </div>

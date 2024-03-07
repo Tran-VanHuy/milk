@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Upload } from 'antd';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
-import { UPLOAD } from '../api/api';
+import { API_URI, UPLOAD } from '../api/api';
 
 
 
@@ -40,17 +40,19 @@ const UpLoadMulti = ({ setListImages, count, listImages }: Props) => {
 
     useEffect(() => {
         if (fileList.length > 0) {
+            console.log("a");
+
             setFileList(fileList.map((item) => ({
                 uid: item?.uid,
-                name: item.name,
+                name: API_URI + "/" + item.name,
                 status: item.status,
-                url: item?.response?.data?.path || item.url
+                url: item?.response?.data?.path ? API_URI + "/" + item?.response?.data?.path : API_URI + "/" + item.url
             })))
 
             setListImages(fileList.map((item) => ({
                 uid: item?.uid,
                 url: item?.response?.data?.path || item.url,
-                name: item?.response?.data?.path || item.url
+                name:  item?.response?.data?.path || item.url
             })))
         }
     }, [loading])
@@ -58,8 +60,12 @@ const UpLoadMulti = ({ setListImages, count, listImages }: Props) => {
     useEffect(() => {
 
         if (listImages && listImages.length > 0) {
+            console.log(listImages);
 
-            setFileList(listImages)
+            setFileList(listImages.map(item => ({
+                ...item,
+                url: API_URI + "/" + item.url
+            })))
         }
     }, [listImages])
     return (

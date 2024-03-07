@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ProductType } from "../../api/products/type";
 import moment from "moment"
 import { formatPrice } from "../../components/format-price";
+import { API_URI } from "../../api/api";
 
 interface AppcontentType {
 
@@ -48,7 +49,7 @@ export const ListProductAdmin = () => {
                     <div className="bg-white  p-2 mb-2" key={item._id}>
                         <div className="flex justify-between">
                             <div className="flex gap-2">
-                                <img src={item.images[0].name} alt="" className="w-[90px] h-[90px] rounded-xl" />
+                                <img src={`${API_URI}/${item.images[0].name}`} alt="" className="w-[90px] h-[90px] rounded-xl" />
                                 <div className="flex flex-col justify-between">
                                     <div>
                                         <p className="font-medium mb line-clamp-2">{item.name}</p>

@@ -15,6 +15,7 @@ import { getAllAds } from "../api/ads/api";
 import { AddressDto } from "../api/address/type";
 import { getAddressDefault } from "../api/address/api";
 import { BodyInfo } from "../api/order/type";
+import { checkTotalCart } from "../api/cart/api";
 
 export const AppContext: any = createContext({});
 
@@ -23,6 +24,7 @@ export const AppProvider = ({ children }) => {
     const [showBottomTab, setShowBottomTab] = useState<boolean>(false);
     const [dataCategoryProducts, setDataCategoryProducts] = useState<CategoryProducts[]>();
     const [user, setUser] = useState<UserDto>();
+
     const [dataProducts, setDataProducts] = useState<ProductType>()
     const [dataProductDetail, setDataProductDetail] = useState<ProductType>()
     const [dataVoucher, setDataVoucher] = useState<VoucherType[]>()
@@ -30,6 +32,20 @@ export const AppProvider = ({ children }) => {
     const [dataAds, setDataAds] = useState<AdsDto[]>()
     const [dataAddressDefault, setAddressDefault] = useState<AddressDto>()
     const [dataInfoOrder, setDataInfoOrder] = useState<BodyInfo>();
+    const [dataTotalCart, setDataTotalCart] = useState<number>()
+
+    const totalCart = async () => {
+
+        try {
+
+            const res = await checkTotalCart(user?.userId!)
+            setDataTotalCart(res.data)
+        } catch (error) {
+
+            console.log({ error });
+
+        }
+    }
 
     const addressDefault = async (userId: string) => {
 
@@ -78,9 +94,8 @@ export const AppProvider = ({ children }) => {
                 setDataVoucher(res.data)
             }
         } catch (error) {
+
             console.log({ error });
-
-
         }
     }
 
@@ -150,6 +165,12 @@ export const AppProvider = ({ children }) => {
     useEffect(() => {
         getUser()
     }, [])
+
+    useEffect(() => {
+        if (user) {
+            totalCart()
+        }
+    }, [user])
     return (
         <AppContext.Provider value={{
             showBottomTab,
@@ -171,7 +192,9 @@ export const AppProvider = ({ children }) => {
             dataAddressDefault,
             addressDefault,
             setDataInfoOrder,
-            dataInfoOrder
+            dataInfoOrder,
+            totalCart,
+            dataTotalCart
         }}>
             {children}
         </AppContext.Provider>

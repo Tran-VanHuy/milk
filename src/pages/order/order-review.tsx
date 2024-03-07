@@ -1,14 +1,16 @@
 import { CloseOutlined, EnvironmentOutlined, FieldTimeOutlined, InboxOutlined, MinusOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { Page, Header, Sheet, Box } from "zmp-ui";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
-import { AddressDto } from "../api/address/type";
-import { UserDto } from "../api/user/type";
-import { BodyInfo, InfoOrder } from "../api/order/type";
+import { AddressDto } from "../../api/address/type";
+import { UserDto } from "../../api/user/type";
+import { BodyInfo, InfoOrder } from "../../api/order/type";
 import axios from "axios";
-import { ORDER } from "../api/api";
-import { formatPrice } from "../components/format-price";
+import { ORDER } from "../../api/api";
+import { formatPrice } from "../../components/format-price";
+import { createOrder } from "zmp-sdk";
+import { createDataOrder } from "../../api/order/api";
 
 interface AppcontentType {
 
@@ -22,26 +24,47 @@ interface AppcontentType {
 
 export const OverReview = () => {
     const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataInfoOrder, setDataInfoOrder }: AppcontentType = useContext(AppContext);
-    console.log({ dataInfoOrder });
 
     const [dataInfo, setDataInfo] = useState<InfoOrder>()
     const [quantity, setQuantity] = useState<number>(1)
+    const [sheetVisible, setSheetVisible] = useState(false);
+
 
     const nav = useNavigate()
 
-    const [sheetVisible, setSheetVisible] = useState(false);
 
-    useEffect(() => {
 
-        setShowBottomTab(false)
-    }, [])
+    const onOrder = async () => {
+
+        const body = {
+            order: [
+                {
+                    productId: dataInfoOrder.productId,
+                    name: dataInfo?.name!,
+                    quantity: quantity,
+                    price: dataInfo?.priceDiscount!,
+                    address: dataAddressDefault.specificAddress,
+                    userId: user.userId
+                }
+            ],
+            userId: user.userId
+        }
+        try {
+            const res = await createDataOrder(body)
+            if (res.status === 200) {
+                nav("/order/success")
+            }
+        } catch (error) {
+
+        }
+
+    }
 
     const infoOrder = async () => {
 
         try {
 
             const res = await axios.post(ORDER.INFO, dataInfoOrder)
-            console.log(res.data.data);
             setDataInfo(res.data.data);
             setQuantity(dataInfoOrder.quantity)
         } catch (error) {
@@ -71,11 +94,13 @@ export const OverReview = () => {
                 setQuantity(totalQuantity)
             }
         }
-        
+
         const body = {
             productId: dataInfoOrder.productId,
             quantity: totalQuantity,
-            type: 3
+            type: dataInfoOrder.type,
+            msId: dataInfoOrder.msId,
+            szId: dataInfoOrder.szId,
         }
         const res = await axios.post(ORDER.INFO, body)
         setDataInfo(res.data.data);
@@ -89,7 +114,7 @@ export const OverReview = () => {
     }, [user])
 
     useEffect(() => {
-
+        setShowBottomTab(false)
         infoOrder()
     }, [])
     return (
@@ -114,12 +139,12 @@ export const OverReview = () => {
                         <div className="flex flex-col justify-between">
                             <div>
                                 <p className="line-clamp-1 text-gray-600 font-[400]">{dataInfo?.name}</p>
-                                {/* <p className="line-clamp-1 text-gray-500 font-[400] text-[14px]">Tất cổ thấp - xám</p> */}
+                                {dataInfo?.nameItem && <p className="line-clamp-1 text-gray-500 font-[400] text-[14px] bg-gray-100 inline-block px-3">{dataInfo.nameItem}</p>}
                             </div>
                             <div className="flex justify-between">
                                 <div>
                                     <p className="font-bold">{formatPrice(dataInfo?.priceDiscount1)}</p>
-                                    <del className="text-[14px] text-gray-500">{formatPrice(dataInfo?.price)}</del>
+                                    {dataInfo?.priceDiscount1 !== dataInfo?.price && <del className="text-[14px] text-gray-500">{formatPrice(dataInfo?.price)}</del>}
                                 </div>
                                 <div className="flex items-center">
                                     <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center" onClick={() => onQuantity("MINUS")}><MinusOutlined className="text-[12px]" /></div>
@@ -184,7 +209,7 @@ export const OverReview = () => {
                     <b>Tổng</b>
                     <b>{formatPrice(dataInfo?.priceDiscount)}</b>
                 </div>
-                <div className=" bg-red-500 text-center py-2 rounded text-white font-bold">Đặt hàng</div>
+                <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onOrder()}>Đặt hàng</div>
             </div>
             <Sheet
                 visible={sheetVisible}

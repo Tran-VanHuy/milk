@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { UploadFile } from "antd";
 import { BannerDto } from "../../api/banner/type";
 import axios from "axios";
-import { ADS, BANNER } from "../../api/api";
+import { ADS } from "../../api/api";
 
 export const CreateAdsAdmin = () => {
     const { id } = useParams()

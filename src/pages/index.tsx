@@ -10,6 +10,7 @@ import { formatPrice } from '../components/format-price';
 import { CategoryProducts } from '../api/category-product/type';
 import { BannerDto } from '../api/banner/type';
 import { AdsDto } from '../api/ads/type';
+import { API_URI } from '../api/api';
 
 interface AppcontentType {
 
@@ -27,7 +28,6 @@ interface AppcontentType {
 const HomePage: React.FunctionComponent = () => {
 
   const { setShowBottomTab, products, dataProducts, categoryProducts, dataCategoryProducts, banner, dataBanner, ads, dataAds }: AppcontentType = useContext(AppContext);
-  console.log({ dataAds });
 
   const nav = useNavigate()
 
@@ -48,8 +48,8 @@ const HomePage: React.FunctionComponent = () => {
           {dataBanner && dataBanner.length > 0 && dataBanner.map(item => (
             <Swiper.Slide key={item._id}>
               <img
-                className="slide-img h-[250px]"
-                src={item.name}
+                className="slide-img h-[250px] w-full"
+                src={`${API_URI}/${item.name}`}
                 alt={`${item._id}`}
               />
             </Swiper.Slide>
@@ -77,7 +77,7 @@ const HomePage: React.FunctionComponent = () => {
                 {dataCategoryProducts && dataCategoryProducts.length > 0 && dataCategoryProducts.map(item => (
                   <div className='col-span-3 text-center flex justify-center flex-col items-center' key={item._id}>
                     <div>
-                      <img src={item?.image} alt="" className='w-[45px] h-[45px] rounded-lg' />
+                      <img src={`${API_URI}/${item?.image}`} alt="" className='w-[45px] h-[45px] rounded-lg' />
                     </div>
                     <p className='text-[14px] text-white px-1'>{item.name}</p>
                   </div>
@@ -88,9 +88,9 @@ const HomePage: React.FunctionComponent = () => {
           <div className='mt-[15px] grid grid-cols-12 px-2 gap-3'>
             {dataAds && dataAds.length && dataAds.map((item, index) => (
               index !== 1 ? <div className='col-span-3' key={item._id}>
-                <img src={item.name} alt="" className='h-[80px] w-full object-cover rounded' />
+                <img src={`${API_URI}/${item.name}`} alt="" className='h-[80px] w-full object-cover rounded' />
               </div> : <div className='col-span-6'>
-                <img src="https://bizweb.dktcdn.net/100/297/257/files/re-vo-dich.jpg?v=1668743104628" alt="" className='h-[80px] w-full object-cover rounded' />
+                <img src={`${API_URI}/${item.name}`} alt="" className='h-[80px] w-full object-cover rounded' />
               </div>
             ))}
           </div>

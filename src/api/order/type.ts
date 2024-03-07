@@ -16,12 +16,32 @@ export type InfoOrder = {
     subtotal: number
     quantityProduct: number
     priceDiscount: number
-    priceDiscount1: number
+    priceDiscount1: number,
+    nameItem?: string
 }
 
 export type BodyInfo = {
 
     productId: string,
     type: number,
+    quantity: number,
+    msId?: string,
+    szId?: string,
+}
+
+export type OrderType = {
+
+    order: ItemOrderType[]
+    userId: string
+
+}
+
+export type ItemOrderType = {
+    _id?: string
+    productId: string
+    name: string
     quantity: number
+    price: number
+    address: string
+    userId: string
 }

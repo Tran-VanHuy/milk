@@ -9,7 +9,7 @@ import { formatPrice } from "../../components/format-price";
 import { VoucherType } from "../../api/voucher/type";
 import { UserDto } from "../../api/user/type";
 import axios from "axios";
-import { ADDRESS, CART } from "../../api/api";
+import { ADDRESS, API_URI, CART } from "../../api/api";
 import { AddressDto } from "../../api/address/type";
 import { BodyInfo } from "../../api/order/type";
 import { BodyCart } from "../../api/cart/type";
@@ -60,8 +60,6 @@ export const ProductDetail = () => {
     const [dataItemSZ, setDataItemSZ] = useState<ItemSZType[]>()
     const [nameProductSheet, setNameProductSheet] = useState<string>("");
     const [dataItemSZProduct, setDataItemSZProduct] = useState<ItemSZType>();
-    console.log({ dataItemSZProduct });
-
     const [imageMS, setImageMS] = useState<string>()
     const [address, setAddress] = useState<AddressDto>()
     const [quantity, setQuantity] = useState<number>(1)
@@ -92,10 +90,9 @@ export const ProductDetail = () => {
     const onItemSZ = (data: ItemSZType) => {
         setIdSZ(data._id);
         setDataItemSZProduct(data);
-
     }
 
-    const onBuyProducts = (action: string) => {
+    const onBuyProducts = async (action: string) => {
         if (dataProductDetail?.type !== 3) {
             setSheetVisible(true)
         } else {
@@ -108,6 +105,19 @@ export const ProductDetail = () => {
                 }
                 )
                 nav(`/order-review`)
+            } else {
+                const body: BodyCart = {
+                    product: id!,
+                    productId: id!,
+                    msId: idMS,
+                    szId: idSZ,
+                    type: dataProductDetail.type,
+                    userId: user.userId,
+                    image: dataProductDetail.images[0].name,
+                    quantity
+                }
+
+                const res = await axios.post(CART.CREATE, body)
             }
         }
     }
@@ -153,27 +163,39 @@ export const ProductDetail = () => {
     const onBuyCart = async () => {
 
         if (typeBuy === "BUY") {
+            setDataInfoOrder({
+                productId: id!,
+                type: dataProductDetail.type,
+                quantity: quantity,
+                msId: idMS,
+                szId: idSZ,
+            }
+            )
             nav(`/order-review`)
         } else {
-            if (dataProductDetail?.type === 1) {
-                console.log(idMS, idSZ);
-                const body: BodyCart = {
-                    product: id!,
-                    productId: id!,
-                    msId: idMS,
-                    szId: idSZ,
-                    type: dataProductDetail.type,
-                    userId: user.userId,
-                    image: imageMS!,
-                    quantity
-                }
+            console.log();
 
-                const res = await axios.post(CART.CREATE, body)
-
-                if (res.data.status === 200) {
-                    setSheetVisible(false)
-                }
+            const body: BodyCart = {
+                product: id!,
+                productId: id!,
+                msId: idMS,
+                szId: idSZ,
+                type: dataProductDetail.type,
+                userId: user.userId,
+                image: imageMS!,
+                quantity
             }
+
+            const res = await axios.post(CART.CREATE, body)
+
+            if (res.data.status === 200) {
+                setSheetVisible(false)
+            }
+            // if (dataProductDetail?.type !== 1) {
+            //     console.log(idMS, idSZ);
+
+
+            // }
         }
     }
     useEffect(() => {
@@ -194,7 +216,7 @@ export const ProductDetail = () => {
                         <Swiper.Slide key={item.uid}>
                             <img
                                 className="slide-img h-[350px] w-full object-cover"
-                                src={item.name}
+                                src={`${API_URI}/${item.name}`}
                                 alt="slide-1"
                             />
                         </Swiper.Slide>
@@ -395,7 +417,7 @@ export const ProductDetail = () => {
                             dataProducts.map(item => (
                                 <div key={item._id} onClick={() => nav(`/product/${item._id}`)}>
                                     <div className="w-[75px] h-[75px]">
-                                        <img src={item.images[0].name} alt="" className="rounded-xl w-full h-full" />
+                                        <img src={`${API_URI}/${item.images[0].name}`} alt="" className="rounded-xl w-full h-full" />
                                     </div>
                                     <span className="text-[14px] font-bold">{formatPrice(item.price)}</span>
                                 </div>
@@ -418,7 +440,7 @@ export const ProductDetail = () => {
             >
                 <Box p={4} className="custom-bottom-sheet" flex flexDirection="column">
                     <div className="bottom-sheet-cover flex gap-3">
-                        <img alt="Bottom Sheet" src={imageMS || dataProductDetail?.images[0].name} width={90} height={90} className="rounded" />
+                        <img alt="Bottom Sheet" src={imageMS ?`${API_URI}/${imageMS}` : `${API_URI}/${dataProductDetail?.images[0].name}`} width={90} height={90} className="rounded" />
                         {/* <img alt="Bottom Sheet" src={imageMS} width={90} height={90} className="rounded" /> */}
                         <div className="flex flex-col justify-between">
                             <div>
@@ -434,7 +456,7 @@ export const ProductDetail = () => {
                             <div className="flex flex-wrap gap-3">
                                 {dataProductDetail?.info?.itemMS?.map(item => (
                                     <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded" key={item._id} onClick={() => onItemMS(item)}>
-                                        {item?.image && <img src={item.image} alt="" width={20} height={20} />}
+                                        {item?.image && <img src={`${API_URI}/${item.image}`} alt="" width={20} height={20} />}
                                         <p className="text-[14px] font-[500] active:text-red">{item.name}</p>
                                     </div>
                                 ))}

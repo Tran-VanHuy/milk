@@ -4,7 +4,7 @@ import { App, ZMPRouter, AnimationRoutes, SnackbarProvider } from 'zmp-ui';
 import { RecoilRoot } from 'recoil';
 import HomePage from '../pages';
 import { ProductDetail } from '../pages/products/product-detail';
-import { OverReview } from '../pages/order-review';
+import { OverReview } from '../pages/order/order-review';
 import BottomNavigationPage from './bottom-tab';
 import { AppProvider } from '../context/AppContext';
 import { Profile } from '../pages/profile';
@@ -25,6 +25,7 @@ import { CreateBannerAdmin } from '../pages/banner/create-banner-admin';
 import { AdsAdmin } from '../pages/ads/ads-admin';
 import { CreateAdsAdmin } from '../pages/ads/create-ads-admin';
 import { Cart } from '../pages/cart';
+import { OrderSuccess } from '../pages/order/order-success';
 
 
 
@@ -58,9 +59,10 @@ const MyApp = () => {
                 <Route path="/setting/banner-admin/create" element={<CreateBannerAdmin></CreateBannerAdmin>}></Route>
                 <Route path="/setting/banner-admin/update/:id" element={<CreateBannerAdmin></CreateBannerAdmin>}></Route>
                 <Route path="/setting/ads-admin" element={<AdsAdmin></AdsAdmin>}></Route>
-                <Route path="/setting/ads-admin/create/:id" element={<CreateAdsAdmin></CreateAdsAdmin>}></Route>
+                <Route path="/setting/ads-admin/create/" element={<CreateAdsAdmin></CreateAdsAdmin>}></Route>
                 <Route path="/setting/ads-admin/update/:id" element={<CreateAdsAdmin></CreateAdsAdmin>}></Route>
                 <Route path="/cart" element={<Cart></Cart>}></Route>
+                <Route path="/order/success" element={<OrderSuccess></OrderSuccess>}></Route>
               </AnimationRoutes>
               <BottomNavigationPage />
             </ZMPRouter>

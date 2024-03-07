@@ -1,12 +1,13 @@
-import { DeleteOutlined, EllipsisOutlined, EyeOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EllipsisOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Header, Page, Sheet } from "zmp-ui";
 import { AppContext } from "../context/AppContext";
 import { formatPrice } from "../components/format-price";
 import axios from "axios";
-import { CART } from "../api/api";
+import { API_URI, CART } from "../api/api";
 import { UserDto } from "../api/user/type";
 import { CartDto } from "../api/cart/type";
+import { useNavigate } from "react-router-dom";
 
 interface AppcontentType {
 
@@ -15,24 +16,24 @@ interface AppcontentType {
 }
 export const Cart = () => {
     const { setShowBottomTab, user }: AppcontentType = useContext(AppContext);
+    const nav = useNavigate()
 
     const [sheetVisible, setSheetVisible] = useState(false);
-
     const [dataCart, setDataCart] = useState<CartDto[]>();
-    console.log({ dataCart });
 
     const cart = async () => {
 
         try {
 
             const res = await axios.get(`${CART.GET_ALL}?userId=${user.userId}`)
-            console.log(res.data.data);
+
             if (res?.data?.status === 200) {
 
                 setDataCart(res.data.data)
             }
         } catch (error) {
 
+            console.log({ error });
         }
     }
 
@@ -45,7 +46,7 @@ export const Cart = () => {
     return (
         <Page>
             <Header title="Giỏ hàng" />
-            <div className="pt-[50px] flex flex-col gap-2">
+            <div className="pt-[50px] flex flex-col gap-2 pb-[130px]">
                 {dataCart && dataCart.length > 0 && dataCart.map(item => (
                     <div className="flex p-2 bg-white items-center gap-2" key={item._id}>
                         <div>
@@ -53,16 +54,17 @@ export const Cart = () => {
                         </div>
                         <div className="flex gap-2">
                             <div>
-                                <img src={item.image} alt="" className="w-[90px] h-[90px] rounded-lg" />
+                                <img src={`${API_URI}/${item.image}`} alt="" className="w-[90px] h-[90px] rounded-lg" />
                             </div>
-                            <div className="flex-1 flex justify-between">
+                            <div className="flex-1 flex justify-between gap-2">
                                 <div className="flex-1 ">
-                                    <p className="line-clamp-2 text-gray-600 font-[400] mb-1">{item?.name}</p>
+                                    <p className="line-clamp-2 text-gray-600 font-[400] mb-1" onClick={() => nav(`/product/${item.productId}`)}>{item?.name}</p>
                                     <div className="bg-gray-200 inline-block px-2 text-[12px] text-gray-500 mb-2">{item.nameMS}{item?.nameSZ && `, ${item.nameSZ}`}</div>
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between items-center">
                                         <div>
+
                                             <p className="font-bold">{formatPrice(item.priceDiscount)}</p>
-                                            <del className="text-[14px] text-gray-500">{formatPrice(item.price)}</del>
+                                            {item.priceDiscount !== item.price && <del className="text-[14px] text-gray-500">{formatPrice(item.price)}</del>}
                                         </div>
                                         <div className="flex items-center">
                                             <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center" ><MinusOutlined className="text-[12px]" /></div>

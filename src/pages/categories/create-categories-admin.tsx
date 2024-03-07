@@ -49,14 +49,16 @@ export const CreateCategoryAdmin = () => {
         try {
 
             const res = await axios.get(`${CATEGORY_PRODUCT.DETAIL}/${id}`)
-            console.log(res);
+
             if (res?.data.status === 200) {
+
                 const data: CategoryProducts = {
                     _id: res.data.data._id,
                     name: res.data.data.name,
                     image: res.data.data.image,
                     status: res.data.data.status
                 }
+
                 setListImages([{ uid: "0", url: res.data.data.image, name: res.data.data.image }])
                 setFormCategories(data)
             }
