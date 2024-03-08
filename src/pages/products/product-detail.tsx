@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, ImageViewer, Page, Swiper, Sheet, Text, Button } from "zmp-ui";
 import { Header } from "../../components/headers/header";
-import { HeartOutlined, MinusOutlined, PlusOutlined, RightOutlined, StarOutlined } from "@ant-design/icons";
+import { HeartFilled, HeartOutlined, MinusOutlined, PlusOutlined, RightOutlined, StarOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import { ItemMsType, ItemSZType, ProductType } from "../../api/products/type";
@@ -9,10 +9,12 @@ import { formatPrice } from "../../components/format-price";
 import { VoucherType } from "../../api/voucher/type";
 import { UserDto } from "../../api/user/type";
 import axios from "axios";
-import { ADDRESS, API_URI, CART } from "../../api/api";
+import { ADDRESS, API_URI, CART, FAVOURITE } from "../../api/api";
 import { AddressDto } from "../../api/address/type";
 import { BodyInfo } from "../../api/order/type";
 import { BodyCart } from "../../api/cart/type";
+import { BodyCheckFavourite } from "../../api/favourite/type";
+import { userState } from "../../state";
 
 interface AppcontentType {
 
@@ -66,8 +68,46 @@ export const ProductDetail = () => {
     const [typeBuy, setTypeBuy] = useState<string>("BUY")
     const [idMS, setIdMS] = useState<string>();
     const [idSZ, setIdSZ] = useState<string>();
+    const [dataCheckFavourite, setDataCheckFavourite] = useState<boolean>(false)
 
+    const onFavourite = async () => {
 
+        try {
+
+            const body = {
+
+                userId: user._id,
+                product: id
+            }
+
+            const res = await axios.post(FAVOURITE.CREATE, body)
+            if (res.data.status === 200) {
+
+                setDataCheckFavourite(true)
+            }
+        } catch (error) {
+            console.log({ error });
+        }
+    }
+
+    const checkFavourite = async () => {
+
+        try {
+            const body: BodyCheckFavourite = {
+                userId: user._id!,
+                productId: id!
+
+            }
+            const res = await axios.post(FAVOURITE.CHECK, body)
+            if (res.data.status === 200) {
+                setDataCheckFavourite(res.data.data.status)
+            }
+        } catch (error) {
+
+            console.log({ error });
+
+        }
+    }
 
     const onItemMS = (data: ItemMsType) => {
 
@@ -205,6 +245,8 @@ export const ProductDetail = () => {
         if (id) {
             productDetail(id)
             voucher(id, "true")
+            checkFavourite()
+
         }
     }, [])
     return (
@@ -240,7 +282,7 @@ export const ProductDetail = () => {
                                 <div className="text-[8px]">|</div>
                                 <p className="text-[14px] text-gray-500">Đã bán <span className="text-black font-[500]">{dataProductDetail?.sale || 0}</span></p>
                             </div>
-                            <HeartOutlined />
+                            {dataCheckFavourite ? <HeartFilled className="text-red-500" /> : <HeartOutlined onClick={() => onFavourite()} />}
                         </div>
                     </div>
                 </div>
@@ -440,7 +482,7 @@ export const ProductDetail = () => {
             >
                 <Box p={4} className="custom-bottom-sheet" flex flexDirection="column">
                     <div className="bottom-sheet-cover flex gap-3">
-                        <img alt="Bottom Sheet" src={imageMS ?`${API_URI}/${imageMS}` : `${API_URI}/${dataProductDetail?.images[0].name}`} width={90} height={90} className="rounded" />
+                        <img alt="Bottom Sheet" src={imageMS ? `${API_URI}/${imageMS}` : `${API_URI}/${dataProductDetail?.images[0].name}`} width={90} height={90} className="rounded" />
                         {/* <img alt="Bottom Sheet" src={imageMS} width={90} height={90} className="rounded" /> */}
                         <div className="flex flex-col justify-between">
                             <div>

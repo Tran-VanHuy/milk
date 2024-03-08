@@ -1,5 +1,5 @@
 export type InfoOrder = {
-
+    _id?: string
     transportFee: number
     deliveryDate: number
     images: [
@@ -16,23 +16,28 @@ export type InfoOrder = {
     subtotal: number
     quantityProduct: number
     priceDiscount: number
-    priceDiscount1: number,
+    priceDiscount1: number
     nameItem?: string
 }
 
 export type BodyInfo = {
 
-    productId: string,
-    type: number,
-    quantity: number,
-    msId?: string,
-    szId?: string,
+    productId: string
+    type?: number
+    quantity: number
+    msId?: string
+    szId?: string
 }
 
 export type OrderType = {
-
+    _id?: string
+    orderCode?: string
     order: ItemOrderType[]
+    orders?: ItemOrderType[]
     userId: string
+    deliveryAddress: string
+    type?: string
+    price?: number
 
 }
 
@@ -44,4 +49,17 @@ export type ItemOrderType = {
     price: number
     address: string
     userId: string
+}
+
+export type BodyListInfoOrderType = {
+    _id?: string
+    products: BodyInfo[],
+    userId: string
+}
+
+export type ListInfoOrderType = {
+
+    subtotal: number
+    priceDiscount: number
+    orders: InfoOrder[]
 }

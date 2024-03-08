@@ -5,7 +5,7 @@ import { AppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { AddressDto } from "../../api/address/type";
 import { UserDto } from "../../api/user/type";
-import { BodyInfo, InfoOrder } from "../../api/order/type";
+import { BodyInfo, InfoOrder, OrderType } from "../../api/order/type";
 import axios from "axios";
 import { ORDER } from "../../api/api";
 import { formatPrice } from "../../components/format-price";
@@ -20,19 +20,18 @@ interface AppcontentType {
     user: UserDto,
     dataInfoOrder: BodyInfo,
     setDataInfoOrder: React.Dispatch<React.SetStateAction<BodyInfo>>
+    setDataOrder: React.Dispatch<React.SetStateAction<OrderType>>
+
 }
 
 export const OverReview = () => {
-    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataInfoOrder, setDataInfoOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataInfoOrder, setDataOrder }: AppcontentType = useContext(AppContext);
 
     const [dataInfo, setDataInfo] = useState<InfoOrder>()
     const [quantity, setQuantity] = useState<number>(1)
     const [sheetVisible, setSheetVisible] = useState(false);
 
-
     const nav = useNavigate()
-
-
 
     const onOrder = async () => {
 
@@ -47,17 +46,18 @@ export const OverReview = () => {
                     userId: user.userId
                 }
             ],
+            deliveryAddress: dataAddressDefault.specificAddress,
             userId: user.userId
         }
         try {
             const res = await createDataOrder(body)
             if (res.status === 200) {
+                setDataOrder(res.data)
                 nav("/order/success")
             }
         } catch (error) {
-
+            console.log(error);
         }
-
     }
 
     const infoOrder = async () => {

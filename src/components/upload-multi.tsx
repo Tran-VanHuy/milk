@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Modal, Upload } from 'antd';
-import type { GetProp, UploadFile, UploadProps } from 'antd';
+import { Upload } from 'antd';
+import type { UploadFile, UploadProps } from 'antd';
 import { API_URI, UPLOAD } from '../api/api';
 
 
@@ -12,13 +12,9 @@ type Props = {
     listImages?: UploadFile[]
 };
 const UpLoadMulti = ({ setListImages, count, listImages }: Props) => {
-    const [previewOpen, setPreviewOpen] = useState(false);
-    const [previewImage, setPreviewImage] = useState('');
-    const [previewTitle, setPreviewTitle] = useState('');
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const handleCancel = () => setPreviewOpen(false);
 
     const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
 
@@ -40,7 +36,6 @@ const UpLoadMulti = ({ setListImages, count, listImages }: Props) => {
 
     useEffect(() => {
         if (fileList.length > 0) {
-            console.log("a");
 
             setFileList(fileList.map((item) => ({
                 uid: item?.uid,
@@ -78,9 +73,6 @@ const UpLoadMulti = ({ setListImages, count, listImages }: Props) => {
             >
                 {fileList.length >= (count || 1) ? null : uploadButton}
             </Upload>
-            <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                <img alt="example" style={{ width: '100%' }} src={previewImage} />
-            </Modal>
         </>
     );
 };

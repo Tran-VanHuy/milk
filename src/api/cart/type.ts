@@ -27,4 +27,5 @@ export type CartDto = {
     price?: number,
     priceDiscount?: number
     name: string
+    quantity: number
 }

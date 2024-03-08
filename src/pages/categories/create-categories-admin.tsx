@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Header, Page } from "zmp-ui";
 import UpLoadMulti from "../../components/upload-multi";
-import { ListImages } from "../products/create-product-admin";
 import { CategoryProducts } from "../../api/category-product/type";
 import axios from "axios";
 import { CATEGORY_PRODUCT } from "../../api/api";

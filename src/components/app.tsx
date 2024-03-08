@@ -26,6 +26,7 @@ import { AdsAdmin } from '../pages/ads/ads-admin';
 import { CreateAdsAdmin } from '../pages/ads/create-ads-admin';
 import { Cart } from '../pages/cart';
 import { OrderSuccess } from '../pages/order/order-success';
+import { ListOrderReview } from '../pages/order/list-order-review';
 
 
 
@@ -33,13 +34,15 @@ const MyApp = () => {
   return (
     <AppProvider>
       <RecoilRoot>
-        <App >
+        <App>
           <SnackbarProvider>
             <ZMPRouter>
               <AnimationRoutes>
                 <Route path="/" element={<HomePage></HomePage>}></Route>
                 <Route path="/product/:id" element={<ProductDetail></ProductDetail>}></Route>
                 <Route path="/order-review" element={<OverReview></OverReview>}></Route>
+                <Route path="/list-order-review" element={<ListOrderReview></ListOrderReview>}></Route>
+                <Route path="/order/success" element={<OrderSuccess></OrderSuccess>}></Route>
                 <Route path="/profile" element={<Profile></Profile>}></Route>
                 <Route path="/address" element={<Address></Address>}></Route>
                 <Route path="/new-address" element={<NewAddress></NewAddress>}></Route>
@@ -62,7 +65,6 @@ const MyApp = () => {
                 <Route path="/setting/ads-admin/create/" element={<CreateAdsAdmin></CreateAdsAdmin>}></Route>
                 <Route path="/setting/ads-admin/update/:id" element={<CreateAdsAdmin></CreateAdsAdmin>}></Route>
                 <Route path="/cart" element={<Cart></Cart>}></Route>
-                <Route path="/order/success" element={<OrderSuccess></OrderSuccess>}></Route>
               </AnimationRoutes>
               <BottomNavigationPage />
             </ZMPRouter>

@@ -14,7 +14,7 @@ import { AdsDto } from "../api/ads/type";
 import { getAllAds } from "../api/ads/api";
 import { AddressDto } from "../api/address/type";
 import { getAddressDefault } from "../api/address/api";
-import { BodyInfo } from "../api/order/type";
+import { BodyInfo, ListInfoOrderType, OrderType } from "../api/order/type";
 import { checkTotalCart } from "../api/cart/api";
 
 export const AppContext: any = createContext({});
@@ -33,6 +33,8 @@ export const AppProvider = ({ children }) => {
     const [dataAddressDefault, setAddressDefault] = useState<AddressDto>()
     const [dataInfoOrder, setDataInfoOrder] = useState<BodyInfo>();
     const [dataTotalCart, setDataTotalCart] = useState<number>()
+    const [dataOrder, setDataOrder] = useState<OrderType>()
+    const [dataListInfoOrder, setDataListInfoOrder] = useState<ListInfoOrderType>()
 
     const totalCart = async () => {
 
@@ -194,7 +196,11 @@ export const AppProvider = ({ children }) => {
             setDataInfoOrder,
             dataInfoOrder,
             totalCart,
-            dataTotalCart
+            dataTotalCart,
+            setDataOrder,
+            dataOrder,
+            setDataListInfoOrder,
+            dataListInfoOrder
         }}>
             {children}
         </AppContext.Provider>

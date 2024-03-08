@@ -89,7 +89,7 @@ const HomePage: React.FunctionComponent = () => {
             {dataAds && dataAds.length && dataAds.map((item, index) => (
               index !== 1 ? <div className='col-span-3' key={item._id}>
                 <img src={`${API_URI}/${item.name}`} alt="" className='h-[80px] w-full object-cover rounded' />
-              </div> : <div className='col-span-6'>
+              </div> : <div className='col-span-6' key={item._id}>
                 <img src={`${API_URI}/${item.name}`} alt="" className='h-[80px] w-full object-cover rounded' />
               </div>
             ))}
@@ -105,8 +105,6 @@ const HomePage: React.FunctionComponent = () => {
                 <Product img={item.images[0].name} title={item.name} price={formatPrice(item.price)} sale={`Đã bán ${item?.sale || 0}`} discount={item.discount} />
               </div>
             )) : null}
-
-
           </div>
         </div>
       </div>
