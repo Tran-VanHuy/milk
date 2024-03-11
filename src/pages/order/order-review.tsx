@@ -7,7 +7,7 @@ import { AddressDto } from "../../api/address/type";
 import { UserDto } from "../../api/user/type";
 import { BodyInfo, InfoOrder, OrderType } from "../../api/order/type";
 import axios from "axios";
-import { ORDER } from "../../api/api";
+import { API_URI, ORDER } from "../../api/api";
 import { formatPrice } from "../../components/format-price";
 import { createOrder } from "zmp-sdk";
 import { createDataOrder } from "../../api/order/api";
@@ -28,6 +28,7 @@ export const OverReview = () => {
     const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataInfoOrder, setDataOrder }: AppcontentType = useContext(AppContext);
 
     const [dataInfo, setDataInfo] = useState<InfoOrder>()
+
     const [quantity, setQuantity] = useState<number>(1)
     const [sheetVisible, setSheetVisible] = useState(false);
 
@@ -35,26 +36,37 @@ export const OverReview = () => {
 
     const onOrder = async () => {
 
-        const body = {
-            order: [
-                {
-                    productId: dataInfoOrder.productId,
-                    name: dataInfo?.name!,
-                    quantity: quantity,
-                    price: dataInfo?.priceDiscount!,
-                    address: dataAddressDefault.specificAddress,
+
+
+        try {
+            if (dataAddressDefault) {
+                const body: OrderType = {
+                    order: [
+                        {
+                            productId: dataInfoOrder.productId,
+                            name: dataInfo?.name!,
+                            quantity: quantity,
+                            price: dataInfo?.priceDiscount!,
+                            address: dataAddressDefault.specificAddress,
+                            userId: user.userId,
+                            nameItem: dataInfo?.nameItem,
+                            images: dataInfo?.images!
+                        }
+                    ],
+                    deliveryAddress: dataAddressDefault.specificAddress,
                     userId: user.userId
                 }
-            ],
-            deliveryAddress: dataAddressDefault.specificAddress,
-            userId: user.userId
-        }
-        try {
-            const res = await createDataOrder(body)
-            if (res.status === 200) {
-                setDataOrder(res.data)
-                nav("/order/success")
+                
+                const res = await createDataOrder(body)
+                if (res.status === 200) {
+                    setDataOrder(res.data)
+                    nav("/order/success")
+                }
+            } else {
+
+                nav("/new-address")
             }
+
         } catch (error) {
             console.log(error);
         }
@@ -135,7 +147,7 @@ export const OverReview = () => {
                 </div>
                 <div className="bg-white p-2 mb-2">
                     <div className="flex gap-2 mb-3">
-                        <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" width={85} height={85} className="rounded" />
+                        <img src={`${API_URI}/${dataInfo?.images}`} alt="" width={85} height={85} className="rounded" />
                         <div className="flex flex-col justify-between">
                             <div>
                                 <p className="line-clamp-1 text-gray-600 font-[400]">{dataInfo?.name}</p>

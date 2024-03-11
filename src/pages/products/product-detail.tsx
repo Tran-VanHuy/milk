@@ -25,11 +25,12 @@ interface AppcontentType {
     dataVoucher: VoucherType[],
     user: UserDto,
     dataProducts: ProductType[],
-    setDataInfoOrder: React.Dispatch<React.SetStateAction<BodyInfo>>
+    setDataInfoOrder: React.Dispatch<React.SetStateAction<BodyInfo>>,
+    getUser: () => void
 }
 export const ProductDetail = () => {
 
-    const { setShowBottomTab, productDetail, dataProductDetail, voucher, dataVoucher, user, dataProducts, setDataInfoOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, productDetail, dataProductDetail, voucher, dataVoucher, user, dataProducts, setDataInfoOrder, getUser }: AppcontentType = useContext(AppContext);
 
     const { id } = useParams()
     const nav = useNavigate()
@@ -69,6 +70,7 @@ export const ProductDetail = () => {
     const [idMS, setIdMS] = useState<string>();
     const [idSZ, setIdSZ] = useState<string>();
     const [dataCheckFavourite, setDataCheckFavourite] = useState<boolean>(false)
+    const [error, setError] = useState<boolean>(true)
 
     const onFavourite = async () => {
 
@@ -76,7 +78,7 @@ export const ProductDetail = () => {
 
             const body = {
 
-                userId: user._id,
+                userId: user.userId,
                 product: id
             }
 
@@ -94,7 +96,7 @@ export const ProductDetail = () => {
 
         try {
             const body: BodyCheckFavourite = {
-                userId: user._id!,
+                userId: user.userId!,
                 productId: id!
 
             }
@@ -115,6 +117,9 @@ export const ProductDetail = () => {
         setImageMS(data.image)
         setDataItemSZ(data.itemSZ)
         setNameProductSheet(data.name)
+        if (dataProductDetail.type === 2) {
+            setError(false)
+        }
         if (dataProductDetail?.type === 2) {
 
             const dataType2: ItemMsType = {
@@ -128,38 +133,48 @@ export const ProductDetail = () => {
     }
 
     const onItemSZ = (data: ItemSZType) => {
+        if (dataProductDetail.type === 1) {
+            setError(false)
+        }
         setIdSZ(data._id);
         setDataItemSZProduct(data);
     }
 
     const onBuyProducts = async (action: string) => {
-        if (dataProductDetail?.type !== 3) {
-            setSheetVisible(true)
+
+        if (user?.userId) {
+            if (dataProductDetail?.type !== 3) {
+                setSheetVisible(true)
+            } else {
+
+                if (action === "BUY") {
+                    setDataInfoOrder({
+                        productId: id!,
+                        type: 3,
+                        quantity: quantity
+                    }
+                    )
+                    nav(`/order-review`)
+                } else {
+                    const body: BodyCart = {
+                        product: id!,
+                        productId: id!,
+                        msId: idMS,
+                        szId: idSZ,
+                        type: dataProductDetail.type,
+                        userId: user.userId,
+                        image: dataProductDetail.images[0].name,
+                        quantity
+                    }
+
+                    await axios.post(CART.CREATE, body)
+                }
+            }
         } else {
 
-            if (action === "BUY") {
-                setDataInfoOrder({
-                    productId: id!,
-                    type: 3,
-                    quantity: quantity
-                }
-                )
-                nav(`/order-review`)
-            } else {
-                const body: BodyCart = {
-                    product: id!,
-                    productId: id!,
-                    msId: idMS,
-                    szId: idSZ,
-                    type: dataProductDetail.type,
-                    userId: user.userId,
-                    image: dataProductDetail.images[0].name,
-                    quantity
-                }
-
-                const res = await axios.post(CART.CREATE, body)
-            }
+            getUser()
         }
+
     }
 
     const addressDefault = async () => {
@@ -202,41 +217,50 @@ export const ProductDetail = () => {
 
     const onBuyCart = async () => {
 
-        if (typeBuy === "BUY") {
-            setDataInfoOrder({
-                productId: id!,
-                type: dataProductDetail.type,
-                quantity: quantity,
-                msId: idMS,
-                szId: idSZ,
+        try {
+
+            if (!error) {
+                if (user?.userId) {
+                    if (typeBuy === "BUY") {
+                        setDataInfoOrder({
+                            productId: id!,
+                            type: dataProductDetail.type,
+                            quantity: quantity,
+                            msId: idMS,
+                            szId: idSZ,
+                        }
+                        )
+                        nav(`/order-review`)
+                    } else {
+                        console.log();
+
+                        const body: BodyCart = {
+                            product: id!,
+                            productId: id!,
+                            msId: idMS,
+                            szId: idSZ,
+                            type: dataProductDetail.type,
+                            userId: user.userId,
+                            image: imageMS!,
+                            quantity
+                        }
+
+                        const res = await axios.post(CART.CREATE, body)
+
+                        if (res.data.status === 200) {
+                            setSheetVisible(false)
+                        }
+                    }
+                } else {
+                    getUser()
+                }
             }
-            )
-            nav(`/order-review`)
-        } else {
-            console.log();
+        } catch (error) {
 
-            const body: BodyCart = {
-                product: id!,
-                productId: id!,
-                msId: idMS,
-                szId: idSZ,
-                type: dataProductDetail.type,
-                userId: user.userId,
-                image: imageMS!,
-                quantity
-            }
+            console.log({ error });
 
-            const res = await axios.post(CART.CREATE, body)
-
-            if (res.data.status === 200) {
-                setSheetVisible(false)
-            }
-            // if (dataProductDetail?.type !== 1) {
-            //     console.log(idMS, idSZ);
-
-
-            // }
         }
+
     }
     useEffect(() => {
 
@@ -269,7 +293,7 @@ export const ProductDetail = () => {
                         <div className="mb-1">
                             <b className="text-red-500 text-[16px]">{dataProductDetail?.priceTitle}</b>
                         </div>
-                        {!dataProductDetail?.checkDiscount && <div className="flex gap-2 items-center mb-1">
+                        {dataProductDetail?.discount !== 0 && <div className="flex gap-2 items-center mb-1">
                             <del className="text-[12px] text-gray-500">{formatPrice(dataProductDetail?.price)}</del>
                             <div className="bg-red-500 bg-opacity-20 inline px-2 text-[11px] text-red-600 font-[500]"> Tiết kiệm tới {dataProductDetail?.discount}%</div>
                         </div>}
@@ -499,9 +523,12 @@ export const ProductDetail = () => {
                                 {dataProductDetail?.info?.itemMS?.map(item => (
                                     <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded" key={item._id} onClick={() => onItemMS(item)}>
                                         {item?.image && <img src={`${API_URI}/${item.image}`} alt="" width={20} height={20} />}
-                                        <p className="text-[14px] font-[500] active:text-red">{item.name}</p>
+                                        {item._id === idMS ? <p className="text-[14px] font-[500] text-red-500">{item.name}</p> : <p className="text-[14px] font-[500] active:text-red">{item.name}</p>}
                                     </div>
                                 ))}
+                            </div>
+                            <div>
+                                {!idMS && <p className="text-[12px] text-red-500">Chưa chọn thông tin sản phẩm!</p>}
                             </div>
                         </div>
                         {dataProductDetail?.type === 1 && dataItemSZ && dataItemSZ.length && <div>
@@ -510,12 +537,12 @@ export const ProductDetail = () => {
                                 {
                                     dataItemSZ.map(item => (
                                         <div className="border-[1px] py-1 pr-2 pl-1 flex gap-2 rounded" key={item._id} onClick={() => onItemSZ(item)}>
-                                            {/* <img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/466/874/products/7-1694767493719.jpg?v=1695012310270" alt="" width={20} height={20} /> */}
-                                            <p className="text-[14px] font-[500]">{item.name}</p>
+                                            {item._id === idSZ ? <p className="text-[14px] font-[500] text-red-500">{item.name}</p> : <p className="text-[14px] font-[500] active:text-red">{item.name}</p>}
                                         </div>
                                     ))
                                 }
                             </div>
+                            {!idSZ && <p className="text-[12px] text-red-500">Chưa chọn thông tin sản phẩm!</p>}
                         </div>
                         }
 

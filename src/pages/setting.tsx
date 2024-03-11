@@ -34,6 +34,18 @@ export const Setting = () => {
                         <div className="text-[14px]">Khuyến mãi (Voucher)</div>
                     </div>
                 </div>
+                <div className="p-2 text-[14px] text-gray-500">Đơn hàng</div>
+                <div className="bg-white p-2">
+                    <div className="border-b-[1px] pb-2 mb-2">
+                        <div className="text-[14px]">Đã đặt hàng</div>
+                    </div>
+                    <div className="border-b-[1px] pb-2 mb-2">
+                        <div className="text-[14px]">Đang vận chuyển</div>
+                    </div>
+                    <div>
+                        <div className="text-[14px]">Đã vận chuyển</div>
+                    </div>
+                </div>
                 <div className="p-2 text-[14px] text-gray-500">Banner</div>
                 <div className="bg-white p-2">
                     <div onClick={() => nav('banner-admin')}>
@@ -52,6 +64,7 @@ export const Setting = () => {
                         <div className="text-[14px]">Danh sách</div>
                     </div>
                 </div>
+               
             </div>
         </Page>
     )

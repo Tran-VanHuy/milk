@@ -23,6 +23,7 @@ export const Cart = () => {
 
     const [sheetVisible, setSheetVisible] = useState(false);
     const [dataCart, setDataCart] = useState<CartDto[]>();
+    const [idCart, setIdCart] = useState<string>()
 
     let arrayDataOrder: CartDto[] = [];
 
@@ -44,8 +45,6 @@ export const Cart = () => {
 
     const onCheck = async (item: CartDto) => {
         arrayDataOrder.push(item)
-        console.log("arrayDataOrder", arrayDataOrder);
-
     }
 
     const onBuy = async () => {
@@ -64,6 +63,20 @@ export const Cart = () => {
             setDataListInfoOrder(res.data.data)
         }
         nav("/list-order-review")
+    }
+
+    const onDelete = async () => {
+
+        try {
+            const res = await axios.delete(`${CART.DELETE}?_id=${idCart}&userId=${user.userId}`)
+            if (res.data.status === 200) {
+                setSheetVisible(false)
+                cart()
+            }
+        } catch (error) {
+
+            console.log({ error });
+        }
     }
 
     useEffect(() => {
@@ -102,7 +115,7 @@ export const Cart = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div onClick={() => setSheetVisible(true)}>
+                                <div onClick={() => { setSheetVisible(true); setIdCart(item._id) }}>
                                     <EllipsisOutlined className="text-[16px]" />
                                 </div>
                             </div>
@@ -128,7 +141,7 @@ export const Cart = () => {
             >
                 <Box>
                     <div className="px-2 pb-[30px]">
-                        <div className="flex items-center gap-2 pb-4">
+                        <div className="flex items-center gap-2 pb-4" onClick={() => onDelete()}>
                             <DeleteOutlined className="text-[16px] font-[500]" />
                             <span className="text-[16px] font-[500]">Xóa</span>
                         </div>

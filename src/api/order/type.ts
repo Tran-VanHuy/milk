@@ -2,12 +2,7 @@ export type InfoOrder = {
     _id?: string
     transportFee: number
     deliveryDate: number
-    images: [
-        {
-            uid: string
-            name: string
-        }
-    ],
+    images: string,
     name: string
     price: number
     discount: number
@@ -38,7 +33,7 @@ export type OrderType = {
     deliveryAddress: string
     type?: string
     price?: number
-
+    images?: string
 }
 
 export type ItemOrderType = {
@@ -49,6 +44,8 @@ export type ItemOrderType = {
     price: number
     address: string
     userId: string
+    nameItem?: string
+    images: string
 }
 
 export type BodyListInfoOrderType = {

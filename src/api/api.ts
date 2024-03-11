@@ -63,17 +63,22 @@ export const ORDER = {
     INFO: API_URI + "/order/info",
     CREATE: API_URI + "/order",
     LIST_INFO: API_URI + "/order/list-info",
+    GET_ALL: API_URI + "/order",
+    DELETE: API_URI + "/order/delete",
 }
 
 export const CART = {
 
     CREATE: API_URI + "/cart",
     GET_ALL: API_URI + "/cart",
-    TOTAL: API_URI + "/cart/check/total"
+    TOTAL: API_URI + "/cart/check/total",
+    DELETE: API_URI + "/cart/delete"
 }
 
 export const FAVOURITE = {
 
     CHECK: API_URI + "/favourite/check",
-    CREATE: API_URI + "/favourite"
+    CREATE: API_URI + "/favourite",
+    GET_ALL: API_URI + "/favourite",
+    DELETE: API_URI + "/favourite/delete"
 }

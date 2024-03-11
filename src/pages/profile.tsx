@@ -85,7 +85,7 @@ export const Profile = () => {
             <div className="p-2 bg-white mb-2">
                 <div className="flex justify-between items-center mb-5">
                     <div className="flex items-center gap-2"><ContainerOutlined className="text-[20px] text-blue-800 pt-1" /> <span className="font-[500]">Đơn mua</span></div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1" onClick={() => nav("/status-order")}>
                         <span className="text-[12px] text-gray-600">Xem lịch sử đơn hàng</span>
                         <RightOutlined className="text-[10px] text-gray-600 pt-1" />
                     </div>
@@ -102,12 +102,6 @@ export const Profile = () => {
                             <TruckOutlined className="text-[25px] text-gray-600" />
                         </div>
                         <span className="text-[12px]">Đang giao hàng</span>
-                    </div>
-                    <div className="text-center">
-                        <div>
-                            <TruckOutlined className="text-[25px] text-gray-600" />
-                        </div>
-                        <span className="text-[12px]">Đã giao hàng</span>
                     </div>
                     <div className="text-center">
                         <div>

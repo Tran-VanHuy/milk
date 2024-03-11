@@ -4,8 +4,10 @@ import { Header, Page } from "zmp-ui";
 import { AppContext } from "../../context/AppContext";
 import { EnvironmentOutlined, FieldTimeOutlined, InboxOutlined, MinusOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { InfoOrder, ListInfoOrderType } from "../../api/order/type";
+import { InfoOrder, ListInfoOrderType, OrderType } from "../../api/order/type";
 import { formatPrice } from "../../components/format-price";
+import { createDataOrder } from "../../api/order/api";
+import { API_URI } from "../../api/api";
 
 interface AppcontentType {
 
@@ -14,6 +16,7 @@ interface AppcontentType {
     addressDefault: (userId: string) => void
     user: UserDto
     dataListInfoOrder: ListInfoOrderType
+    setDataOrder: React.Dispatch<React.SetStateAction<OrderType>>
 }
 
 type PriceOrder = {
@@ -24,9 +27,39 @@ type PriceOrder = {
 
 export const ListOrderReview = () => {
 
-    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder, setDataOrder }: AppcontentType = useContext(AppContext);
     const [listorder, setListOrder] = useState<InfoOrder[]>()
     const [priceAllOrder, setPriceAllOrder] = useState<PriceOrder>()
+
+    const onOrder = async () => {
+        console.log(listorder);
+
+        const body: OrderType = {
+            order: listorder && listorder.length > 0 ? listorder?.map(item => ({
+                productId: item._id!,
+                name: item?.name!,
+                quantity: item.quantityProduct,
+                price: item?.priceDiscount!,
+                address: dataAddressDefault.specificAddress,
+                userId: user.userId,
+                nameItem: item?.nameItem!,
+                images: item.images
+            })) : [],
+            deliveryAddress: dataAddressDefault.specificAddress,
+            userId: user.userId
+        }
+        console.log({ body });
+
+        try {
+            const res = await createDataOrder(body)
+            if (res.status === 200) {
+                setDataOrder(res.data)
+                nav("/order/success")
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const nav = useNavigate()
 
@@ -52,6 +85,8 @@ export const ListOrderReview = () => {
             }
         }
     }
+
+
 
     useEffect(() => {
         if (user) {
@@ -87,7 +122,7 @@ export const ListOrderReview = () => {
                     <div key={item._id}>
                         <div className="bg-white p-2 mb-[1px]">
                             <div className="flex gap-2 mb-3">
-                                <img src="https://bizweb.dktcdn.net/100/466/874/products/9-jpeg-1700457098386.jpg?v=1700457347270" alt="" width={85} height={85} className="rounded" />
+                                <img src={`${API_URI}/${item.images}`} alt="" width={85} height={85} className="rounded" />
                                 <div className="flex flex-col justify-between">
                                     <div>
                                         <p className="line-clamp-1 text-gray-600 font-[400]">{item?.name}</p>
@@ -172,7 +207,7 @@ export const ListOrderReview = () => {
                     <b>Tổng</b>
                     <b>{formatPrice(priceAllOrder?.priceDiscount)}</b>
                 </div>
-                <div className=" bg-red-500 text-center py-2 rounded text-white font-bold">Đặt hàng</div>
+                <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onOrder()}>Đặt hàng</div>
             </div>
         </Page>
     )
