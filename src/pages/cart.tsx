@@ -14,11 +14,12 @@ interface AppcontentType {
 
     setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>,
     user: UserDto,
-    setDataListInfoOrder: React.Dispatch<React.SetStateAction<ListInfoOrderType>>
+    setDataListInfoOrder: React.Dispatch<React.SetStateAction<ListInfoOrderType>>,
+    totalCart: () => void
 }
 export const Cart = () => {
 
-    const { setShowBottomTab, user, setDataListInfoOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, user, setDataListInfoOrder, totalCart }: AppcontentType = useContext(AppContext);
     const nav = useNavigate()
 
     const [sheetVisible, setSheetVisible] = useState(false);
@@ -57,12 +58,13 @@ export const Cart = () => {
                 szId: item.szId
             }))
         }
-        console.log({ body });
-        const res = await axios.post(ORDER.LIST_INFO, body)
-        if (res.data.status === 200) {
-            setDataListInfoOrder(res.data.data)
+        if (body.products.length > 0) {
+            const res = await axios.post(ORDER.LIST_INFO, body)
+            if (res.data.status === 200) {
+                setDataListInfoOrder(res.data.data)
+            }
+            nav("/list-order-review")
         }
-        nav("/list-order-review")
     }
 
     const onDelete = async () => {
@@ -72,6 +74,7 @@ export const Cart = () => {
             if (res.data.status === 200) {
                 setSheetVisible(false)
                 cart()
+                totalCart()
             }
         } catch (error) {
 

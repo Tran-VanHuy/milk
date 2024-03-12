@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Box, ImageViewer, Page, Swiper, Sheet, Text, Button } from "zmp-ui";
+import { Box, ImageViewer, Page, Swiper, Sheet } from "zmp-ui";
 import { Header } from "../../components/headers/header";
 import { HeartFilled, HeartOutlined, MinusOutlined, PlusOutlined, RightOutlined, StarOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,7 +14,6 @@ import { AddressDto } from "../../api/address/type";
 import { BodyInfo } from "../../api/order/type";
 import { BodyCart } from "../../api/cart/type";
 import { BodyCheckFavourite } from "../../api/favourite/type";
-import { userState } from "../../state";
 
 interface AppcontentType {
 
@@ -27,10 +26,11 @@ interface AppcontentType {
     dataProducts: ProductType[],
     setDataInfoOrder: React.Dispatch<React.SetStateAction<BodyInfo>>,
     getUser: () => void
+    totalCart: () => void
 }
 export const ProductDetail = () => {
 
-    const { setShowBottomTab, productDetail, dataProductDetail, voucher, dataVoucher, user, dataProducts, setDataInfoOrder, getUser }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, productDetail, dataProductDetail, voucher, dataVoucher, user, dataProducts, setDataInfoOrder, getUser, totalCart }: AppcontentType = useContext(AppContext);
 
     const { id } = useParams()
     const nav = useNavigate()
@@ -167,7 +167,10 @@ export const ProductDetail = () => {
                         quantity
                     }
 
-                    await axios.post(CART.CREATE, body)
+                    const res = await axios.post(CART.CREATE, body)
+                    if (res.data.status === 200) {
+                        totalCart()
+                    }
                 }
             }
         } else {
@@ -232,7 +235,6 @@ export const ProductDetail = () => {
                         )
                         nav(`/order-review`)
                     } else {
-                        console.log();
 
                         const body: BodyCart = {
                             product: id!,
@@ -249,6 +251,7 @@ export const ProductDetail = () => {
 
                         if (res.data.status === 200) {
                             setSheetVisible(false)
+                            totalCart()
                         }
                     }
                 } else {

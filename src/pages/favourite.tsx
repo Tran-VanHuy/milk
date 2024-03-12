@@ -58,7 +58,7 @@ export const Favourite = () => {
     }, [])
     return (
         <Page>
-            <Header title="Yêu thích (30)" />
+            <Header title="Yêu thích" />
             <div className="pt-[44px] bg-white pb-4">
                 {dataFavourite && dataFavourite.length > 0 && dataFavourite.map(item => (
                     <div className="pl-2 pr-4 pt-5" key={item._id}>
