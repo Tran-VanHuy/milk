@@ -15,8 +15,6 @@ export const Notificaiton = () => {
     const nav = useNavigate();
 
     const [dataNotification, setDataNotification] = useState<NotificationType[]>()
-    console.log("dataNotification", dataNotification);
-
 
     const notification = async () => {
 
