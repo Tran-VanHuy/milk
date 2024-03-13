@@ -3,21 +3,27 @@ import { Page } from "zmp-ui";
 import { Header } from "../../components/headers/header";
 import { AppContext } from "../../context/AppContext";
 import { formatPrice } from "../../components/format-price";
-import { OrderType } from "../../api/order/type";
+import { BodyListInfoOrderType, ListInfoOrderType, OrderType } from "../../api/order/type";
 import { getAllOrder } from "../../api/order/api";
 import { UserDto } from "../../api/user/type";
 import { InboxOutlined } from "@ant-design/icons";
 import { API_URI, ORDER } from "../../api/api";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface AppcontentType {
 
-    setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>,
-    user: UserDto
+    setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>
+    setDataListInfoOrder: React.Dispatch<React.SetStateAction<ListInfoOrderType>>
+    user: UserDto,
+    setTypeOrder: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const StatusOrder = () => {
-    const { setShowBottomTab, user }: AppcontentType = useContext(AppContext);
+
+    const { setShowBottomTab, user, setDataListInfoOrder, setTypeOrder }: AppcontentType = useContext(AppContext);
+    const nav = useNavigate()
+
     const [dataStatusOrder, setDataStatusOrder] = useState<OrderType[]>()
     const [status, setStatus] = useState<string>("");
     const [idStatus, setIdStatus] = useState<number>(1);
@@ -43,6 +49,30 @@ export const StatusOrder = () => {
             type: "ĐÃ VẬN CHUYỂN"
         }
     ]
+
+    const onSeeOrder = async (item: OrderType) => {
+
+        const body: BodyListInfoOrderType = {
+            userId: user.userId,
+            products: item?.orders!.map(item => ({
+                productId: item.productId,
+                quantity: item.quantity || 1,
+                msId: item?.msId,
+                szId: item?.szId
+            }))
+        }
+
+        if (body.products.length > 0) {
+            const res = await axios.post(ORDER.LIST_INFO, body)
+            if (res.data.status === 200) {
+                setDataListInfoOrder(res.data.data)
+                nav("/list-order-review")
+                setTypeOrder(2)
+            }
+         
+        }
+
+    }
 
     const onDelete = async (_id: string) => {
 
@@ -88,8 +118,8 @@ export const StatusOrder = () => {
                 <div className="fixed w-full">
                     <div className="flex overflow-x-scroll pl-1 pt-2 bg-white border-t-[1px] border-b-[1px] text-nowrap">
                         {textStatus.map(item => item.id === idStatus ?
-                            <p className="font-[500] px-3 border-b-[2px] border-black pb-2" onClick={() => { setStatus(item.type); setIdStatus(item.id) }} key={item.id}>{item.name}</p>
-                            : <p className="font-[500] px-3 text-gray-500" onClick={() => { setStatus(item.type); setIdStatus(item.id) }} key={item.id}>{item.name}</p>)}
+                            <p className="font-[500] px-3 border-b-[2px] border-black pb-2 text-nowrap" onClick={() => { setStatus(item.type); setIdStatus(item.id) }} key={item.id}>{item.name}</p>
+                            : <p className="font-[500] px-3 text-gray-500 text-nowrap" onClick={() => { setStatus(item.type); setIdStatus(item.id) }} key={item.id}>{item.name}</p>)}
                     </div>
                 </div>
                 <div className="pt-[45px]">
@@ -129,6 +159,7 @@ export const StatusOrder = () => {
                                     {item.type === "ĐÃ ĐẶT HÀNG" && <button className="border-[1px] px-2 py-1 text-[14px]" onClick={() => onDelete(item._id!)}>Hủy đơn hàng</button>}
                                     {item.type === "ĐANG VẬN CHUYỂN" && <button className="border-[1px] px-2 py-1 text-[14px]">Liên hệ với người bán</button>}
                                     {item.type === "ĐÃ VẬN CHUYỂN" && <button className="border-[1px] px-2 py-1 text-[14px]">Đánh giá</button>}
+                                    <button className="border-[1px] px-2 py-1 text-[14px] ml-2" onClick={() => onSeeOrder(item)}>Xem</button>
                                 </div>
                             </div>
                         </div>

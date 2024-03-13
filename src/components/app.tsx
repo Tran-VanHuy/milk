@@ -28,6 +28,7 @@ import { Cart } from '../pages/cart';
 import { OrderSuccess } from '../pages/order/order-success';
 import { ListOrderReview } from '../pages/order/list-order-review';
 import { StatusOrder } from '../pages/order/status-order';
+import { Search } from '../pages/search';
 
 
 
@@ -67,6 +68,8 @@ const MyApp = () => {
                 <Route path="/setting/ads-admin/create/" element={<CreateAdsAdmin></CreateAdsAdmin>}></Route>
                 <Route path="/setting/ads-admin/update/:id" element={<CreateAdsAdmin></CreateAdsAdmin>}></Route>
                 <Route path="/cart" element={<Cart></Cart>}></Route>
+                <Route path="/search" element={<Search></Search>}></Route>
+
               </AnimationRoutes>
               <BottomNavigationPage />
             </ZMPRouter>

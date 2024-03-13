@@ -1,4 +1,4 @@
-import { DeleteOutlined, EllipsisOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EllipsisOutlined, InboxOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Header, Page, Sheet } from "zmp-ui";
 import { AppContext } from "../context/AppContext";
@@ -14,12 +14,13 @@ interface AppcontentType {
 
     setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>,
     user: UserDto,
-    setDataListInfoOrder: React.Dispatch<React.SetStateAction<ListInfoOrderType>>,
+    setDataListInfoOrder: React.Dispatch<React.SetStateAction<ListInfoOrderType>>
     totalCart: () => void
+    setTypeOrder: React.Dispatch<React.SetStateAction<number>>
 }
 export const Cart = () => {
 
-    const { setShowBottomTab, user, setDataListInfoOrder, totalCart }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, user, setDataListInfoOrder, totalCart, setTypeOrder }: AppcontentType = useContext(AppContext);
     const nav = useNavigate()
 
     const [sheetVisible, setSheetVisible] = useState(false);
@@ -62,8 +63,9 @@ export const Cart = () => {
             const res = await axios.post(ORDER.LIST_INFO, body)
             if (res.data.status === 200) {
                 setDataListInfoOrder(res.data.data)
+                setTypeOrder(1)
+                nav("/list-order-review")
             }
-            nav("/list-order-review")
         }
     }
 
@@ -92,7 +94,7 @@ export const Cart = () => {
         <Page>
             <Header title="Giỏ hàng" />
             <div className="pt-[50px] flex flex-col gap-2 pb-[130px]">
-                {dataCart && dataCart.length > 0 && dataCart.map(item => (
+                {dataCart && dataCart.length > 0 ? dataCart.map(item => (
                     <div className="flex p-2 bg-white items-center gap-2" key={item._id}>
                         <div>
                             <input type="radio" name="" id="" onChange={() => onCheck(item)} />
@@ -124,15 +126,19 @@ export const Cart = () => {
                             </div>
                         </div>
                     </div>
-                ))}
+                )) : <div className="bg-white p-3 flex flex-col justify-center items-center">
+                    <InboxOutlined className="text-[32px] text-gray-500" />
+                    <span className=" text-gray-400">Không có sản phẩm</span>
+                </div>}
 
-                <div className="px-2 grid grid-cols-1 gap-2 bg-white absolute bottom-0 w-full pb-[40px] pt-[20px] border-t-[1px]">
+                {dataCart && dataCart.length > 0 && <div className="px-2 grid grid-cols-1 gap-2 bg-white absolute bottom-0 w-full pb-[40px] pt-[20px] border-t-[1px]">
                     {/* <div className="flex justify-between text-[16px]">
                         <b>Tổng</b>
                         <b>{formatPrice(10000)}</b>
                     </div> */}
                     <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onBuy()}>Đặt hàng</div>
-                </div>
+                </div>}
+
             </div>
             <Sheet
                 visible={sheetVisible}

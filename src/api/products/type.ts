@@ -55,3 +55,9 @@ export type ItemSZType = {
     discount: number,
     quantity: number,
 }
+
+export type SearchProductsType = {
+
+    _id?: string,
+    name: string
+}

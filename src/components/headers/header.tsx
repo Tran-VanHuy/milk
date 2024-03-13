@@ -19,11 +19,11 @@ export const Header = ({ showNav }: Props) => {
     return (
         <div className='fixed w-full py-2 z-10 px-[15px] flex justify-between gap-[20px] items-center bg-white'>
             {showNav === true && <CloseOutlined onClick={() => nav("/")} />}
-            <div className='flex-1 relative'>
+            <div className='flex-1 relative' onClick={() => nav("/search")}>
                 <div className='absolute top-0 bottom-0 left-2 flex items-center justify-center'>
                     <SearchOutlined />
                 </div>
-                <input type="text" placeholder="Tìm kiếm sản phẩm" className='py-2 pl-[30px] pr-2 w-full bg-gray-200' />
+                <input type="text" placeholder="Tìm kiếm sản phẩm" className='py-2 pl-[30px] pr-2 w-full bg-gray-200' onClick={() => nav("/search")}/>
             </div>
             <div className="mr-[95px]">
                 <div className="relative" onClick={() => nav("/cart")}>

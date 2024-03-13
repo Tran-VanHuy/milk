@@ -34,6 +34,7 @@ export const AppProvider = ({ children }) => {
     const [dataTotalCart, setDataTotalCart] = useState<number>()
     const [dataOrder, setDataOrder] = useState<OrderType>()
     const [dataListInfoOrder, setDataListInfoOrder] = useState<ListInfoOrderType>()
+    const [typeOrder, setTypeOrder] = useState<number>(1)
 
     const totalCart = async () => {
 
@@ -199,7 +200,9 @@ export const AppProvider = ({ children }) => {
             setDataOrder,
             dataOrder,
             setDataListInfoOrder,
-            dataListInfoOrder
+            dataListInfoOrder,
+            setTypeOrder,
+            typeOrder
         }}>
             {children}
         </AppContext.Provider>

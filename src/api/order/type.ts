@@ -13,6 +13,8 @@ export type InfoOrder = {
     priceDiscount: number
     priceDiscount1: number
     nameItem?: string
+    msId: string
+    szId: string
 }
 
 export type BodyInfo = {
@@ -34,6 +36,8 @@ export type OrderType = {
     type?: string
     price?: number
     images?: string
+    msId?: string
+    szId?: string
 }
 
 export type ItemOrderType = {
@@ -46,6 +50,8 @@ export type ItemOrderType = {
     userId: string
     nameItem?: string
     images: string
+    msId?: string
+    szId?: string
 }
 
 export type BodyListInfoOrderType = {

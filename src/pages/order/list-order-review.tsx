@@ -16,7 +16,8 @@ interface AppcontentType {
     addressDefault: (userId: string) => void
     user: UserDto
     dataListInfoOrder: ListInfoOrderType
-    setDataOrder: React.Dispatch<React.SetStateAction<OrderType>>
+    setDataOrder: React.Dispatch<React.SetStateAction<OrderType>>,
+    typeOrder: number
 }
 
 type PriceOrder = {
@@ -27,12 +28,11 @@ type PriceOrder = {
 
 export const ListOrderReview = () => {
 
-    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder, setDataOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder, setDataOrder, typeOrder }: AppcontentType = useContext(AppContext);
     const [listorder, setListOrder] = useState<InfoOrder[]>()
     const [priceAllOrder, setPriceAllOrder] = useState<PriceOrder>()
 
     const onOrder = async () => {
-        console.log(listorder);
 
         const body: OrderType = {
             order: listorder && listorder.length > 0 ? listorder?.map(item => ({
@@ -43,12 +43,13 @@ export const ListOrderReview = () => {
                 address: dataAddressDefault.specificAddress,
                 userId: user.userId,
                 nameItem: item?.nameItem!,
-                images: item.images
+                images: item.images,
+                msId: item?.msId,
+                szId: item?.szId
             })) : [],
             deliveryAddress: dataAddressDefault.specificAddress,
             userId: user.userId
         }
-        console.log({ body });
 
         try {
             const res = await createDataOrder(body)
@@ -133,11 +134,12 @@ export const ListOrderReview = () => {
                                             <p className="font-bold">{formatPrice(item?.priceDiscount1)}</p>
                                             {item?.priceDiscount1 !== item?.price && <del className="text-[14px] text-gray-500">{formatPrice(item?.price)}</del>}
                                         </div>
-                                        <div className="flex items-center">
+                                        {typeOrder !== 2 && <div className="flex items-center">
                                             <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center" onClick={() => onQuantity("MINUS", item._id!)}><MinusOutlined className="text-[12px]" /></div>
                                             <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center text-[14px] font-[500]">{item.quantityProduct}</div>
                                             <div className="border-[1px] w-[25px] h-[25px] flex items-center justify-center" onClick={() => onQuantity("PLUS", item._id!)}><PlusOutlined className="text-[12px]" /></div>
-                                        </div>
+                                        </div>}
+
                                     </div>
                                 </div>
                             </div>
@@ -207,7 +209,8 @@ export const ListOrderReview = () => {
                     <b>Tổng</b>
                     <b>{formatPrice(priceAllOrder?.priceDiscount)}</b>
                 </div>
-                <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onOrder()}>Đặt hàng</div>
+                {typeOrder === 2 ? <div className=" bg-red-500 text-center py-2 rounded text-white font-bold">Hủy đơn hàng</div> : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onOrder()}>Đặt hàng</div>}
+
             </div>
         </Page>
     )
