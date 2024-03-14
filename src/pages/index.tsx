@@ -75,7 +75,7 @@ const HomePage: React.FunctionComponent = () => {
             <div className='pb-2'>
               <div className='pt-[70px] grid grid-cols-12 gap-2  overflow-x-auto '>
                 {dataCategoryProducts && dataCategoryProducts.length > 0 && dataCategoryProducts.map(item => (
-                  <div className='col-span-3 text-center flex justify-center flex-col items-center' key={item._id}>
+                  <div className='col-span-3 text-center flex justify-center flex-col items-center' key={item._id} onClick={() => nav(`/list-product-category/${item.name}/${item._id}`)}>
                     <div>
                       <img src={`${API_URI}/${item?.image}`} alt="" className='w-[45px] h-[45px] rounded-lg' />
                     </div>

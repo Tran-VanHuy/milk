@@ -44,7 +44,7 @@ export const Search = () => {
         }
     }, [inputSearch])
     return (
-        <Page>
+        <Page className="!overflow-hidden">
             <div className='w-full py-2 z-10 px-[15px] flex justify-between gap-[20px] items-center bg-white border-b-[1px]'>
                 <CloseOutlined onClick={() => nav("/")} />
                 <div className='flex-1 relative'>
@@ -76,7 +76,7 @@ export const Search = () => {
                 <div className="bg-white text-red-600 px-2 mb-2 py-1 font">
                    <b> Gợi ý sản phẩm</b>
                 </div>
-                <div className="h-[350px] overflow-auto">
+                <div className="max-h-[450px] overflow-auto">
                     <ProductSuggestions />
                 </div>
             </div>

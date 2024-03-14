@@ -17,11 +17,12 @@ interface AppcontentType {
     setDataListInfoOrder: React.Dispatch<React.SetStateAction<ListInfoOrderType>>
     user: UserDto,
     setTypeOrder: React.Dispatch<React.SetStateAction<number>>
+    setStatusOrder:  React.Dispatch<React.SetStateAction<string>>
 }
 
 export const StatusOrder = () => {
 
-    const { setShowBottomTab, user, setDataListInfoOrder, setTypeOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, user, setDataListInfoOrder, setTypeOrder, setStatusOrder }: AppcontentType = useContext(AppContext);
     const nav = useNavigate()
 
     const [dataStatusOrder, setDataStatusOrder] = useState<OrderType[]>()
@@ -51,7 +52,7 @@ export const StatusOrder = () => {
     ]
 
     const onSeeOrder = async (item: OrderType) => {
-
+        
         const body: BodyListInfoOrderType = {
             userId: user.userId,
             products: item?.orders!.map(item => ({
@@ -68,8 +69,8 @@ export const StatusOrder = () => {
                 setDataListInfoOrder(res.data.data)
                 nav("/list-order-review")
                 setTypeOrder(2)
+                setStatusOrder(item?.type!)
             }
-         
         }
 
     }
@@ -116,10 +117,10 @@ export const StatusOrder = () => {
             <Header showNav={true} />
             <div className="pt-[52px]">
                 <div className="fixed w-full">
-                    <div className="flex overflow-x-scroll pl-1 pt-2 bg-white border-t-[1px] border-b-[1px] text-nowrap">
+                    <div className="flex overflow-x-scroll pl-1 pt-2 bg-white border-t-[1px] border-b-[1px] text-nowrap" style={{whiteSpace: "nowrap"}}>
                         {textStatus.map(item => item.id === idStatus ?
-                            <p className="font-[500] px-3 border-b-[2px] border-black pb-2 text-nowrap" onClick={() => { setStatus(item.type); setIdStatus(item.id) }} key={item.id}>{item.name}</p>
-                            : <p className="font-[500] px-3 text-gray-500 text-nowrap" onClick={() => { setStatus(item.type); setIdStatus(item.id) }} key={item.id}>{item.name}</p>)}
+                            <p className="font-[500] px-3 border-b-[2px] border-black pb-2 text-nowrap"  style={{whiteSpace: "nowrap"}} onClick={() => { setStatus(item.type); setIdStatus(item.id) }} key={item.id}>{item.name}</p>
+                            : <p className="font-[500] px-3 text-gray-500 text-nowrap"  style={{whiteSpace: "nowrap"}}  onClick={() => { setStatus(item.type); setIdStatus(item.id) }} key={item.id}>{item.name}</p>)}
                     </div>
                 </div>
                 <div className="pt-[45px]">

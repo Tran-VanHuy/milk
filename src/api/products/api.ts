@@ -1,10 +1,10 @@
 import axios from "axios"
 import { PRODUCT } from "../api"
 
-export const getAllProducts = async (skip: number, limit: number, status) => {
+export const getAllProducts = async (skip: number, limit: number, status: string, category: string) => {
 
     const checkStatus = status ? `&status=${status}` : "";
-    const res = await axios.get(`${PRODUCT.GET_ALL}?limit=${limit}&skip=${skip}${checkStatus}`)
+    const res = await axios.get(`${PRODUCT.GET_ALL}?limit=${limit}&skip=${skip}${checkStatus}&category=${category}`)
     return res.data
 }
 

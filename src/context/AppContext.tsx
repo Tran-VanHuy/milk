@@ -16,6 +16,8 @@ import { AddressDto } from "../api/address/type";
 import { getAddressDefault } from "../api/address/api";
 import { BodyInfo, ListInfoOrderType, OrderType } from "../api/order/type";
 import { checkTotalCart } from "../api/cart/api";
+import { getAllNotification } from "../api/notification/api";
+import { NotificationType } from "../api/notification/type";
 
 export const AppContext: any = createContext({});
 
@@ -35,6 +37,25 @@ export const AppProvider = ({ children }) => {
     const [dataOrder, setDataOrder] = useState<OrderType>()
     const [dataListInfoOrder, setDataListInfoOrder] = useState<ListInfoOrderType>()
     const [typeOrder, setTypeOrder] = useState<number>(1)
+    const [dataNotification, setDataNotification] = useState<NotificationType[]>()
+    const [statusOrder, setStatusOrder] = useState<string>();
+
+    const notification = async (userId: string) => {
+
+        try {
+
+            const res = await getAllNotification((userId || ""));
+            if (res.status === 200) {
+
+                setDataNotification(res.data)
+            }
+
+        } catch (error) {
+
+            console.log({ error });
+
+        }
+    }
 
     const totalCart = async () => {
 
@@ -102,7 +123,7 @@ export const AppProvider = ({ children }) => {
 
     const getUser = async () => {
         try {
-            
+
             const { userInfo } = await getUserInfo({});
             let { number } = await getPhoneNumber({});
 
@@ -138,10 +159,10 @@ export const AppProvider = ({ children }) => {
         }
     }
 
-    const products = async (limit: number, skip: number, status: boolean) => {
+    const products = async (limit: number, skip: number, status: string, category?: string) => {
 
         try {
-            const res = await getAllProducts(limit, skip, status)
+            const res = await getAllProducts(limit, skip, status, (category || ""))
 
             setDataProducts(res.data)
         } catch (error) {
@@ -202,7 +223,11 @@ export const AppProvider = ({ children }) => {
             setDataListInfoOrder,
             dataListInfoOrder,
             setTypeOrder,
-            typeOrder
+            typeOrder,
+            notification,
+            dataNotification,
+            setStatusOrder,
+            statusOrder
         }}>
             {children}
         </AppContext.Provider>

@@ -1,39 +1,25 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header, Page } from "zmp-ui";
-import { AppContext } from "../context/AppContext";
-import { getAllNotification } from "../api/notification/api";
-import { NotificationType } from "../api/notification/type";
-import { API_URI } from "../api/api";
+import { AppContext } from "../../context/AppContext";
+import { NotificationType } from "../../api/notification/type";
+import { API_URI } from "../../api/api";
 import moment from "moment";
+import { UserDto } from "../../api/user/type";
 interface AppcontentType {
 
     setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>
+    notification: (userId: string) => void,
+    dataNotification: NotificationType[]
+    user: UserDto
 }
 export const Notificaiton = () => {
-    const { setShowBottomTab }: AppcontentType = useContext(AppContext);
+
+    const { setShowBottomTab, notification, dataNotification, user }: AppcontentType = useContext(AppContext);
     const nav = useNavigate();
 
-    const [dataNotification, setDataNotification] = useState<NotificationType[]>()
-
-    const notification = async () => {
-
-        try {
-
-            const res = await getAllNotification();
-            if (res.status === 200) {
-
-                setDataNotification(res.data)
-            }
-
-        } catch (error) {
-
-            console.log({ error });
-
-        }
-    }
     useEffect(() => {
-        notification()
+        notification(user.userId)
         setShowBottomTab(true)
     }, [])
     return (
@@ -49,7 +35,7 @@ export const Notificaiton = () => {
                         <div className="py-2 px-4" key={item._id}>
                             <div className="flex gap-3 border-b-[1px] pb-2 [&:last-child]:border-0">
                                 <img src={`${API_URI}/${item.image}`} alt="" className="w-[45px] h-[45px]" />
-                                <div onClick={() => nav(item.link)}>
+                                <div onClick={() => nav(item?.link || `/product/${item.productId}`)}>
                                     <p className="text-[14px] font-[500] line-clamp-2">{item.title}</p>
                                     <div className="text-[14px] text-gray-500 line-clamp-4">
                                         {item.shortContent}

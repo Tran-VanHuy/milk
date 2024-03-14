@@ -24,3 +24,12 @@ export type addressVN = {
     id?: string
     name: string
 }
+
+export type SelectUser = {
+    _id?: string,
+    userId: string,
+    avatar?: string,
+    name: string,
+    phone: string,
+    address?: AddressDto
+}

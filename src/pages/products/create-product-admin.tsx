@@ -94,7 +94,6 @@ export const CreateProductAdmin = () => {
         } catch (error) {
 
             console.log({ error });
-
         }
     }
 
@@ -119,7 +118,7 @@ export const CreateProductAdmin = () => {
                 <div className="bg-white p-2 mb-3">
                     <input type="text" placeholder="Tên sản phẩm (*)" className="py-2 px-2 mb-2 w-full bg-gray-100" onChange={(e) => setFormProduct({ ...formProduct!, name: e.target.value })} />
                     <div className="mb-2">
-                        <SelecMulti setMultiSelect={setMultiSelect} dataSelect={dataSelect!} />
+                        <SelecMulti setMultiSelect={setMultiSelect} dataSelect={dataSelect!} typeSelect="multiple" placeholder="Danh mục" />
                     </div>
                     <div className="grid grid-cols-3 gap-2">
                         <input type="number" placeholder="Giá tiền (VND) (*)" className="col-span-1 py-2 px-2 bg-gray-100" onChange={(e) => setFormProduct({ ...formProduct!, price: Number(e.target.value) })} />

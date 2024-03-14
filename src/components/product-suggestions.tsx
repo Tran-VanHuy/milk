@@ -7,17 +7,22 @@ import { formatPrice } from "./format-price";
 
 interface AppcontentType {
 
-    products: (limit: number, skip: number, status: string | boolean) => void
+    products: (limit: number, skip: number, status: string | boolean, category?: string) => void
     dataProducts: ProductType[]
 }
 
-export const ProductSuggestions = () => {
+type Props = {
+
+    category?: string
+}
+
+export const ProductSuggestions = ({ category }: Props) => {
 
     const { products, dataProducts }: AppcontentType = useContext(AppContext)
     const nav = useNavigate()
 
     useEffect(() => {
-        products(0, 8, true)
+        products(0, 8, true, category)
     }, [])
 
     return (

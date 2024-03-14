@@ -1,8 +1,9 @@
-export const API_URI = "http://192.168.1.10:3001/v1";
+export const API_URI = "http://192.168.1.9:3001/v1";
 
 export const USER = {
     CREATE: API_URI + "/user",
-    FIND_ONE: API_URI + "/user/findOne"
+    FIND_ONE: API_URI + "/user/findOne",
+    GET_ALL: API_URI + "/user"
 }
 
 export const ADDRESS = {
@@ -87,5 +88,6 @@ export const FAVOURITE = {
 export const NOTIFICATION = {
 
     CREATE: API_URI + "/notification",
-    GET_ALL: API_URI + "/notification"
+    GET_ALL: API_URI + "/notification",
+    DELETE: API_URI + "/notification"
 }

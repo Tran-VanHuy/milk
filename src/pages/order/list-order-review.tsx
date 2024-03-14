@@ -17,7 +17,8 @@ interface AppcontentType {
     user: UserDto
     dataListInfoOrder: ListInfoOrderType
     setDataOrder: React.Dispatch<React.SetStateAction<OrderType>>,
-    typeOrder: number
+    typeOrder: number,
+    statusOrder: string
 }
 
 type PriceOrder = {
@@ -28,7 +29,7 @@ type PriceOrder = {
 
 export const ListOrderReview = () => {
 
-    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder, setDataOrder, typeOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder, setDataOrder, typeOrder, statusOrder }: AppcontentType = useContext(AppContext);
     const [listorder, setListOrder] = useState<InfoOrder[]>()
     const [priceAllOrder, setPriceAllOrder] = useState<PriceOrder>()
 
@@ -86,8 +87,6 @@ export const ListOrderReview = () => {
             }
         }
     }
-
-
 
     useEffect(() => {
         if (user) {
@@ -188,6 +187,13 @@ export const ListOrderReview = () => {
                 <div className="bg-white p-2 mb-2">
                     <p className="font-[500] mb-3">Tóm tắt đơn hàng</p>
                     <div className="flex flex-col gap-2 text-[14px]">
+                        {statusOrder &&
+                            <div className="flex justify-between text-gray-600">
+                                <span>Trạng thái đơn hàng</span>
+                                <span>{statusOrder}</span>
+                            </div>
+                        }
+
                         <div className="flex justify-between text-gray-600">
                             <span>Tổng phụ</span>
                             <span>{formatPrice(priceAllOrder?.subtotal)}</span>
@@ -209,7 +215,7 @@ export const ListOrderReview = () => {
                     <b>Tổng</b>
                     <b>{formatPrice(priceAllOrder?.priceDiscount)}</b>
                 </div>
-                {typeOrder === 2 ? <div className=" bg-red-500 text-center py-2 rounded text-white font-bold">Hủy đơn hàng</div> : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onOrder()}>Đặt hàng</div>}
+                {typeOrder === 2 ? statusOrder === "ĐÃ ĐẶT HÀNG" ? <div className=" bg-red-500 text-center py-2 rounded text-white font-bold">Hủy đơn hàng</div> : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => nav("/")}>Xác nhận</div> : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onOrder()}>Đặt hàng</div>}
 
             </div>
         </Page>

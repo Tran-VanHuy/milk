@@ -64,7 +64,7 @@ export const CreateVoucherAdmin = () => {
                 <div className="bg-white p-2 mb-3">
                     <input type="text" placeholder="Tên khuyến mãi" className="py-2 px-2 mb-2 w-full bg-gray-100" onChange={(e) => setFormVoucher({ ...formVoucher!, name: e.target.value })} />
                     <div className="mb-2">
-                        <SelecMulti setMultiSelect={setMultiSelect} dataSelect={dataSelect!} />
+                        <SelecMulti setMultiSelect={setMultiSelect} dataSelect={dataSelect!} placeholder="Liên kết sản phẩm" typeSelect="multiple" />
                     </div>
                     <input type="text" placeholder="Nội dụng (*)" className="w-full mb-2 py-2 px-2 bg-gray-100" onChange={(e) => setFormVoucher({ ...formVoucher!, content: e.target.value })} />
                     <div className="grid grid-cols-2 gap-2">

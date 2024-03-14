@@ -10,7 +10,7 @@ import { AppProvider } from '../context/AppContext';
 import { Profile } from '../pages/profile';
 import { Address } from '../pages/address/address';
 import { NewAddress } from '../pages/address/new-address';
-import { Notificaiton } from '../pages/notification';
+import { Notificaiton } from '../pages/notification/notification';
 import { Favourite } from '../pages/favourite';
 import { News } from '../pages/news';
 import { Setting } from '../pages/setting';
@@ -29,6 +29,9 @@ import { OrderSuccess } from '../pages/order/order-success';
 import { ListOrderReview } from '../pages/order/list-order-review';
 import { StatusOrder } from '../pages/order/status-order';
 import { Search } from '../pages/search';
+import { NotificationAdmin } from '../pages/notification/notification-admin';
+import { CreateNotificationAdmin } from '../pages/notification/create-notification-admin';
+import { ListProductCategory } from '../pages/products/list-product-category';
 
 
 
@@ -54,6 +57,7 @@ const MyApp = () => {
                 <Route path="/favourite" element={<Favourite></Favourite>}></Route>
                 <Route path="/news" element={<News></News>}></Route>
                 <Route path="/setting" element={<Setting></Setting>}></Route>
+                <Route path="/list-product-category/:title/:id" element={<ListProductCategory></ListProductCategory>}></Route>
                 <Route path="/setting/list-product-admin" element={<ListProductAdmin></ListProductAdmin>}></Route>
                 <Route path="/setting/list-product-admin/create" element={<CreateProductAdmin></CreateProductAdmin>}></Route>
                 <Route path="/setting/list-voucher" element={<ListVoucherAdmin></ListVoucherAdmin>}></Route>
@@ -69,7 +73,8 @@ const MyApp = () => {
                 <Route path="/setting/ads-admin/update/:id" element={<CreateAdsAdmin></CreateAdsAdmin>}></Route>
                 <Route path="/cart" element={<Cart></Cart>}></Route>
                 <Route path="/search" element={<Search></Search>}></Route>
-
+                <Route path="/notification-admin" element={<NotificationAdmin></NotificationAdmin>}></Route>
+                <Route path="/notification-admin/create" element={<CreateNotificationAdmin></CreateNotificationAdmin>}></Route>
               </AnimationRoutes>
               <BottomNavigationPage />
             </ZMPRouter>

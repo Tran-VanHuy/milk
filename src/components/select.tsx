@@ -1,14 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { Select, Space } from 'antd';
-import { CategoryProducts } from '../api/category-product/type';
-import { AppContext } from '../context/AppContext';
-
-interface AppcontentType {
-
-  categoryProducts: () => void
-  dataCategoryProducts: CategoryProducts[]
-
-}
 
 export type dataSelectType = {
 
@@ -20,8 +11,10 @@ export type Props = {
 
   setMultiSelect: React.Dispatch<React.SetStateAction<string[] | undefined>>
   dataSelect: dataSelectType[]
+  placeholder: string
+  typeSelect: string
 }
-const SelecMulti = ({ setMultiSelect, dataSelect }: Props) => {
+const SelecMulti = ({ setMultiSelect, dataSelect, placeholder, typeSelect }: Props) => {
 
 
   const handleChange = (value: string[]) => {
@@ -30,16 +23,26 @@ const SelecMulti = ({ setMultiSelect, dataSelect }: Props) => {
   };
 
   return (
-    <Space style={{ width: '100%' }} direction="vertical">
-      {dataSelect && dataSelect.length > 0 && <Select
-        mode="multiple"
-        allowClear
-        style={{ width: '100%' }}
-        placeholder="Danh mục"
-        onChange={handleChange}
-        options={dataSelect}
-      />}
-    </Space>
+    <>
+      <Space style={{ width: '100%' }} direction="vertical">
+        {typeSelect === "multiple" ? <Select
+          mode="multiple"
+          allowClear
+          style={{ width: '100%' }}
+          placeholder={placeholder}
+          onChange={handleChange}
+          options={dataSelect}
+        /> : <Select
+          allowClear
+          style={{ width: '100%' }}
+          placeholder={placeholder}
+          onChange={handleChange}
+          options={dataSelect}
+        />}
+
+      </Space>
+    </>
+
   )
 }
 
