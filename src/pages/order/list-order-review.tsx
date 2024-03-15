@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AddressDto, UserDto } from "../../api/user/type";
-import { Header, Page } from "zmp-ui";
+import { Box, Header, Page, Sheet } from "zmp-ui";
 import { AppContext } from "../../context/AppContext";
-import { EnvironmentOutlined, FieldTimeOutlined, InboxOutlined, MinusOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EnvironmentOutlined, EyeOutlined, FieldTimeOutlined, InboxOutlined, MinusOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { InfoOrder, ListInfoOrderType, OrderType } from "../../api/order/type";
+import { BodyChangeStatusOrderType, InfoOrder, ListInfoOrderType, OrderType } from "../../api/order/type";
 import { formatPrice } from "../../components/format-price";
-import { createDataOrder } from "../../api/order/api";
+import { changeStatusOrder, createDataOrder } from "../../api/order/api";
 import { API_URI } from "../../api/api";
 
 interface AppcontentType {
@@ -16,9 +16,11 @@ interface AppcontentType {
     addressDefault: (userId: string) => void
     user: UserDto
     dataListInfoOrder: ListInfoOrderType
-    setDataOrder: React.Dispatch<React.SetStateAction<OrderType>>,
-    typeOrder: number,
+    setDataOrder: React.Dispatch<React.SetStateAction<OrderType>>
+    typeOrder: number
     statusOrder: string
+    idOrder: string
+    setStatusOrder: React.Dispatch<React.SetStateAction<string>>
 }
 
 type PriceOrder = {
@@ -29,9 +31,13 @@ type PriceOrder = {
 
 export const ListOrderReview = () => {
 
-    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder, setDataOrder, typeOrder, statusOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder, setStatusOrder, setDataOrder, typeOrder, statusOrder, idOrder }: AppcontentType = useContext(AppContext);
+    console.log(dataListInfoOrder._id);
+    console.log("statusOrder", statusOrder);
+
     const [listorder, setListOrder] = useState<InfoOrder[]>()
     const [priceAllOrder, setPriceAllOrder] = useState<PriceOrder>()
+    const [sheetVisible, setSheetVisible] = useState(false);
 
     const onOrder = async () => {
 
@@ -88,6 +94,32 @@ export const ListOrderReview = () => {
         }
     }
 
+    const onChangeStatusOrder = async (action: string) => {
+
+        try {
+
+            if (user.role === "ADMIN") {
+
+                const body: BodyChangeStatusOrderType = {
+
+                    userId: user.userId,
+                    type: action,
+                    orderId: idOrder
+                }
+                const res = await changeStatusOrder(body)
+                setStatusOrder(action)
+                if (res?.data) {
+
+                    
+                setSheetVisible(false)
+
+                }
+
+            }
+        } catch (error) {
+
+        }
+    }
     useEffect(() => {
         if (user) {
 
@@ -215,9 +247,36 @@ export const ListOrderReview = () => {
                     <b>Tổng</b>
                     <b>{formatPrice(priceAllOrder?.priceDiscount)}</b>
                 </div>
-                {typeOrder === 2 ? statusOrder === "ĐÃ ĐẶT HÀNG" ? <div className=" bg-red-500 text-center py-2 rounded text-white font-bold">Hủy đơn hàng</div> : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => nav("/")}>Xác nhận</div> : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onOrder()}>Đặt hàng</div>}
 
+                {user.role === "ADMIN" ? typeOrder === 2 &&
+                    <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => { setSheetVisible(true) }}>Chuyển trạng thái</div>
+                    :
+                    typeOrder === 2 ? statusOrder === "ĐÃ ĐẶT HÀNG" ?
+                        <div className=" bg-red-500 text-center py-2 rounded text-white font-bold">Hủy đơn hàng</div>
+                        : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => nav("/")}>Xác nhận</div> : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onOrder()}>Đặt hàng</div>}
             </div>
+            <Sheet
+                visible={sheetVisible}
+                onClose={() => setSheetVisible(false)}
+                autoHeight
+                mask
+                handler
+                swipeToClose
+            >
+                <Box>
+                    <div className="px-4 pb-[30px]">
+                        <div className="border-b-[1px] pb-4 mb-4" onClick={() => onChangeStatusOrder("Hủy đơn hàng")}>
+                            <span className="text-[16px] font-[500]">Hủy đơn hàng</span>
+                        </div>
+                        <div className="border-b-[1px] pb-4 mb-4" onClick={() => onChangeStatusOrder("Đang vận chuyển")}>
+                            <span className="text-[16px] font-[500]">Đang vận chuyển</span>
+                        </div>
+                        <div className=" mb-4" onClick={() => onChangeStatusOrder("Đã vận chuyển")}>
+                            <span className="text-[16px] font-[500]">Đã vận chuyển</span>
+                        </div>
+                    </div>
+                </Box>
+            </Sheet>
         </Page>
     )
 }

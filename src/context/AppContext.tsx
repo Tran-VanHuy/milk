@@ -39,6 +39,9 @@ export const AppProvider = ({ children }) => {
     const [typeOrder, setTypeOrder] = useState<number>(1)
     const [dataNotification, setDataNotification] = useState<NotificationType[]>()
     const [statusOrder, setStatusOrder] = useState<string>();
+    console.log("statusOrder", statusOrder);
+    
+    const [idOrder, setIdOrder] = useState<string>()
 
     const notification = async (userId: string) => {
 
@@ -131,7 +134,8 @@ export const AppProvider = ({ children }) => {
                 userId: userInfo.id,
                 avatar: userInfo.avatar,
                 name: userInfo.name,
-                phone: number || "Chưa có"
+                phone: number || "Chưa có",
+                role: "USER"
             }
             await createApiUser(body)
             const user = await findOneUser(body.userId)
@@ -227,7 +231,9 @@ export const AppProvider = ({ children }) => {
             notification,
             dataNotification,
             setStatusOrder,
-            statusOrder
+            statusOrder,
+            setIdOrder,
+            idOrder
         }}>
             {children}
         </AppContext.Provider>

@@ -1,6 +1,6 @@
 import axios from "axios"
 import { ORDER } from "../api"
-import { OrderType } from "./type"
+import { BodyChangeStatusOrderType, OrderType } from "./type"
 
 export const getInfoOrder = async (productId: string, type: number, quantity: number) => {
 
@@ -17,5 +17,11 @@ export const createDataOrder = async (body: OrderType) => {
 export const getAllOrder = async (userId: string, type: string) => {
 
     const res = await axios.get(`${ORDER.GET_ALL}?userId=${userId}&type=${type}`)
+    return res.data
+}
+
+export const changeStatusOrder = async (body: BodyChangeStatusOrderType) => {
+
+    const res = await axios.put(ORDER.CHANGE_TYPE, body)
     return res.data
 }

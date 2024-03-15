@@ -24,7 +24,7 @@ export const Product = ({ img, title, price, sale, discount }: Props) => {
                 </div>
                 <div className='flex justify-between mt-1'>
                     <p className='text-red-600 font-medium'>{price}</p>
-                    <p className='text-[10px] font-medium'>{sale}</p>
+                    {/* <p className='text-[10px] font-medium'>{sale}</p> */}
                 </div>
             </div>
         </div>

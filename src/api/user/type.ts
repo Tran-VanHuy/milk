@@ -6,6 +6,7 @@ export type UserDto = {
     name: string,
     phone: string,
     address?: AddressDto[]
+    role: string
 }
 
 export type AddressDto = {

@@ -1,4 +1,4 @@
-export const API_URI = "http://192.168.1.9:3001/v1";
+export const API_URI = "http://192.168.1.11:3001/v1";
 
 export const USER = {
     CREATE: API_URI + "/user",
@@ -67,6 +67,7 @@ export const ORDER = {
     LIST_INFO: API_URI + "/order/list-info",
     GET_ALL: API_URI + "/order",
     DELETE: API_URI + "/order/delete",
+    CHANGE_TYPE: API_URI + "/order/change-type",
 }
 
 export const CART = {

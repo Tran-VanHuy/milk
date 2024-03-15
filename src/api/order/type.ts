@@ -61,8 +61,15 @@ export type BodyListInfoOrderType = {
 }
 
 export type ListInfoOrderType = {
-
+    _id?: string
     subtotal: number
     priceDiscount: number
     orders: InfoOrder[]
+}
+
+export type BodyChangeStatusOrderType = {
+
+    userId: string,
+    type: string,
+    orderId: string
 }
