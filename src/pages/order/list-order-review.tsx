@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { BodyChangeStatusOrderType, InfoOrder, ListInfoOrderType, OrderType } from "../../api/order/type";
 import { formatPrice } from "../../components/format-price";
 import { changeStatusOrder, createDataOrder } from "../../api/order/api";
-import { API_URI } from "../../api/api";
+import { API_URI, ORDER } from "../../api/api";
+import axios from "axios";
 
 interface AppcontentType {
 
@@ -32,12 +33,12 @@ type PriceOrder = {
 export const ListOrderReview = () => {
 
     const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder, setStatusOrder, setDataOrder, typeOrder, statusOrder, idOrder }: AppcontentType = useContext(AppContext);
-    console.log(dataListInfoOrder._id);
-    console.log("statusOrder", statusOrder);
 
     const [listorder, setListOrder] = useState<InfoOrder[]>()
     const [priceAllOrder, setPriceAllOrder] = useState<PriceOrder>()
     const [sheetVisible, setSheetVisible] = useState(false);
+    const [dataAddress, setAddress] = useState<OrderType>()
+
 
     const onOrder = async () => {
 
@@ -110,8 +111,8 @@ export const ListOrderReview = () => {
                 setStatusOrder(action)
                 if (res?.data) {
 
-                    
-                setSheetVisible(false)
+
+                    setSheetVisible(false)
 
                 }
 
@@ -120,12 +121,35 @@ export const ListOrderReview = () => {
 
         }
     }
+
+    const addressUser = async () => {
+
+        try {
+            const res = await axios.get(`${ORDER.DETAIL}/${idOrder}`)
+            if (res.data.status === 200) {
+
+                setAddress(res.data.data)
+            }
+            console.log(res);
+
+        } catch (error) {
+
+            console.log({ error });
+
+        }
+    }
+
     useEffect(() => {
         if (user) {
-
             addressDefault(user.userId)
         }
     }, [user])
+
+    useEffect(() => {
+        if (idOrder) {
+            addressUser()
+        }
+    }, [idOrder])
 
     useEffect(() => {
         setListOrder(dataListInfoOrder.orders)
@@ -137,14 +161,21 @@ export const ListOrderReview = () => {
         <Page className="pb-[125px]">
             <Header title="Tổng quan đơn hàng" />
             <div className="pt-[44px]">
-                <div className="bg-white p-2 flex justify-between mb-2" onClick={() => nav("/address")}>
+                <div className="bg-white p-2 flex justify-between mb-2" onClick={() => {!dataAddress?.address  &&  nav("/address")}}>
                     <div className="flex gap-2">
                         <EnvironmentOutlined className="mt-1" />
-                        {dataAddressDefault ? <div>
-                            <p className="font-[500] mb-1">{dataAddressDefault.name} (+84){dataAddressDefault.phone}</p>
-                            <p className="text-gray-500 text-[14px] font-[400] line-clamp-1">{dataAddressDefault.specificAddress}</p>
-                            <p className="text-gray-500 text-[14px] font-[400] line-clamp-1">{dataAddressDefault.commune}, {dataAddressDefault.district}, {dataAddressDefault.city}</p>
-                        </div> : <span className="text-[12px] text-red-500">Chưa cập nhật địa chỉ</span>}
+                        {dataAddress && dataAddress.address && <div>
+                            <p className="font-[500] mb-1">{dataAddress.address.name} (+84){dataAddress.address.phone}</p>
+                            <p className="text-gray-500 text-[14px] font-[400] line-clamp-1">{dataAddress.address.specificAddress}</p>
+                            <p className="text-gray-500 text-[14px] font-[400] line-clamp-1">{dataAddress.address.commune}, {dataAddress.address.district}, {dataAddress.address.city}</p>
+                        </div>}
+                        {!dataAddress?.address && (
+                            dataAddressDefault ? <div>
+                                <p className="font-[500] mb-1">{dataAddressDefault.name} (+84){dataAddressDefault.phone} 1</p>
+                                <p className="text-gray-500 text-[14px] font-[400] line-clamp-1">{dataAddressDefault.specificAddress}</p>
+                                <p className="text-gray-500 text-[14px] font-[400] line-clamp-1">{dataAddressDefault.commune}, {dataAddressDefault.district}, {dataAddressDefault.city}</p>
+                            </div> : <span className="text-[12px] text-red-500">Chưa cập nhật địa chỉ</span>
+                        )}
 
                     </div>
                     <RightOutlined className="text-[12px] text-gray-500 mt-1" />

@@ -4,6 +4,7 @@ import { AppContext } from "../context/AppContext";
 import { AccountBookOutlined, ContainerOutlined, EnvironmentOutlined, HeartOutlined, MessageOutlined, RightOutlined, SettingOutlined, ShoppingCartOutlined, StarOutlined, TruckOutlined, WalletOutlined, WarningOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { AddressDto, UserDto } from "../api/user/type";
+import { quantityType } from "../api/order/api";
 
 interface AppcontentType {
 
@@ -11,11 +12,20 @@ interface AppcontentType {
     user: UserDto
 }
 
+type QuantityTypeOrderType = {
+
+    ordered: number,
+    beingTransported: number,
+    shipped: number
+}
+
 export const Profile = () => {
+
     const { setShowBottomTab, user }: AppcontentType = useContext(AppContext);
     const nav = useNavigate()
 
     const [addressDefault, setAddressDefault] = useState<AddressDto>();
+    const [dataQuantityTypeOrder, setDataQuantityTypeOrder] = useState<QuantityTypeOrderType>()
 
     const fileInputRef: any = useRef(null);
 
@@ -42,26 +52,43 @@ export const Profile = () => {
         }
     }
 
+    const quantityTypeOrder = async () => {
+
+        try {
+
+            const res = await quantityType(user.userId)
+            if (res.status === 200) {
+
+                setDataQuantityTypeOrder(res.data)
+            }
+
+        } catch (error) {
+
+            console.log({ error });
+
+        }
+    }
+
     useEffect(() => {
 
         setShowBottomTab(true)
         profile()
-
+        quantityTypeOrder()
     }, [])
     return (
         <Page className="pb-[65px]">
             <div className="pt-[65px] pb-3 px-3 bg-orange-500 flex gap-2 relative" style={{ background: "#f53d2d" }}>
                 <div className="relative overflow-hidden">
-                    <img src={user?.avatar} alt="" className="rounded-full w-[60px] h-[60px] object-cover" onClick={handleDivClick}/>
+                    <img src={user?.avatar} alt="" className="rounded-full w-[60px] h-[60px] object-cover" onClick={handleDivClick} />
 
                     <div className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-30 text-center" >
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                style={{ display: 'none' }}
-                                onChange={handleFileChange}
-                                className="text-white text-[12px]"
-                            />
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                            className="text-white text-[12px]"
+                        />
                     </div>
                 </div>
                 <div className="text-white">
@@ -92,20 +119,24 @@ export const Profile = () => {
                 </div>
                 <div className="flex justify-between px-2">
                     <div className="text-center">
-                        <div>
+                        <div className="relative" onClick={() => nav("/status-order")}>
                             <WalletOutlined className="text-[25px] text-gray-600" />
+                            {dataQuantityTypeOrder?.ordered !== 0 && <div className="rounded-full w-[15px] h-[15px] bg-red-500 text-[10px] text-white flex justify-center items-center absolute -top-[5px] right-[18px]">{dataQuantityTypeOrder?.ordered}</div>}
                         </div>
                         <span className="text-[12px]">Chờ xác nhận</span>
                     </div>
                     <div className="text-center">
-                        <div>
+                        <div className="relative" onClick={() => nav("/status-order")}>
                             <TruckOutlined className="text-[25px] text-gray-600" />
+                            {dataQuantityTypeOrder?.beingTransported !== 0 && <div className="rounded-full w-[15px] h-[15px] bg-red-500 text-[10px] text-white flex justify-center items-center absolute -top-[5px] right-[20px]">{dataQuantityTypeOrder?.beingTransported}</div>}
                         </div>
                         <span className="text-[12px]">Đang giao hàng</span>
                     </div>
                     <div className="text-center">
-                        <div>
+                        <div className="relative" onClick={() => nav("/status-order")}>
                             <StarOutlined className="text-[25px] text-gray-600" />
+                            {dataQuantityTypeOrder?.shipped !== 0 && <div className="rounded-full w-[15px] h-[15px] bg-red-500 text-[10px] text-white flex justify-center items-center absolute -top-[5px] right-[8px]">{dataQuantityTypeOrder?.shipped}</div>}
+
                         </div>
                         <span className="text-[12px]">Đánh giá</span>
                     </div>

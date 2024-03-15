@@ -38,6 +38,15 @@ export type OrderType = {
     images?: string
     msId?: string
     szId?: string
+    address?: {
+        name: string,
+        phone: string,
+        city: string,
+        district: string,
+        commune: string,
+        specificAddress: string,
+        default: boolean,
+    }
 }
 
 export type ItemOrderType = {

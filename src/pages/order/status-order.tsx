@@ -132,7 +132,7 @@ export const StatusOrder = () => {
                     {dataStatusOrder && dataStatusOrder.length > 0 ? dataStatusOrder.map(item => (
                         <div className="p-3 bg-white mb-2" key={item._id}>
                             <p className="text-right font-[500] mb-2">
-                                {item.type === "ĐÃ ĐẶT HÀNG" && "Đã đặt hàng"}
+                                {item.type === "ĐÃ ĐẶT HÀNG" && "Đơn hàng đã được đặt"}
                                 {item.type === "ĐANG VẬN CHUYỂN" && "Đơn hàng đang được vận chuyển"}
                                 {item.type === "ĐÃ VẬN CHUYỂN" && "Đơn hàng đã được vận chuyển"}
                             </p>

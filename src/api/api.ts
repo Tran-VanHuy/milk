@@ -68,6 +68,8 @@ export const ORDER = {
     GET_ALL: API_URI + "/order",
     DELETE: API_URI + "/order/delete",
     CHANGE_TYPE: API_URI + "/order/change-type",
+    DETAIL: API_URI + "/order/detail",
+    QUANTITY_TYPE: API_URI + "/order/quantity-status-order"
 }
 
 export const CART = {

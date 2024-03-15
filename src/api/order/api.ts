@@ -25,3 +25,9 @@ export const changeStatusOrder = async (body: BodyChangeStatusOrderType) => {
     const res = await axios.put(ORDER.CHANGE_TYPE, body)
     return res.data
 }
+
+export const quantityType = async (userId: string) => {
+
+    const res = await axios.get(`${ORDER.QUANTITY_TYPE}?userId=${userId}`)
+    return res.data
+}
