@@ -27,7 +27,7 @@ export const Setting = () => {
                     <div className="text-[14px] border-b-[1px] pb-2 mb-2" onClick={() => nav('list-product-admin')}>Danh sách</div>
                     <div className="text-[14px] border-b-[1px] pb-2 mb-2" onClick={() => nav('categories-admin')}>Danh mục sản phẩm</div>
                     <div className="text-[14px] border-b-[1px] pb-2 mb-2" onClick={() => nav('list-voucher')}>Khuyến mãi (Voucher)</div>
-                    <div className="text-[14px]" onClick={() => nav("/status-order")}>Danh sách đơn hàng</div>
+                    <div className="text-[14px]" onClick={() => nav("/status-order/all")}>Danh sách đơn hàng</div>
                 </div>
                 <div className="p-2 text-[14px] text-gray-500">Truyền thông</div>
                 <div className="bg-white p-2">

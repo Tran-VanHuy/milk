@@ -47,7 +47,7 @@ const MyApp = () => {
                 <Route path="/product/:id" element={<ProductDetail></ProductDetail>}></Route>
                 <Route path="/order-review" element={<OverReview></OverReview>}></Route>
                 <Route path="/list-order-review" element={<ListOrderReview></ListOrderReview>}></Route>
-                <Route path="/status-order" element={<StatusOrder></StatusOrder>}></Route>
+                <Route path="/status-order/:nameStatusOrder" element={<StatusOrder></StatusOrder>}></Route>
                 <Route path="/order/success" element={<OrderSuccess></OrderSuccess>}></Route>
                 <Route path="/profile" element={<Profile></Profile>}></Route>
                 <Route path="/address" element={<Address></Address>}></Route>

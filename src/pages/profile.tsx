@@ -4,7 +4,8 @@ import { AppContext } from "../context/AppContext";
 import { AccountBookOutlined, ContainerOutlined, EnvironmentOutlined, HeartOutlined, MessageOutlined, RightOutlined, SettingOutlined, ShoppingCartOutlined, StarOutlined, TruckOutlined, WalletOutlined, WarningOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { AddressDto, UserDto } from "../api/user/type";
-import { quantityType } from "../api/order/api";
+import { boughtOrder, quantityType } from "../api/order/api";
+import { API_URI } from "../api/api";
 
 interface AppcontentType {
 
@@ -19,6 +20,13 @@ type QuantityTypeOrderType = {
     shipped: number
 }
 
+type BoughtOrderType = {
+    productId: string
+    name: string
+    images: string
+    count: number
+}
+
 export const Profile = () => {
 
     const { setShowBottomTab, user }: AppcontentType = useContext(AppContext);
@@ -26,6 +34,7 @@ export const Profile = () => {
 
     const [addressDefault, setAddressDefault] = useState<AddressDto>();
     const [dataQuantityTypeOrder, setDataQuantityTypeOrder] = useState<QuantityTypeOrderType>()
+    const [dataBoughtOrder, setDataBoughtOrder] = useState<BoughtOrderType[]>()
 
     const fileInputRef: any = useRef(null);
 
@@ -69,8 +78,23 @@ export const Profile = () => {
         }
     }
 
+    const bought = async () => {
+
+        try {
+
+            const res = await boughtOrder(user.userId)
+            if (res) {
+                setDataBoughtOrder(res)
+            }
+        } catch (error) {
+
+            console.log({ error });
+        }
+    }
+
     useEffect(() => {
 
+        bought()
         setShowBottomTab(true)
         profile()
         quantityTypeOrder()
@@ -111,29 +135,29 @@ export const Profile = () => {
             </div>
             <div className="p-2 bg-white mb-2">
                 <div className="flex justify-between items-center mb-5">
-                    <div className="flex items-center gap-2"><ContainerOutlined className="text-[20px] text-blue-800 pt-1" /> <span className="font-[500]">Đơn mua</span></div>
-                    <div className="flex items-center gap-1" onClick={() => nav("/status-order")}>
+                    <div className="flex items-center gap-2"><ContainerOutlined className="text-[20px] text-blue-800 pt-1" /> <span className="font-[500]">{user.role === "ADMIN" ? "Đơn hàng" : "Đơn mua"}</span></div>
+                    <div className="flex items-center gap-1" onClick={() => nav("/status-order/all")}>
                         <span className="text-[12px] text-gray-600">Xem lịch sử đơn hàng</span>
                         <RightOutlined className="text-[10px] text-gray-600 pt-1" />
                     </div>
                 </div>
                 <div className="flex justify-between px-2">
                     <div className="text-center">
-                        <div className="relative" onClick={() => nav("/status-order")}>
+                        <div className="relative" onClick={() => nav("/status-order/ĐÃ ĐẶT HÀNG")}>
                             <WalletOutlined className="text-[25px] text-gray-600" />
                             {dataQuantityTypeOrder?.ordered !== 0 && <div className="rounded-full w-[15px] h-[15px] bg-red-500 text-[10px] text-white flex justify-center items-center absolute -top-[5px] right-[18px]">{dataQuantityTypeOrder?.ordered}</div>}
                         </div>
-                        <span className="text-[12px]">Chờ xác nhận</span>
+                        <span className="text-[12px]">Đã đặt hàng</span>
                     </div>
                     <div className="text-center">
-                        <div className="relative" onClick={() => nav("/status-order")}>
+                        <div className="relative" onClick={() => nav("/status-order/ĐANG VẬN CHUYỂN")}>
                             <TruckOutlined className="text-[25px] text-gray-600" />
                             {dataQuantityTypeOrder?.beingTransported !== 0 && <div className="rounded-full w-[15px] h-[15px] bg-red-500 text-[10px] text-white flex justify-center items-center absolute -top-[5px] right-[20px]">{dataQuantityTypeOrder?.beingTransported}</div>}
                         </div>
                         <span className="text-[12px]">Đang giao hàng</span>
                     </div>
                     <div className="text-center">
-                        <div className="relative" onClick={() => nav("/status-order")}>
+                        <div className="relative" onClick={() => nav("/status-order/ĐÃ VẬN CHUYỂN")}>
                             <StarOutlined className="text-[25px] text-gray-600" />
                             {dataQuantityTypeOrder?.shipped !== 0 && <div className="rounded-full w-[15px] h-[15px] bg-red-500 text-[10px] text-white flex justify-center items-center absolute -top-[5px] right-[8px]">{dataQuantityTypeOrder?.shipped}</div>}
 
@@ -142,58 +166,54 @@ export const Profile = () => {
                     </div>
                 </div>
             </div>
-            <div className="bg-white pt-2">
-                <div className="px-2 flex justify-between mb-3">
-                    <div className="flex items-center gap-2 font-[500]"><AccountBookOutlined className="text-yellow-500 text-[20px]" /> Mua lại</div>
-                    <div className="flex items-center gap-1">
-                        <span className="text-[12px] text-gray-600">Xem thêm sản phẩm</span>
-                        <RightOutlined className="text-[10px] text-gray-600 pt-1" />
-                    </div>
-                </div>
-                <div className="flex overflow-x-scroll gap-[10px] px-2 pb-2 mb-3">
-                    <div className="">
-                        <div className="w-[110px] h-[100px] border">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdyc3I3u0PNW741NK2HcNY4TfaXwWPgd1jSA&usqp=CAU" alt="" className="w-full h-full" />
+            {dataBoughtOrder && dataBoughtOrder.length > 0 &&
+                <div className="bg-white pt-2">
+                    <div className="px-2 flex justify-between mb-3">
+                        <div className="flex items-center gap-2 font-[500]"><AccountBookOutlined className="text-yellow-500 text-[20px]" /> {user.role === "ADMIN" ? "Khách hàng đã mua" : "Mua lại"}</div>
+                        <div className="flex items-center gap-1">
+                            <span className="text-[12px] text-gray-600">Xem thêm sản phẩm</span>
+                            <RightOutlined className="text-[10px] text-gray-600 pt-1" />
                         </div>
-                        <p className="text-[12px] text-gray-500">Đã mua 1 lần</p>
-                        <b>250.000đ</b>
                     </div>
-                    <div className="">
-                        <div className="w-[110px] h-[100px] border">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdyc3I3u0PNW741NK2HcNY4TfaXwWPgd1jSA&usqp=CAU" alt="" className="w-full h-full" />
-                        </div>
-                        <p className="text-[12px] text-gray-500">Đã mua 1 lần</p>
-                        <b>250.000đ</b>
+                    <div className="flex overflow-x-scroll gap-[10px] px-2 pb-2 mb-3">
+                        {dataBoughtOrder.map(item => (
+                            <div onClick={() => nav(`/product/${item.productId}`)}>
+                                <div className="w-[110px] h-[100px] border">
+                                    <img src={`${API_URI}/${item.images}`} alt="" className="w-full h-full" />
+                                </div>
+                                <p className="text-[12px] text-gray-500">Đã mua {item.count} lần</p>
+                            </div>
+                        ))}
                     </div>
-                    <div className="">
-                        <div className="w-[110px] h-[100px] border">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdyc3I3u0PNW741NK2HcNY4TfaXwWPgd1jSA&usqp=CAU" alt="" className="w-full h-full" />
-                        </div>
-                        <p className="text-[12px] text-gray-500">Đã mua 1 lần</p>
-                        <b>250.000đ</b>
-                    </div>
-                    <div className="">
-                        <div className="w-[110px] h-[100px] border">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdyc3I3u0PNW741NK2HcNY4TfaXwWPgd1jSA&usqp=CAU" alt="" className="w-full h-full" />
-                        </div>
-                        <p className="text-[12px] text-gray-500">Đã mua 1 lần</p>
-                        <b>250.000đ</b>
-                    </div>
-                </div>
-            </div>
+                </div>}
+
             <div className="bg-white p-2">
-                <div className="flex items-center gap-2 border-b-[1px] pb-2 mb-2" onClick={() => nav("/address")}>
-                    <EnvironmentOutlined />
-                    <div className="text-[14px]">Địa chỉ</div>
-                </div>
-                <div className="flex items-center gap-2 border-b-[1px] pb-2 mb-2" onClick={() => nav("/favourite")}>
-                    <HeartOutlined />
-                    <div className="text-[14px]">Đã thích</div>
-                </div>
-                <div className="flex items-center gap-2" onClick={() => nav("/setting")}>
-                    <SettingOutlined />
-                    <div className="text-[14px]">Cài đặt</div>
-                </div>
+                {user.role === "ADMIN" ?
+                    <>
+                        <div className="flex items-center gap-2 border-b-[1px] pb-2 mb-2" onClick={() => nav("/address")}>
+                            <EnvironmentOutlined />
+                            <div className="text-[14px]">Địa chỉ</div>
+                        </div>
+                        <div className="flex items-center gap-2 border-b-[1px] pb-2 mb-2" onClick={() => nav("/favourite")}>
+                            <HeartOutlined />
+                            <div className="text-[14px]">Đã thích</div>
+                        </div>
+                        <div className="flex items-center gap-2" onClick={() => nav("/setting")}>
+                            <SettingOutlined />
+                            <div className="text-[14px]">Cài đặt</div>
+                        </div>
+                    </> :
+                    <>
+                        <div className="flex items-center gap-2 border-b-[1px] pb-2 mb-2" onClick={() => nav("/address")}>
+                            <EnvironmentOutlined />
+                            <div className="text-[14px]">Địa chỉ</div>
+                        </div>
+                        <div className="flex items-center gap-2" onClick={() => nav("/favourite")}>
+                            <HeartOutlined />
+                            <div className="text-[14px]">Đã thích</div>
+                        </div>
+                    </>}
+
             </div>
         </Page>
     )

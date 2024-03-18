@@ -9,7 +9,7 @@ import { UserDto } from "../../api/user/type";
 import { InboxOutlined } from "@ant-design/icons";
 import { API_URI, ORDER } from "../../api/api";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface AppcontentType {
 
@@ -24,17 +24,16 @@ interface AppcontentType {
 export const StatusOrder = () => {
 
     const { setShowBottomTab, user, setDataListInfoOrder, setTypeOrder, setStatusOrder, setIdOrder }: AppcontentType = useContext(AppContext);
-
+    const { nameStatusOrder } = useParams()
     const nav = useNavigate()
 
     const [dataStatusOrder, setDataStatusOrder] = useState<OrderType[]>()
-    const [status, setStatus] = useState<string>("");
-    const [idStatus, setIdStatus] = useState<number>(1);
+    const [status, setStatus] = useState<string>(nameStatusOrder || "all");
     const textStatus = [
         {
             id: 1,
             name: "Tất cả",
-            type: ""
+            type: "all"
         },
         {
             id: 2,
@@ -84,7 +83,7 @@ export const StatusOrder = () => {
             const res = await axios.delete(`${ORDER.DELETE}?_id=${_id}&userId=${user.userId}`)
             if (res.data.status === 200) {
 
-                statusOrder()
+                statusOrder(nameStatusOrder || "")
             }
         } catch (error) {
             console.log({ error });
@@ -92,11 +91,11 @@ export const StatusOrder = () => {
         }
     }
 
-    const statusOrder = async () => {
+    const statusOrder = async (status: string) => {
         try {
 
 
-            const res = await getAllOrder(user.role !== "ADMIN" ? user.userId : "", status)
+            const res = await getAllOrder(user.role !== "ADMIN" ? user.userId : "", status === "all" ? "" : status)
             if (res?.status === 200) {
 
                 setDataStatusOrder(res.data)
@@ -108,14 +107,20 @@ export const StatusOrder = () => {
         }
     }
 
+    const onStatus = (item) => {
+
+        setStatus(item.type);
+        statusOrder(item.type)
+    }
+
     useEffect(() => {
 
         setShowBottomTab(false)
     }, [])
 
     useEffect(() => {
-        statusOrder()
-    }, [status])
+        statusOrder(nameStatusOrder || "")
+    }, [])
 
     return (
         <Page>
@@ -123,9 +128,9 @@ export const StatusOrder = () => {
             <div className="pt-[52px]">
                 <div className="fixed w-full">
                     <div className="flex overflow-x-scroll pl-1 pt-2 bg-white border-t-[1px] border-b-[1px] text-nowrap" style={{ whiteSpace: "nowrap" }}>
-                        {textStatus.map(item => item.id === idStatus ?
-                            <p className="font-[500] px-3 border-b-[2px] border-black pb-2 text-nowrap" style={{ whiteSpace: "nowrap" }} onClick={() => { setStatus(item.type); setIdStatus(item.id) }} key={item.id}>{item.name}</p>
-                            : <p className="font-[500] px-3 text-gray-500 text-nowrap" style={{ whiteSpace: "nowrap" }} onClick={() => { setStatus(item.type); setIdStatus(item.id) }} key={item.id}>{item.name}</p>)}
+                        {textStatus.map(item => item.type === status ?
+                            <p className="font-[500] px-3 border-b-[2px] border-black pb-2 text-nowrap" style={{ whiteSpace: "nowrap" }} onClick={() => onStatus(item)} key={item.id}>{item.name}</p>
+                            : <p className="font-[500] px-3 text-gray-500 text-nowrap" style={{ whiteSpace: "nowrap" }} onClick={() => onStatus(item)} key={item.id}>{item.name}</p>)}
                     </div>
                 </div>
                 <div className="pt-[45px]">

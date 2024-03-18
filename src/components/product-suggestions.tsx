@@ -7,7 +7,7 @@ import { formatPrice } from "./format-price";
 
 interface AppcontentType {
 
-    products: (limit: number, skip: number, status: string | boolean, category?: string) => void
+    products: (skip: number, limit: number, status: string | boolean, category?: string) => void
     dataProducts: ProductType[]
 }
 

@@ -10,7 +10,7 @@ import { ProductType } from "../../api/products/type";
 import { BodyNotificationType } from "../../api/notification/type";
 import { useNavigate } from "react-router-dom";
 interface AppContextType {
-    products: (limit: number, skip: number, status: string | boolean) => void
+    products: (skip: number, limit: number, status: string | boolean) => void
     dataProducts: ProductType[]
 }
 export const CreateNotificationAdmin = () => {

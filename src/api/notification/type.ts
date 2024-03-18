@@ -20,3 +20,16 @@ export type BodyNotificationType = {
     users: string[]
     allUser: boolean
 }
+
+// 
+export type NotifiCationOrderType = {
+    _id: string
+    image: string
+    title: string
+    content: string
+    orderId: string
+    orderCode: string
+    userId: string
+    readed: boolean
+    createdAt: string
+}

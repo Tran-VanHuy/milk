@@ -69,7 +69,8 @@ export const ORDER = {
     DELETE: API_URI + "/order/delete",
     CHANGE_TYPE: API_URI + "/order/change-type",
     DETAIL: API_URI + "/order/detail",
-    QUANTITY_TYPE: API_URI + "/order/quantity-status-order"
+    QUANTITY_TYPE: API_URI + "/order/quantity-status-order",
+    BOUGHT: API_URI + "/order/bought-product"
 }
 
 export const CART = {
@@ -92,5 +93,7 @@ export const NOTIFICATION = {
 
     CREATE: API_URI + "/notification",
     GET_ALL: API_URI + "/notification",
-    DELETE: API_URI + "/notification"
+    DELETE: API_URI + "/notification",
+    ORDER: API_URI + "/notification/get/order",
+    CHECK_READ: API_URI + "/notification/get/check-read"
 }

@@ -26,7 +26,8 @@ export const AppProvider = ({ children }) => {
     const [showBottomTab, setShowBottomTab] = useState<boolean>(false);
     const [dataCategoryProducts, setDataCategoryProducts] = useState<CategoryProducts[]>();
     const [user, setUser] = useState<UserDto>();
-    const [dataProducts, setDataProducts] = useState<ProductType>()
+    const [dataProducts, setDataProducts] = useState<ProductType[]>()
+
     const [dataProductDetail, setDataProductDetail] = useState<ProductType>()
     const [dataVoucher, setDataVoucher] = useState<VoucherType[]>()
     const [dataBanner, setDataBanner] = useState<BannerDto[]>()
@@ -39,8 +40,6 @@ export const AppProvider = ({ children }) => {
     const [typeOrder, setTypeOrder] = useState<number>(1)
     const [dataNotification, setDataNotification] = useState<NotificationType[]>()
     const [statusOrder, setStatusOrder] = useState<string>();
-    console.log("statusOrder", statusOrder);
-    
     const [idOrder, setIdOrder] = useState<string>()
 
     const notification = async (userId: string) => {
@@ -163,12 +162,26 @@ export const AppProvider = ({ children }) => {
         }
     }
 
-    const products = async (limit: number, skip: number, status: string, category?: string) => {
+    const products = async (skip: number, limit: number, status: string, category?: string) => {
 
         try {
-            const res = await getAllProducts(limit, skip, status, (category || ""))
+            const res = await getAllProducts(skip, limit, status, (category || ""))
 
-            setDataProducts(res.data)
+            if (res?.status === 200) {
+                let data = res.data
+                if (skip !== 0) {
+                    console.log(skip);
+                    
+                    if (dataProducts && dataProducts?.length > 0) {
+                        console.log("vào đây"); 
+                        const paging: any = [...dataProducts, res.data]
+                        data = paging.flat()
+                    }
+                }
+
+                setDataProducts(data)
+            }
+
         } catch (error) {
 
             console.log({ error });

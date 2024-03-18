@@ -11,7 +11,7 @@ import { API_URI } from "../../api/api";
 interface AppcontentType {
 
     setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>
-    products: (limit: number, skip: number, status: string) => void
+    products: (skip: number, limit: number, status: string) => void
     dataProducts: ProductType[]
 }
 

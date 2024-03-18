@@ -10,7 +10,7 @@ import { createVoucher } from "../../api/voucher/api";
 interface AppcontentType {
 
     setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>
-    products: (limit: number, skip: number, status: string | boolean) => void
+    products: (skip: number, limit: number, status: string | boolean) => void
     dataProducts: ProductType[]
 }
 

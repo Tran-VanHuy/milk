@@ -130,12 +130,24 @@ export const ListOrderReview = () => {
 
                 setAddress(res.data.data)
             }
-            console.log(res);
 
         } catch (error) {
 
             console.log({ error });
 
+        }
+    }
+
+    const onDelete = async () => {
+
+        try {
+            const res = await axios.delete(`${ORDER.DELETE}?_id=${idOrder}&userId=${user.userId}`)
+            if (res.data.status === 200) {
+                onChangeStatusOrder("Hủy đơn hàng")
+                nav(`/status-order/${statusOrder}`)
+            }
+        } catch (error) {
+            console.log({ error });
         }
     }
 
@@ -161,7 +173,7 @@ export const ListOrderReview = () => {
         <Page className="pb-[125px]">
             <Header title="Tổng quan đơn hàng" />
             <div className="pt-[44px]">
-                <div className="bg-white p-2 flex justify-between mb-2" onClick={() => {!dataAddress?.address  &&  nav("/address")}}>
+                <div className="bg-white p-2 flex justify-between mb-2" onClick={() => { !dataAddress?.address && nav("/address") }}>
                     <div className="flex gap-2">
                         <EnvironmentOutlined className="mt-1" />
                         {dataAddress && dataAddress.address && <div>
@@ -171,7 +183,7 @@ export const ListOrderReview = () => {
                         </div>}
                         {!dataAddress?.address && (
                             dataAddressDefault ? <div>
-                                <p className="font-[500] mb-1">{dataAddressDefault.name} (+84){dataAddressDefault.phone} 1</p>
+                                <p className="font-[500] mb-1">{dataAddressDefault.name} (+84){dataAddressDefault.phone}</p>
                                 <p className="text-gray-500 text-[14px] font-[400] line-clamp-1">{dataAddressDefault.specificAddress}</p>
                                 <p className="text-gray-500 text-[14px] font-[400] line-clamp-1">{dataAddressDefault.commune}, {dataAddressDefault.district}, {dataAddressDefault.city}</p>
                             </div> : <span className="text-[12px] text-red-500">Chưa cập nhật địa chỉ</span>
@@ -283,7 +295,7 @@ export const ListOrderReview = () => {
                     <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => { setSheetVisible(true) }}>Chuyển trạng thái</div>
                     :
                     typeOrder === 2 ? statusOrder === "ĐÃ ĐẶT HÀNG" ?
-                        <div className=" bg-red-500 text-center py-2 rounded text-white font-bold">Hủy đơn hàng</div>
+                        <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onDelete()}>Hủy đơn hàng</div>
                         : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => nav("/")}>Xác nhận</div> : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onOrder()}>Đặt hàng</div>}
             </div>
             <Sheet
@@ -296,7 +308,7 @@ export const ListOrderReview = () => {
             >
                 <Box>
                     <div className="px-4 pb-[30px]">
-                        <div className="border-b-[1px] pb-4 mb-4" onClick={() => onChangeStatusOrder("Hủy đơn hàng")}>
+                        <div className="border-b-[1px] pb-4 mb-4" onClick={() => onDelete()}>
                             <span className="text-[16px] font-[500]">Hủy đơn hàng</span>
                         </div>
                         <div className="border-b-[1px] pb-4 mb-4" onClick={() => onChangeStatusOrder("Đang vận chuyển")}>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Page, Swiper } from 'zmp-ui';
 import { ShoppingCartOutlined, MessageOutlined, SearchOutlined, QrcodeOutlined, WalletOutlined, DollarOutlined, ScanOutlined } from "@ant-design/icons";
 import { Product } from '../components/products/product';
@@ -15,7 +15,7 @@ import { API_URI } from '../api/api';
 interface AppcontentType {
 
   setShowBottomTab: React.Dispatch<React.SetStateAction<boolean>>,
-  products: (limit: number, skip: number, status: string | boolean) => void
+  products: (skip: number, limit: number, status: string | boolean) => void
   dataProducts: ProductType[]
   categoryProducts: (skip: number, limit: number, status?: string) => void
   dataCategoryProducts: CategoryProducts[]
@@ -28,20 +28,37 @@ interface AppcontentType {
 const HomePage: React.FunctionComponent = () => {
 
   const { setShowBottomTab, products, dataProducts, categoryProducts, dataCategoryProducts, banner, dataBanner, ads, dataAds }: AppcontentType = useContext(AppContext);
-
   const nav = useNavigate()
+  const listInnerRef: any = useRef();
+  const [skip, setSkip] = useState<number>(0)
+
+
+  const onScroll = () => {
+    if (listInnerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+      if (scrollTop + clientHeight === scrollHeight) {
+        setSkip(skip + 1)
+        // This will be triggered after hitting the last element.
+        // API call should be made here while implementing pagination.
+      }
+    }
+  };
 
   useEffect(() => {
     categoryProducts(0, 8, "true")
     setShowBottomTab(true)
-    products(0, 10, true)
     banner(0, 100, "true")
     ads(0, 3, "true")
   }, [])
 
+  useEffect(() => {
+    products(skip, 6, true)
+  }, [skip])
+
   useEffect
   return (
-    <Page className='pb-[50px]'>
+    <Page className='pb-[50px]' onScroll={onScroll}
+      ref={listInnerRef}>
       <Header showNav={false} />
       <div className='pt-[52px]'>
         <Swiper>

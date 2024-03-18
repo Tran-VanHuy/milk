@@ -31,3 +31,9 @@ export const quantityType = async (userId: string) => {
     const res = await axios.get(`${ORDER.QUANTITY_TYPE}?userId=${userId}`)
     return res.data
 }
+
+export const boughtOrder = async (userId: string) => {
+
+    const res = await axios.get(`${ORDER.BOUGHT}?userId=${userId}`)
+    return res.data
+}
