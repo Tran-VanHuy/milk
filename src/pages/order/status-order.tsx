@@ -1,15 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Page } from "zmp-ui";
 import { Header } from "../../components/headers/header";
 import { AppContext } from "../../context/AppContext";
 import { formatPrice } from "../../components/format-price";
-import { BodyListInfoOrderType, ListInfoOrderType, OrderType } from "../../api/order/type";
+import { BodyListInfoOrderType, ItemOrderType, ListInfoOrderType, OrderType } from "../../api/order/type";
 import { getAllOrder } from "../../api/order/api";
 import { UserDto } from "../../api/user/type";
 import { InboxOutlined } from "@ant-design/icons";
 import { API_URI, ORDER } from "../../api/api";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { SheetRating } from "../../components/sheet-rating";
 
 interface AppcontentType {
 
@@ -18,17 +19,21 @@ interface AppcontentType {
     user: UserDto,
     setTypeOrder: React.Dispatch<React.SetStateAction<number>>
     setStatusOrder: React.Dispatch<React.SetStateAction<string>>
-    setIdOrder: React.Dispatch<React.SetStateAction<string>>
+    setIdOrder: React.Dispatch<React.SetStateAction<string>>,
+    order: (skip: number, user: UserDto, status: string) => void,
+    dataStatusOrder: OrderType[]
 }
 
 export const StatusOrder = () => {
 
-    const { setShowBottomTab, user, setDataListInfoOrder, setTypeOrder, setStatusOrder, setIdOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, user, setDataListInfoOrder, setTypeOrder, setStatusOrder, setIdOrder, order, dataStatusOrder }: AppcontentType = useContext(AppContext);
     const { nameStatusOrder } = useParams()
     const nav = useNavigate()
-
-    const [dataStatusOrder, setDataStatusOrder] = useState<OrderType[]>()
+    const listInnerRef: any = useRef();
     const [status, setStatus] = useState<string>(nameStatusOrder || "all");
+    const [sheetVisible, setSheetVisible] = useState(false);
+    const [dataContentRating, setDataContentRating] = useState<ItemOrderType>()
+
     const textStatus = [
         {
             id: 1,
@@ -51,6 +56,17 @@ export const StatusOrder = () => {
             type: "ĐÃ VẬN CHUYỂN"
         }
     ]
+    const [skip, setSkip] = useState<number>(0)
+
+    const onScroll = () => {
+        if (listInnerRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+            if (scrollTop + clientHeight === scrollHeight) {
+                setSkip(skip + 1)
+            }
+        }
+    };
+
 
     const onSeeOrder = async (item: OrderType) => {
 
@@ -83,34 +99,26 @@ export const StatusOrder = () => {
             const res = await axios.delete(`${ORDER.DELETE}?_id=${_id}&userId=${user.userId}`)
             if (res.data.status === 200) {
 
-                statusOrder(nameStatusOrder || "")
+                statusOrder(skip, status || "")
             }
         } catch (error) {
             console.log({ error });
-
         }
     }
 
-    const statusOrder = async (status: string) => {
-        try {
-
-
-            const res = await getAllOrder(user.role !== "ADMIN" ? user.userId : "", status === "all" ? "" : status)
-            if (res?.status === 200) {
-
-                setDataStatusOrder(res.data)
-            }
-        } catch (error) {
-
-            console.log({ error });
-
-        }
+    const statusOrder = (paing: number, status: string) => {
+            order(paing, user, status)
     }
 
     const onStatus = (item) => {
-
         setStatus(item.type);
-        statusOrder(item.type)
+        statusOrder(0, item.type)
+    }
+
+    const contentRating = (item: ItemOrderType) => {
+        setSheetVisible(true)
+        console.log(item);
+        setDataContentRating(item)
     }
 
     useEffect(() => {
@@ -119,11 +127,11 @@ export const StatusOrder = () => {
     }, [])
 
     useEffect(() => {
-        statusOrder(nameStatusOrder || "")
-    }, [])
+        statusOrder(skip, status || "all")
+    }, [skip])
 
     return (
-        <Page>
+        <Page onScroll={onScroll} ref={listInnerRef}>
             <Header showNav={true} />
             <div className="pt-[52px]">
                 <div className="fixed w-full">
@@ -158,6 +166,9 @@ export const StatusOrder = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    {status === "ĐÃ VẬN CHUYỂN" && <div className="text-right">
+                                      {!order.rating && <button className="border-[1px] px-2 py-1 text-[14px] mt-2" onClick={() => contentRating(order)}>Đánh giá</button>}
+                                    </div>}
                                 </div>
                             ))}
 
@@ -169,7 +180,6 @@ export const StatusOrder = () => {
                                 <div className="text-right">
                                     {item.type === "ĐÃ ĐẶT HÀNG" && <button className="border-[1px] px-2 py-1 text-[14px]" onClick={() => onDelete(item._id!)}>Hủy đơn hàng</button>}
                                     {item.type === "ĐANG VẬN CHUYỂN" && <button className="border-[1px] px-2 py-1 text-[14px]">Liên hệ với người bán</button>}
-                                    {item.type === "ĐÃ VẬN CHUYỂN" && <button className="border-[1px] px-2 py-1 text-[14px]">Đánh giá</button>}
                                     <button className="border-[1px] px-2 py-1 text-[14px] ml-2" onClick={() => onSeeOrder(item)}>Xem</button>
                                 </div>
                             </div>
@@ -178,9 +188,10 @@ export const StatusOrder = () => {
                         <InboxOutlined className="text-[32px] text-gray-500" />
                         <span className=" text-gray-400">Không có đơn hàng!</span>
                     </div>}
-
                 </div>
             </div>
+            {dataContentRating && <SheetRating skip={skip} dataContentRating={dataContentRating!} sheetVisible={sheetVisible} setSheetVisible={setSheetVisible}/>}
+            
         </Page>
     )
 }

@@ -177,7 +177,7 @@ export const Profile = () => {
                     </div>
                     <div className="flex overflow-x-scroll gap-[10px] px-2 pb-2 mb-3">
                         {dataBoughtOrder.map(item => (
-                            <div onClick={() => nav(`/product/${item.productId}`)}>
+                            <div onClick={() => nav(`/product/${item.productId}`)} key={item.productId}>
                                 <div className="w-[110px] h-[100px] border">
                                     <img src={`${API_URI}/${item.images}`} alt="" className="w-full h-full" />
                                 </div>

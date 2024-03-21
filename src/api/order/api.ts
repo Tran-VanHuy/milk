@@ -14,9 +14,9 @@ export const createDataOrder = async (body: OrderType) => {
     return res.data;
 }
 
-export const getAllOrder = async (userId: string, type: string) => {
+export const getAllOrder = async (skip: number, limit: number, userId: string, type: string) => {
 
-    const res = await axios.get(`${ORDER.GET_ALL}?userId=${userId}&type=${type}`)
+    const res = await axios.get(`${ORDER.GET_ALL}?skip=${skip}&limit=${limit}&userId=${userId}&type=${type}`)
     return res.data
 }
 

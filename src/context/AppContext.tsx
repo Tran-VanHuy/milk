@@ -18,6 +18,7 @@ import { BodyInfo, ListInfoOrderType, OrderType } from "../api/order/type";
 import { checkTotalCart } from "../api/cart/api";
 import { getAllNotification } from "../api/notification/api";
 import { NotificationType } from "../api/notification/type";
+import { getAllOrder } from "../api/order/api";
 
 export const AppContext: any = createContext({});
 
@@ -41,6 +42,29 @@ export const AppProvider = ({ children }) => {
     const [dataNotification, setDataNotification] = useState<NotificationType[]>()
     const [statusOrder, setStatusOrder] = useState<string>();
     const [idOrder, setIdOrder] = useState<string>()
+    const [dataStatusOrder, setDataStatusOrder] = useState<OrderType[]>()
+
+    const order = async (skip: number, user: UserDto,status: string) => {
+        try {
+
+            const res = await getAllOrder(skip, 6, user?.role! !== "ADMIN" ? user?.userId : "", status === "all" ? "" : status)
+            if (res?.status === 200) {
+                let data = res.data;
+                if (skip !== 0) {
+
+                    if (dataStatusOrder && dataStatusOrder?.length > 0) {
+                        const paging: any = [...dataStatusOrder, res.data]
+                        data = paging.flat()
+                    }
+                }
+                setDataStatusOrder(data)
+            }
+        } catch (error) {
+
+            console.log({ error });
+
+        }
+    }
 
     const notification = async (userId: string) => {
 
@@ -166,19 +190,18 @@ export const AppProvider = ({ children }) => {
 
         try {
             const res = await getAllProducts(skip, limit, status, (category || ""))
-
+            
             if (res?.status === 200) {
+                
                 let data = res.data
                 if (skip !== 0) {
-                    console.log(skip);
                     
                     if (dataProducts && dataProducts?.length > 0) {
-                        console.log("vào đây"); 
                         const paging: any = [...dataProducts, res.data]
                         data = paging.flat()
                     }
                 }
-
+                
                 setDataProducts(data)
             }
 
@@ -246,7 +269,9 @@ export const AppProvider = ({ children }) => {
             setStatusOrder,
             statusOrder,
             setIdOrder,
-            idOrder
+            idOrder,
+            order,
+            dataStatusOrder
         }}>
             {children}
         </AppContext.Provider>

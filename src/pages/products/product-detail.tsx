@@ -14,6 +14,7 @@ import { AddressDto } from "../../api/address/type";
 import { BodyInfo } from "../../api/order/type";
 import { BodyCart } from "../../api/cart/type";
 import { BodyCheckFavourite } from "../../api/favourite/type";
+import FlyingButton from 'react-flying-item'
 
 interface AppcontentType {
 
@@ -496,7 +497,9 @@ export const ProductDetail = () => {
                 </div>
             </div>
             <div className="px-2 grid grid-cols-2 gap-2 bg-white absolute bottom-0 w-full pb-[40px] pt-[20px] border-t-[1px]">
-                <div className="border-[2px] border-red-500 text-center py-2 rounded text-red-500 font-bold" onClick={() => { onBuyProducts("CART"); setTypeBuy("CART") }}>Thêm vào giỏ hàng</div>
+                <div className="border-[2px] border-red-500 text-center py-2 rounded text-red-500 font-bold" onClick={() => { onBuyProducts("CART"); setTypeBuy("CART") }}>
+                    {dataProductDetail?.type !== 3 ? "Thêm vào giỏ hàng" : <FlyingButton src='https://banner2.cleanpng.com/20180425/jhq/kisspng-shopping-cart-computer-icons-icon-design-5ae0619bcfebe4.2435918915246544918517.jpg' targetLeft="70%" flyingItemStyling={{ width: "30px" }}>Thêm vào giỏ hàng</FlyingButton>}
+                </div>
                 <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => { onBuyProducts("BUY"); setTypeBuy("BUY") }}>Mua ngay</div>
             </div>
             {dataProductDetail?.type !== 3 ? <Sheet
@@ -563,7 +566,7 @@ export const ProductDetail = () => {
                         </Box>
                     </div>
                     <div className="pb-4">
-                        <div className="bg-red-500 text-white font-medium text-center py-2 rounded-lg" onClick={() => onBuyCart()}>{typeBuy === "BUY" ? "Mua Ngay" : "Thêm Vào Giỏ Hàng"}</div>
+                        <div className="bg-red-500 text-white font-medium text-center py-2 rounded-lg" onClick={() => onBuyCart()}>{typeBuy === "BUY" ? "Mua Ngay" : idMS || idSZ ? <FlyingButton src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBhUuz2vc2-RYgLCtFtTzjY9oApsKqIMXVdQ&usqp=CAU' targetLeft="70%" flyingItemStyling={{ width: "30px" }}>Thêm vào giỏ hàng</FlyingButton> : "Thêm vào giỏ hàng"}</div>
                     </div>
                 </Box>
             </Sheet> : null}

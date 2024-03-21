@@ -59,7 +59,7 @@ export const Favourite = () => {
     return (
         <Page>
             <Header title="Yêu thích" />
-            <div className="pt-[44px] bg-white pb-4 pb-[50px]">
+            <div className="pt-[44px] bg-white px-4 pb-[50px]">
                 {dataFavourite && dataFavourite.length > 0 && dataFavourite.map(item => (
                     <div className="pl-2 pr-4 pt-5" key={item._id}>
                         <div className="flex gap-2">

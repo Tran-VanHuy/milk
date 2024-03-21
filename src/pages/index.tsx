@@ -57,8 +57,7 @@ const HomePage: React.FunctionComponent = () => {
 
   useEffect
   return (
-    <Page className='pb-[50px]' onScroll={onScroll}
-      ref={listInnerRef}>
+    <Page className='pb-[50px]' onScroll={onScroll} ref={listInnerRef}>
       <Header showNav={false} />
       <div className='pt-[52px]'>
         <Swiper>
@@ -79,12 +78,12 @@ const HomePage: React.FunctionComponent = () => {
                 <ScanOutlined />
                 <div className='ml-[10px] pl-[10px] border-l-[1px] '>
                   <div className='flex items-center gap-2'><WalletOutlined className='text-red-400 text-[16px]' /> <span className='text-[14px] font-[500]'>Ví VNPay</span></div>
-                  <span className='text-[12px] text-gray-500'>Chưa kích hoạt</span>
+                  <span className='text-[12px] text-gray-500 line-clamp-1'>Chức năng đang phát triển</span>
                 </div>
               </div>
               <div className='ml-[10px] pl-[10px] border-l-[1px] '>
                 <div className='flex items-center gap-2'><DollarOutlined className='text-yellow-500 text-[16px]' /> <span className='text-[14px] font-[500]'>0 điểm</span></div>
-                <span className='text-[12px] text-gray-500'>Điểm danh mỗi ngày</span>
+                <span className='text-[12px] text-gray-500 line-clamp-1'>Chức năng đang phát triển</span>
               </div>
             </div>
           </div>

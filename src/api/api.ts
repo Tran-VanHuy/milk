@@ -1,4 +1,4 @@
-export const API_URI = "http://192.168.1.11:3001/v1";
+export const API_URI = "http://192.168.1.9:3001/v1";
 
 export const USER = {
     CREATE: API_URI + "/user",
@@ -96,4 +96,9 @@ export const NOTIFICATION = {
     DELETE: API_URI + "/notification",
     ORDER: API_URI + "/notification/get/order",
     CHECK_READ: API_URI + "/notification/get/check-read"
+}
+
+export const RATING = {
+
+    CREATE: API_URI + "/rating"
 }

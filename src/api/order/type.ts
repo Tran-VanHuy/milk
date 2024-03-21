@@ -15,6 +15,8 @@ export type InfoOrder = {
     nameItem?: string
     msId: string
     szId: string
+    numberRating?: number
+    rating?: boolean
 }
 
 export type BodyInfo = {
@@ -46,7 +48,7 @@ export type OrderType = {
         commune: string,
         specificAddress: string,
         default: boolean,
-    }
+    },
 }
 
 export type ItemOrderType = {
@@ -61,6 +63,8 @@ export type ItemOrderType = {
     images: string
     msId?: string
     szId?: string
+    numberRating?: number,
+    rating?: boolean
 }
 
 export type BodyListInfoOrderType = {
