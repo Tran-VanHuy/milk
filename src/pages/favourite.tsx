@@ -59,21 +59,23 @@ export const Favourite = () => {
     return (
         <Page>
             <Header title="Yêu thích" />
-            <div className="pt-[44px] bg-white px-4 pb-[50px]">
-                {dataFavourite && dataFavourite.length > 0 && dataFavourite.map(item => (
-                    <div className="pl-2 pr-4 pt-5" key={item._id}>
-                        <div className="flex gap-2">
-                            <img src={`${API_URI}/${item.product.images[0].url}`} alt="" className="w-[80px] h-[80px] rounded-lg" />
-                            <div className="flex flex-col justify-between flex-1">
-                                <p className="text-gray-500 font-[400] line-clamp-2" onClick={() => nav(`/product/${item.product._id}`)}>{item.product.name}</p>
-                                <div className="flex justify-between items-center">
-                                    <b>{formatPrice(item.product.price)}</b>
-                                    <div className="w-[30px]" onClick={() => { setSheetVisible(true); setIdFavourite(item._id) }}><EllipsisOutlined /></div>
+            <div className="pt-[44px]  pb-[50px]">
+                <div className="bg-white  px-4">
+                    {dataFavourite && dataFavourite.length > 0 && dataFavourite.map(item => (
+                        <div className="pl-2 pr-4 pt-5 border-b-[1px] pb-4 [&:last-child]:pb-4" key={item._id}>
+                            <div className="flex gap-2">
+                                <img src={`${API_URI}/${item.product.images[0].url}`} alt="" className="w-[80px] h-[80px] rounded-lg" />
+                                <div className="flex flex-col justify-between flex-1">
+                                    <p className="text-gray-500 font-[500] line-clamp-2" onClick={() => nav(`/product/${item.product._id}`)}>{item.product.name}</p>
+                                    <div className="flex justify-between items-center">
+                                        <b>{formatPrice(item.product.price)}</b>
+                                        <div className="w-[30px]" onClick={() => { setSheetVisible(true); setIdFavourite(item._id) }}><EllipsisOutlined /></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
             <Sheet
                 visible={sheetVisible}

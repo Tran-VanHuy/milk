@@ -24,7 +24,7 @@ export const ListProductAdmin = () => {
 
     useEffect(() => {
 
-        products(10, 0, "")
+        products(0, 6, "")
         setShowBottomTab(false)
     }, [])
     return (

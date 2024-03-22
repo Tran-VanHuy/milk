@@ -84,7 +84,7 @@ export const CreateProductAdmin = () => {
 
     const onSubmit = async () => {
 
-        const newData = { ...formProduct, images: listImages, categories: multiSelect || [], info: formProduct?.ms && formProduct?.ms && { ms: formProduct?.ms, sz: formProduct?.sz, itemMS: allDataFormSheet.flat() } }
+        const newData = { ...formProduct, images: listImages, categories: multiSelect || [], info: formProduct?.ms ? formProduct?.ms && { ms: formProduct?.ms, sz: formProduct?.sz, itemMS: allDataFormSheet.flat() } : null }
 
         try {
             const res = await axios.post(PRODUCT.CREATE, newData)

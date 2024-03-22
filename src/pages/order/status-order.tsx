@@ -21,12 +21,13 @@ interface AppcontentType {
     setStatusOrder: React.Dispatch<React.SetStateAction<string>>
     setIdOrder: React.Dispatch<React.SetStateAction<string>>,
     order: (skip: number, user: UserDto, status: string) => void,
-    dataStatusOrder: OrderType[]
+    dataStatusOrder: OrderType[],
+    setOrderCode: React.Dispatch<React.SetStateAction<string>>
 }
 
 export const StatusOrder = () => {
 
-    const { setShowBottomTab, user, setDataListInfoOrder, setTypeOrder, setStatusOrder, setIdOrder, order, dataStatusOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, user, setDataListInfoOrder, setTypeOrder, setStatusOrder, setIdOrder, order, dataStatusOrder, setOrderCode }: AppcontentType = useContext(AppContext);
     const { nameStatusOrder } = useParams()
     const nav = useNavigate()
     const listInnerRef: any = useRef();
@@ -69,7 +70,7 @@ export const StatusOrder = () => {
 
 
     const onSeeOrder = async (item: OrderType) => {
-
+        
         const body: BodyListInfoOrderType = {
             userId: user.userId,
             products: item?.orders!.map(item => ({
@@ -88,6 +89,7 @@ export const StatusOrder = () => {
                 setTypeOrder(2)
                 setStatusOrder(item?.type!)
                 setIdOrder(item._id!)
+                setOrderCode(item.orderCode!)
             }
         }
 
@@ -117,7 +119,6 @@ export const StatusOrder = () => {
 
     const contentRating = (item: ItemOrderType) => {
         setSheetVisible(true)
-        console.log(item);
         setDataContentRating(item)
     }
 
@@ -145,9 +146,12 @@ export const StatusOrder = () => {
                     {dataStatusOrder && dataStatusOrder.length > 0 ? dataStatusOrder.map(item => (
                         <div className="p-3 bg-white mb-2" key={item._id}>
                             <p className="text-right font-[500] mb-2">
+                                {status === "all" && <>
                                 {item.type === "ĐÃ ĐẶT HÀNG" && "Đơn hàng đã được đặt"}
                                 {item.type === "ĐANG VẬN CHUYỂN" && "Đơn hàng đang được vận chuyển"}
                                 {item.type === "ĐÃ VẬN CHUYỂN" && "Đơn hàng đã được vận chuyển"}
+                                </> }
+                               
                             </p>
                             {item.orders?.map(order => (
                                 <div className="mb-3" key={order._id}>

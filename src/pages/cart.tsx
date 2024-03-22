@@ -99,11 +99,12 @@ export const Cart = () => {
                         <div>
                             <input type="radio" name="" id="" onChange={() => onCheck(item)} />
                         </div>
-                        <div className="flex gap-2">
-                            <div>
-                                <img src={`${API_URI}/${item.image}`} alt="" className="w-[90px] h-[90px] rounded-lg" />
-                            </div>
-                            <div className="flex-1 flex justify-between gap-2">
+                        <div className="flex-1 flex gap-2 justify-between">
+
+                            <div className="flex-1 flex  gap-2">
+                                <div>
+                                    <img src={`${API_URI}/${item.image}`} alt="" className="w-[90px] h-[90px] rounded-lg" />
+                                </div>
                                 <div className="flex-1 ">
                                     <p className="line-clamp-2 text-gray-600 font-[400] mb-1" onClick={() => nav(`/product/${item.productId}`)}>{item?.name}</p>
                                     <div className="bg-gray-200 inline-block px-2 text-[12px] text-gray-500 mb-2">{item.nameMS}{item?.nameSZ && `, ${item.nameSZ}`}</div>
@@ -120,9 +121,10 @@ export const Cart = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div onClick={() => { setSheetVisible(true); setIdCart(item._id) }}>
-                                    <EllipsisOutlined className="text-[16px]" />
-                                </div>
+
+                            </div>
+                            <div onClick={() => { setSheetVisible(true); setIdCart(item._id) }}>
+                                <EllipsisOutlined className="text-[16px]" />
                             </div>
                         </div>
                     </div>

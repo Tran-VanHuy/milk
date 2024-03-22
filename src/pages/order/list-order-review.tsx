@@ -22,6 +22,7 @@ interface AppcontentType {
     statusOrder: string
     idOrder: string
     setStatusOrder: React.Dispatch<React.SetStateAction<string>>
+    orderCode: string
 }
 
 type PriceOrder = {
@@ -32,13 +33,12 @@ type PriceOrder = {
 
 export const ListOrderReview = () => {
 
-    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder, setStatusOrder, setDataOrder, typeOrder, statusOrder, idOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder, setStatusOrder, setDataOrder, typeOrder, statusOrder, idOrder, orderCode }: AppcontentType = useContext(AppContext);
 
     const [listorder, setListOrder] = useState<InfoOrder[]>()
     const [priceAllOrder, setPriceAllOrder] = useState<PriceOrder>()
     const [sheetVisible, setSheetVisible] = useState(false);
     const [dataAddress, setAddress] = useState<OrderType>()
-
 
     const onOrder = async () => {
 
@@ -108,7 +108,7 @@ export const ListOrderReview = () => {
                     orderId: idOrder
                 }
                 const res = await changeStatusOrder(body)
-                setStatusOrder(action)
+                setStatusOrder(action.toUpperCase())
                 if (res?.data) {
 
 
@@ -198,7 +198,7 @@ export const ListOrderReview = () => {
                         <div className="bg-white p-2 mb-[1px]">
                             <div className="flex gap-2 mb-3">
                                 <img src={`${API_URI}/${item.images}`} alt="" width={85} height={85} className="rounded" />
-                                <div className="flex flex-col justify-between">
+                                <div className="flex-1  flex flex-col justify-between">
                                     <div>
                                         <p className="line-clamp-1 text-gray-600 font-[400]">{item?.name}</p>
                                         {item?.nameItem && <p className="line-clamp-1 text-gray-500 font-[400] text-[14px] bg-gray-100 inline-block px-3">{item.nameItem}</p>}
@@ -246,6 +246,11 @@ export const ListOrderReview = () => {
                                     <span>Tổng phụ</span>
                                     <span>{formatPrice(item?.subtotal)}</span>
                                 </div>
+                                {typeOrder === 2 && <div className="flex justify-between text-gray-600">
+                                    <span>Số lượng</span>
+                                    <span>x{item?.quantityProduct}</span>
+                                </div>}
+
                                 <div className="flex justify-between text-gray-600">
                                     <span>Vận chuyển</span>
                                     <span>{formatPrice(item?.transportFee)}</span>
@@ -266,6 +271,12 @@ export const ListOrderReview = () => {
                             <div className="flex justify-between text-gray-600">
                                 <span>Trạng thái đơn hàng</span>
                                 <span>{statusOrder}</span>
+                            </div>
+                        }
+                        {
+                            typeOrder === 2 && <div className="flex justify-between text-gray-600">
+                                <span>Mã (code)</span>
+                                <span>{orderCode}</span>
                             </div>
                         }
 

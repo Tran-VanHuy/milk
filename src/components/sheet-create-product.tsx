@@ -16,11 +16,10 @@ type props = {
     allDataFormSheet: any
 }
 
-
-
 export const SheetCreateProduct = ({ sheetVisible, setSheetVisible, ms, sz, setAllDataFromSheet, allDataFormSheet }: props) => {
 
     const [dataFormSheet, setDataFormSheet] = useState<formSheet>()
+    
     const [listImages, setListImages] = useState<ListImages[]>();
 
     const onFinish = (values: any) => {
@@ -30,8 +29,8 @@ export const SheetCreateProduct = ({ sheetVisible, setSheetVisible, ms, sz, setA
         setDataFormSheet(newData)
 
         if (allDataFormSheet && allDataFormSheet.length > 0) {
-
-            setAllDataFromSheet([{ ...dataFormSheet! }, allDataFormSheet])
+            const flatAray : any = [{ ...dataFormSheet! }, allDataFormSheet.flat()]
+            setAllDataFromSheet(flatAray)
         } else {
             setAllDataFromSheet([newData])
         }

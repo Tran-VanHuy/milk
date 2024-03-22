@@ -41,13 +41,13 @@ const UpLoadMulti = ({ setListImages, count, listImages }: Props) => {
                 uid: item?.uid,
                 name: API_URI + "/" + item.name,
                 status: item.status,
-                url: item?.response?.data?.path ? API_URI + "/" + item?.response?.data?.path : API_URI + "/" + item.url
+                url: item?.response?.data?.path ? API_URI + "/" + item?.response?.data?.path :  item.url
             })))
 
             setListImages(fileList.map((item) => ({
                 uid: item?.uid,
-                url: item?.response?.data?.path || item.url,
-                name:  item?.response?.data?.path || item.url
+                url: item?.response?.data?.path ||  item.url?.substring(item.url.indexOf("file")) ,
+                name:  item?.response?.data?.path || item.url?.substring(item.url.indexOf("file"))
             })))
         }
     }, [loading])
@@ -55,7 +55,6 @@ const UpLoadMulti = ({ setListImages, count, listImages }: Props) => {
     useEffect(() => {
 
         if (listImages && listImages.length > 0) {
-            console.log(listImages);
 
             setFileList(listImages.map(item => ({
                 ...item,
@@ -63,6 +62,7 @@ const UpLoadMulti = ({ setListImages, count, listImages }: Props) => {
             })))
         }
     }, [listImages])
+
     return (
         <>
             <Upload

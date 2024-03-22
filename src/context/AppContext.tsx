@@ -19,6 +19,7 @@ import { checkTotalCart } from "../api/cart/api";
 import { getAllNotification } from "../api/notification/api";
 import { NotificationType } from "../api/notification/type";
 import { getAllOrder } from "../api/order/api";
+import { openChat } from 'zmp-sdk/apis';
 
 export const AppContext: any = createContext({});
 
@@ -28,7 +29,6 @@ export const AppProvider = ({ children }) => {
     const [dataCategoryProducts, setDataCategoryProducts] = useState<CategoryProducts[]>();
     const [user, setUser] = useState<UserDto>();
     const [dataProducts, setDataProducts] = useState<ProductType[]>()
-
     const [dataProductDetail, setDataProductDetail] = useState<ProductType>()
     const [dataVoucher, setDataVoucher] = useState<VoucherType[]>()
     const [dataBanner, setDataBanner] = useState<BannerDto[]>()
@@ -43,8 +43,24 @@ export const AppProvider = ({ children }) => {
     const [statusOrder, setStatusOrder] = useState<string>();
     const [idOrder, setIdOrder] = useState<string>()
     const [dataStatusOrder, setDataStatusOrder] = useState<OrderType[]>()
+    const [orderCode, setOrderCode] = useState<string>("")
 
-    const order = async (skip: number, user: UserDto,status: string) => {
+
+
+    const openChatScreen = async (user: UserDto) => {
+        try {
+            await openChat({
+                type: "user",
+                id: user?.userId,
+                message: "Xin Chào",
+            });
+        } catch (error) {
+            // xử lý khi gọi api thất bại
+            console.log(error);
+        }
+    };
+
+    const order = async (skip: number, user: UserDto, status: string) => {
         try {
 
             const res = await getAllOrder(skip, 6, user?.role! !== "ADMIN" ? user?.userId : "", status === "all" ? "" : status)
@@ -190,18 +206,18 @@ export const AppProvider = ({ children }) => {
 
         try {
             const res = await getAllProducts(skip, limit, status, (category || ""))
-            
+
             if (res?.status === 200) {
-                
+
                 let data = res.data
                 if (skip !== 0) {
-                    
+
                     if (dataProducts && dataProducts?.length > 0) {
                         const paging: any = [...dataProducts, res.data]
                         data = paging.flat()
                     }
                 }
-                
+
                 setDataProducts(data)
             }
 
@@ -232,6 +248,7 @@ export const AppProvider = ({ children }) => {
     useEffect(() => {
         if (user) {
             totalCart()
+            openChatScreen(user)
         }
     }, [user])
     return (
@@ -271,7 +288,9 @@ export const AppProvider = ({ children }) => {
             setIdOrder,
             idOrder,
             order,
-            dataStatusOrder
+            dataStatusOrder,
+            orderCode, 
+            setOrderCode
         }}>
             {children}
         </AppContext.Provider>

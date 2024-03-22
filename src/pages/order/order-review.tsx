@@ -148,7 +148,7 @@ export const OverReview = () => {
                 <div className="bg-white p-2 mb-2">
                     <div className="flex gap-2 mb-3">
                         <img src={`${API_URI}/${dataInfo?.images}`} alt="" width={85} height={85} className="rounded" />
-                        <div className="flex flex-col justify-between">
+                        <div className="flex-1 flex flex-col justify-between">
                             <div>
                                 <p className="line-clamp-1 text-gray-600 font-[400]">{dataInfo?.name}</p>
                                 {dataInfo?.nameItem && <p className="line-clamp-1 text-gray-500 font-[400] text-[14px] bg-gray-100 inline-block px-3">{dataInfo.nameItem}</p>}

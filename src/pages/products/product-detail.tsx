@@ -15,6 +15,7 @@ import { BodyInfo } from "../../api/order/type";
 import { BodyCart } from "../../api/cart/type";
 import { BodyCheckFavourite } from "../../api/favourite/type";
 import FlyingButton from 'react-flying-item'
+import { RatingProduct } from "../../components/products/rating-product";
 
 interface AppcontentType {
 
@@ -36,30 +37,6 @@ export const ProductDetail = () => {
     const { id } = useParams()
     const nav = useNavigate()
 
-    const images = [
-        {
-            src: "https://stc-zmp.zadn.vn/zmp-zaui/images/e2e10aa1a6087a5623192.jpg",
-            alt: "img 1",
-            key: "1",
-        },
-        {
-            src: "https://stc-zmp.zadn.vn/zmp-zaui/images/fee40cbea0177c4925061.jpg",
-            alt: "img 2",
-            key: "2",
-        },
-        {
-            src: "https://stc-zmp.zadn.vn/zmp-zaui/images/82ca759bd932056c5c233.jpg",
-            alt: "img 3",
-            key: "3",
-        },
-        {
-            src: "https://stc-zmp.zadn.vn/zmp-zaui/images/77f5b8cd1464c83a91754.jpg",
-            alt: "img 4",
-            key: "4",
-        },
-    ];
-    const [visible, setVisible] = useState(false);
-    const [activeIndex, setActiveIndex] = useState(0);
     const [sheetVisible, setSheetVisible] = useState(false);
     const [dataItemSZ, setDataItemSZ] = useState<ItemSZType[]>()
     const [nameProductSheet, setNameProductSheet] = useState<string>("");
@@ -118,6 +95,7 @@ export const ProductDetail = () => {
         setImageMS(data.image)
         setDataItemSZ(data.itemSZ)
         setNameProductSheet(data.name)
+        setIdSZ("")
         if (dataProductDetail.type === 2) {
             setError(false)
         }
@@ -139,6 +117,7 @@ export const ProductDetail = () => {
         }
         setIdSZ(data._id);
         setDataItemSZProduct(data);
+    
     }
 
     const onBuyProducts = async (action: string) => {
@@ -366,117 +345,7 @@ export const ProductDetail = () => {
                         <div className="text-[14px] font-[500]">Ngày giao hàng dự kiến: {dataProductDetail?.deliveryDate === 0 ? "Trong ngày" : `${dataProductDetail?.deliveryDate} ngày  `} <span className="text-[10px] text-red-500">(có thể thay đổi)</span></div>
                     </div>
                 </div>
-                <div className="p-2 bg-white mb-3">
-                    <div className="px-2">
-                        <div className="flex justify-between items-center mb-2">
-                            <span className="text-[16px] font-[700]">Đánh giá của khách hàng (43)</span>
-                            <div className="text-[14px] font-[500] text-gray-500">Xem thêm</div>
-                        </div>
-                        <div className="flex items-baseline mb-4">
-                            <div className="font-bold mr-2">4.8</div>
-                            <div className="text-[12px] text-gray-500 mr-2">/5</div>
-                            <div className="flex gap-1">
-                                <StarOutlined className="text-[12px] text-yellow-500" />
-                                <StarOutlined className="text-[12px] text-yellow-500" />
-                                <StarOutlined className="text-[12px] text-yellow-500" />
-                                <StarOutlined className="text-[12px] text-yellow-500" />
-                                <StarOutlined className="text-[12px] text-yellow-500" />
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-5">
-                            <div>
-                                <div className="flex items-center gap-2 mb-1">
-                                    <img src="https://i.pinimg.com/736x/78/90/e1/7890e13d8985d3a5360e3e62831575fd.jpg" alt="" className="w-[25px] h-[25px] rounded-full" />
-                                    <span className="font-bold text-[14px]">V** H** A**</span>
-                                </div>
-                                <div className="flex gap-1 mb-1">
-                                    <StarOutlined className="text-[12px] text-yellow-500" />
-                                    <StarOutlined className="text-[12px] text-yellow-500" />
-                                    <StarOutlined className="text-[12px] text-yellow-500" />
-                                    <StarOutlined className="text-[12px] text-yellow-500" />
-                                    <StarOutlined className="text-[12px] text-yellow-500" />
-                                </div>
-                                <span className="text-[14px] text-gray-600 font-[500]">Mặt hàng: Default</span>
-                                <p className="font-[500] text-[14px] pt-1 mb-2">Shop thật sự rất nhiệt tình luôn ạ</p>
-                                <div className="flex">
-                                    {images.map((img, index) => (
-                                        <Box
-                                            mr={1}
-                                            key={img.key}
-                                            style={{
-                                                width: "68px",
-                                                height: "69px",
-                                                borderRadius: "8px",
-                                                overflow: "hidden",
-                                            }}
-                                        >
-                                            <img
-                                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                                                role="presentation"
-                                                onClick={() => {
-                                                    setActiveIndex(index);
-                                                    setVisible(true);
-                                                }}
-                                                src={img.src}
-                                                alt={img.alt}
-                                            />
-                                        </Box>
-                                    ))}
-                                </div>
-                                <ImageViewer
-                                    onClose={() => setVisible(false)}
-                                    images={images}
-                                    visible={visible}
-                                />
-                            </div>
-                            <div>
-                                <div className="flex items-center gap-2 mb-1">
-                                    <img src="https://i.pinimg.com/736x/78/90/e1/7890e13d8985d3a5360e3e62831575fd.jpg" alt="" className="w-[25px] h-[25px] rounded-full" />
-                                    <span className="font-bold text-[14px]">V** H** A**</span>
-                                </div>
-                                <div className="flex gap-1 mb-1">
-                                    <StarOutlined className="text-[12px] text-yellow-500" />
-                                    <StarOutlined className="text-[12px] text-yellow-500" />
-                                    <StarOutlined className="text-[12px] text-yellow-500" />
-                                    <StarOutlined className="text-[12px] text-yellow-500" />
-                                    <StarOutlined className="text-[12px] text-yellow-500" />
-                                </div>
-                                <span className="text-[14px] text-gray-600 font-[500]">Mặt hàng: Default</span>
-                                <p className="font-[500] text-[14px] pt-1 mb-2">Shop thật sự rất nhiệt tình luôn ạ</p>
-                                <div className="flex">
-                                    {images.map((img, index) => (
-                                        <Box
-                                            mr={1}
-                                            key={img.key}
-                                            style={{
-                                                width: "68px",
-                                                height: "69px",
-                                                borderRadius: "8px",
-                                                overflow: "hidden",
-                                            }}
-                                        >
-                                            <img
-                                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                                                role="presentation"
-                                                onClick={() => {
-                                                    setActiveIndex(index);
-                                                    setVisible(true);
-                                                }}
-                                                src={img.src}
-                                                alt={img.alt}
-                                            />
-                                        </Box>
-                                    ))}
-                                </div>
-                                <ImageViewer
-                                    onClose={() => setVisible(false)}
-                                    images={images}
-                                    visible={visible}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <RatingProduct productId={id!} />
                 <div className="p-2 bg-white mb-3">
                     <div className="px-2 flex justify-between items-center mb-2">
                         <span className="text-[16px] font-[700]">Xem thêm sản phẩm khác</span>
