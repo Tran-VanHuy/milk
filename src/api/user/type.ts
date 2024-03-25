@@ -34,3 +34,8 @@ export type SelectUser = {
     phone: string,
     address?: AddressDto
 }
+
+export type BodySignInType = {
+
+    userId: string;
+}

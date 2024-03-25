@@ -1,5 +1,5 @@
 import { USER } from "../api";
-import { UserDto } from "./type";
+import { BodySignInType, UserDto } from "./type";
 import axios from "axios";
 
 export const createApiUser = async (data: UserDto) => {
@@ -16,7 +16,7 @@ export const findOneUser = async (userId: string) => {
 
 export const getAllProvince = async (title: string, id?: string) => {
     let data = [];
-    if(title === "Tỉnh/ TP"){
+    if (title === "Tỉnh/ TP") {
         const res = await axios.get("https://vapi.vnappmob.com/api/province/");
         data = res.data.results.map((item) => ({
 
@@ -25,7 +25,7 @@ export const getAllProvince = async (title: string, id?: string) => {
         }));
     }
 
-    if(title === "Quận/ Huyện"){
+    if (title === "Quận/ Huyện") {
         const res = await axios.get(`https://vapi.vnappmob.com/api/province/district/${id}`);
         data = res.data.results.map((item) => ({
 
@@ -34,7 +34,7 @@ export const getAllProvince = async (title: string, id?: string) => {
         }));
     }
 
-    if(title === "Xã/ Phường"){
+    if (title === "Xã/ Phường") {
         const res = await axios.get(`https://vapi.vnappmob.com/api/province/ward/${id}`);
         data = res.data.results.map((item) => ({
 
@@ -42,6 +42,12 @@ export const getAllProvince = async (title: string, id?: string) => {
             name: item.ward_name
         }));
     }
-    
+
     return data;
+}
+
+export const SignIn = async (body: BodySignInType) => {
+
+    const res = await axios.post(USER.SIGN_IN, body)
+    return res.data;
 }

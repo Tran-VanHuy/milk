@@ -6,6 +6,7 @@ import { AppContext } from "../../context/AppContext";
 import { BannerDto } from "../../api/banner/type";
 import axios from "axios";
 import { API_URI, BANNER } from "../../api/api";
+import { deleteBanner } from "../../api/banner/api";
 
 interface AppcontentType {
 
@@ -25,8 +26,8 @@ export const BannerAdmin = () => {
         try {
             if (action === "DELETE") {
 
-                const res = await axios.delete(`${BANNER.DELETE}/${idBanner}`)
-                if (res?.data?.status === 200) {
+                const res = await deleteBanner(idBanner!)
+                if (res?.status === 200) {
                     banner(0, 8)
                 }
             }

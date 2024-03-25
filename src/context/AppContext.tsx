@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
-import { getAccessToken, getPhoneNumber, getUserID, getUserInfo } from "zmp-sdk";
-import { createApiUser, findOneUser } from "../api/user/user";
-import { UserDto } from "../api/user/type";
+import { getAccessToken, getPhoneNumber, getUserID, getUserInfo, setStorage } from "zmp-sdk";
+import { SignIn, createApiUser, findOneUser } from "../api/user/user";
+import { BodySignInType, UserDto } from "../api/user/type";
 import { CategoryProducts } from "../api/category-product/type";
 import { getAllCategoryProduct } from "../api/category-product/api";
 import { ProductType } from "../api/products/type";
@@ -44,6 +44,7 @@ export const AppProvider = ({ children }) => {
     const [idOrder, setIdOrder] = useState<string>()
     const [dataStatusOrder, setDataStatusOrder] = useState<OrderType[]>()
     const [orderCode, setOrderCode] = useState<string>("")
+    const [accessToken, setAccessToken] = useState<string>()
 
 
 
@@ -182,6 +183,20 @@ export const AppProvider = ({ children }) => {
             if (user) {
 
                 setUser(user.data.data)
+
+                const body: BodySignInType = {
+                    userId: user.data.data.userId
+                }
+                const signIn = await SignIn(body)
+                if (signIn?.status === 200) {
+
+                    const { errorKeys } = await setStorage({
+                        data: {
+                            accessToken: signIn.data.accessToken,
+
+                        }
+                    });
+                }
             }
 
         } catch (error) {
@@ -289,8 +304,9 @@ export const AppProvider = ({ children }) => {
             idOrder,
             order,
             dataStatusOrder,
-            orderCode, 
-            setOrderCode
+            orderCode,
+            setOrderCode,
+            accessToken
         }}>
             {children}
         </AppContext.Provider>

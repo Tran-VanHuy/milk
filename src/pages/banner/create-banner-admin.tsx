@@ -6,6 +6,7 @@ import { UploadFile } from "antd";
 import { BannerDto } from "../../api/banner/type";
 import axios from "axios";
 import { BANNER } from "../../api/api";
+import { requestEdit, requestPost } from "../../api/apiRequest";
 
 export const CreateBannerAdmin = () => {
     const { id } = useParams()
@@ -22,8 +23,9 @@ export const CreateBannerAdmin = () => {
                 status: enabled
 
             }
-            const res = !id ? await axios.post(BANNER.CREATE, body) : await axios.put(`${BANNER.UPDATE}/${id}`, body)
-            if (res?.data?.status === 200) {
+
+            const res = !id ? await requestPost(BANNER.CREATE, body) : await requestEdit(`${BANNER.UPDATE}/${id}`, body)
+            if (res?.status === 200) {
 
                 nav("/setting/banner-admin")
             }

@@ -3,7 +3,8 @@ export const API_URI = "http://192.168.1.8:3001/v1";
 export const USER = {
     CREATE: API_URI + "/user",
     FIND_ONE: API_URI + "/user/findOne",
-    GET_ALL: API_URI + "/user"
+    GET_ALL: API_URI + "/user",
+    SIGN_IN: API_URI + "/user/sign-in"
 }
 
 export const ADDRESS = {
