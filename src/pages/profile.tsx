@@ -101,10 +101,51 @@ export const Profile = () => {
     }, [])
     return (
         <Page className="pb-[65px]">
-            <div className="pt-[65px] pb-3 px-3 bg-orange-500 flex gap-2 relative" style={{ background: "#f53d2d" }}>
+            <div className="relative mb-[70px]">
+                <div className="bg-[#f53d2d] rounded-b-3xl h-[150px]"></div>
+                <div className="px-2 absolute w-full top-[60px]">
+                    <div className="flex gap-2 mb-1">
+                        <img src={user?.avatar} alt="" className="rounded-full w-[45px] h-[45px] object-cover" />
+                        <div className="text-white">
+                            <p className="text-[14px]">Xin chào</p>
+                            <p className="font-bold text-[16px]">{addressDefault?.name || "Chưa cập nhật"}</p>
+                        </div>
+                    </div>
+                    <div className="bg-white px-2 rounded-xl">
+                        <div className="flex justify-end items-center py-2 border-b-[2px] mb-4 gap-1" onClick={() => nav("/status-order/all")}>
+                            <span className="text-[12px] text-gray-600">Lịch sử đơn hàng</span>
+                            <RightOutlined className="text-[10px] text-gray-600 pt-1" />
+                        </div>
+                        <div className="flex justify-between px-2 pb-2">
+                            <div className="text-center">
+                                <div className="relative" onClick={() => nav("/status-order/ĐÃ ĐẶT HÀNG")}>
+                                    <WalletOutlined className="text-[25px] text-gray-600" />
+                                    {dataQuantityTypeOrder?.ordered !== 0 && <div className="rounded-full w-[15px] h-[15px] bg-red-500 text-[10px] text-white flex justify-center items-center absolute -top-[5px] right-[18px]">{dataQuantityTypeOrder?.ordered}</div>}
+                                </div>
+                                <span className="text-[12px]">Đã đặt hàng</span>
+                            </div>
+                            <div className="text-center">
+                                <div className="relative" onClick={() => nav("/status-order/ĐANG VẬN CHUYỂN")}>
+                                    <TruckOutlined className="text-[25px] text-gray-600" />
+                                    {dataQuantityTypeOrder?.beingTransported !== 0 && <div className="rounded-full w-[15px] h-[15px] bg-red-500 text-[10px] text-white flex justify-center items-center absolute -top-[5px] right-[20px]">{dataQuantityTypeOrder?.beingTransported}</div>}
+                                </div>
+                                <span className="text-[12px]">Đang giao hàng</span>
+                            </div>
+                            <div className="text-center">
+                                <div className="relative" onClick={() => nav("/status-order/ĐÃ VẬN CHUYỂN")}>
+                                    <StarOutlined className="text-[25px] text-gray-600" />
+                                    {dataQuantityTypeOrder?.shipped !== 0 && <div className="rounded-full w-[15px] h-[15px] bg-red-500 text-[10px] text-white flex justify-center items-center absolute -top-[5px] right-[8px]">{dataQuantityTypeOrder?.shipped}</div>}
+
+                                </div>
+                                <span className="text-[12px]">Đánh giá</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* <div className="pt-[65px] pb-3 px-3 bg-orange-500 flex gap-2 relative" style={{ background: "#f53d2d" }}>
                 <div className="relative overflow-hidden">
                     <img src={user?.avatar} alt="" className="rounded-full w-[60px] h-[60px] object-cover" onClick={handleDivClick} />
-
                     <div className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-30 text-center" >
                         <input
                             type="file"
@@ -124,7 +165,7 @@ export const Profile = () => {
                     <ShoppingCartOutlined className='pr-[10px] text-white text-[16px]' />
                     <MessageOutlined className='text-white text-[16px]' />
                 </div>
-            </div>
+            </div> */}
             <div className="p-2">
                 <div className="bg-white flex  gap-2 items-center p-2 rounded">
                     <WarningOutlined className="text-red-500" />
@@ -133,7 +174,7 @@ export const Profile = () => {
                     </div>
                 </div>
             </div>
-            <div className="p-2 bg-white mb-2">
+            {/* <div className="p-2 bg-white mb-2">
                 <div className="flex justify-between items-center mb-5">
                     <div className="flex items-center gap-2"><ContainerOutlined className="text-[20px] text-blue-800 pt-1" /> <span className="font-[500]">{user.role === "ADMIN" ? "Đơn hàng" : "Đơn mua"}</span></div>
                     <div className="flex items-center gap-1" onClick={() => nav("/status-order/all")}>
@@ -165,7 +206,7 @@ export const Profile = () => {
                         <span className="text-[12px]">Đánh giá</span>
                     </div>
                 </div>
-            </div>
+            </div> */}
             {dataBoughtOrder && dataBoughtOrder.length > 0 &&
                 <div className="bg-white pt-2">
                     <div className="px-2 flex justify-between mb-3">

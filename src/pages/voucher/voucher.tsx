@@ -1,10 +1,11 @@
-import { DeleteOutlined, EllipsisOutlined, EyeOutlined, FormOutlined, HeartOutlined, SearchOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EllipsisOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Header, Page, Sheet } from "zmp-ui";
 import { AppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { formatPrice } from "../../components/format-price";
-import { VoucherType } from "../../api/voucher/type";
+import { BodyVoucherType, VoucherType } from "../../api/voucher/type";
+import { deleteVoucher, updateVoucher } from "../../api/voucher/api";
 
 interface AppcontentType {
 
@@ -19,6 +20,48 @@ export const ListVoucherAdmin = () => {
     const nav = useNavigate();
 
     const [sheetVisible, setSheetVisible] = useState(false);
+    const [idVoucher, setIdVoucher] = useState<string>()
+    const [detail, setDetail] = useState<VoucherType>()
+
+    const onDetail = (item: VoucherType) => {
+        setIdVoucher(item._id)
+        setSheetVisible(true)
+        setDetail(item)
+    }
+    const onDelete = async () => {
+        try {
+
+            const res = await deleteVoucher(idVoucher!);
+            if (res) {
+                voucher("", "")
+            }
+            setSheetVisible(false)
+        } catch (error) {
+
+            console.log({ error });
+        }
+    }
+
+    const onUpdate = async () => {
+
+        try {
+            const body: BodyVoucherType = {
+                ...detail!,
+                status: !detail?.status
+            }
+
+            const res = await updateVoucher(idVoucher!, body);
+            if (res) {
+
+                voucher("", "")
+            }
+
+            setSheetVisible(false)
+        } catch (error) {
+
+            console.log({ error });
+        }
+    }
 
     useEffect(() => {
 
@@ -45,27 +88,21 @@ export const ListVoucherAdmin = () => {
             {dataVoucher && dataVoucher.length > 0 && dataVoucher.map(item => (
                 <div className="bg-white  p-2 mb-2" key={item._id}>
                     <div className="flex justify-between">
-                        <div className="flex gap-2">
-                            <div className="flex flex-col justify-between">
-                                <div>
-                                    <p className="font-medium mb line-clamp-2">{item.name}</p>
-                                    <div className="flex flex-col">
-                                        <span className="text-[12px] text-gray-[400]">{item.content}</span>
-                                        <span className="text-[12px] text-gray-[400]">Giảm: {formatPrice(item.discount)}</span>
-                                        <span className="text-[12px] text-gray-[400]">Đơn hàng tối thiểu: {formatPrice(item.minimum)}</span>
-                                        <span className="text-[12px] text-gray-[400]">Trạng thái: {item.status ? "hiện" : "ẩn"}</span>
-                                    </div>
-                                </div>
+                        <div onClick={() => nav(`update/${item._id}`)}>
+                            <p className="font-medium mb line-clamp-2">{item.name}</p>
+                            <div className="flex flex-col">
+                                <span className="text-[12px] text-gray-[400]">{item.content}</span>
+                                <span className="text-[12px] text-gray-[400]">Giảm: {formatPrice(item.discount)}</span>
+                                <span className="text-[12px] text-gray-[400]">Đơn hàng tối thiểu: {formatPrice(item.minimum)}</span>
+                                <span className="text-[12px] text-gray-[400]">Trạng thái: {item.status ? "hiện" : "ẩn"}</span>
                             </div>
                         </div>
-                        <div onClick={() => { setSheetVisible(true) }}>
+                        <div onClick={() => onDetail(item)}>
                             <EllipsisOutlined />
                         </div>
                     </div>
                 </div>
             ))}
-
-
 
             <Sheet
                 visible={sheetVisible}
@@ -77,17 +114,13 @@ export const ListVoucherAdmin = () => {
             >
                 <Box>
                     <div className="px-2 pb-[30px]">
-                        <div className="flex items-center gap-2 border-b-[1px] pb-4 mb-4" onClick={() => setSheetVisible(false)}>
+                        <div className="flex items-center gap-2 border-b-[1px] pb-4 mb-4" onClick={() => onDelete()}>
                             <DeleteOutlined className="text-[16px] font-[500]" />
                             <span className="text-[16px] font-[500]">Xóa</span>
                         </div>
-                        <div className="flex items-center gap-2 border-b-[1px] pb-4 mb-4" onClick={() => setSheetVisible(false)}>
-                            <FormOutlined className="text-[16px] font-[500]" />
-                            <span className="text-[16px] font-[500]">Chỉnh sửa</span>
-                        </div>
-                        <div className="flex items-center gap-2" onClick={() => setSheetVisible(false)}>
+                        <div className="flex items-center gap-2" onClick={() => onUpdate()}>
                             <EyeOutlined className="text-[16px] font-[500]" />
-                            <span className="text-[16px] font-[500]">Ẩn</span>
+                            <span className="text-[16px] font-[500]">{detail?.status ? "Ẩn" : "Hiện"}</span>
                         </div>
                     </div>
                 </Box>

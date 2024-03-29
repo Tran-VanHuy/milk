@@ -58,7 +58,7 @@ export const NotificationAdmin = () => {
             {dataNotification && dataNotification.length ? dataNotification.map(item => (
                 <div className="bg-white p-2 mb-2" key={item._id}>
                     <div className="flex justify-between">
-                        <div className="flex gap-2">
+                        <div className="flex gap-2" onClick={() => nav(`update/${item._id}`)}>
                             <img src={`${API_URI}/${item.image}`} alt="" className="w-[90px] h-[90px] rounded-xl" />
                             <div className="flex flex-col justify-between">
                                 <div>

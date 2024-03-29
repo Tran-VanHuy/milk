@@ -17,7 +17,6 @@ export type BodyNotificationType = {
     content?: string
     link?: string
     productId: string
-    users: string[]
     allUser: boolean
 }
 

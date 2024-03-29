@@ -1,4 +1,4 @@
-export const API_URI = "http://192.168.1.8:3001/v1";
+export const API_URI = "http://192.168.1.6:3001/v1";
 
 export const USER = {
     CREATE: API_URI + "/user",
@@ -40,7 +40,11 @@ export const UPLOAD = {
 export const VOUCHER = {
 
     GET_ALL: API_URI + "/voucher",
-    CREATE: API_URI + "/voucher"
+    CREATE: API_URI + "/voucher",
+    DELETE: API_URI + "/voucher",
+    UPDATE: API_URI + "/voucher",
+    DETAIL: API_URI + "/voucher"
+
 }
 
 export const BANNER = {
@@ -96,7 +100,9 @@ export const NOTIFICATION = {
     GET_ALL: API_URI + "/notification",
     DELETE: API_URI + "/notification",
     ORDER: API_URI + "/notification/get/order",
-    CHECK_READ: API_URI + "/notification/get/check-read"
+    CHECK_READ: API_URI + "/notification/get/check-read",
+    UPDATE: API_URI + "/notification",
+    DETAIL: API_URI + "/notification",
 }
 
 export const RATING = {

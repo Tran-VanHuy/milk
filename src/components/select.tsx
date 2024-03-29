@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Select, Space } from 'antd';
 
 export type dataSelectType = {
@@ -13,14 +13,10 @@ export type Props = {
   dataSelect: dataSelectType[]
   placeholder: string
   typeSelect: string
+  value?: string[]
+  multiSelect?: string[]
 }
-const SelecMulti = ({ setMultiSelect, dataSelect, placeholder, typeSelect }: Props) => {
-
-
-  const handleChange = (value: string[]) => {
-
-    setMultiSelect(value)
-  };
+const SelecMulti = ({ setMultiSelect, dataSelect, placeholder, typeSelect, multiSelect }: Props) => {
 
   return (
     <>
@@ -30,14 +26,17 @@ const SelecMulti = ({ setMultiSelect, dataSelect, placeholder, typeSelect }: Pro
           allowClear
           style={{ width: '100%' }}
           placeholder={placeholder}
-          onChange={handleChange}
+          onChange={setMultiSelect}
           options={dataSelect}
+          value={multiSelect}
+        
         /> : <Select
           allowClear
           style={{ width: '100%' }}
           placeholder={placeholder}
-          onChange={handleChange}
+          onChange={setMultiSelect}
           options={dataSelect}
+          value={multiSelect}
         />}
 
       </Space>

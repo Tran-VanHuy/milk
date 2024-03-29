@@ -49,16 +49,16 @@ export const AppProvider = ({ children }) => {
 
 
     const openChatScreen = async (user: UserDto) => {
-        try {
-            await openChat({
-                type: "user",
-                id: user?.userId,
-                message: "Xin Chào",
-            });
-        } catch (error) {
-            // xử lý khi gọi api thất bại
-            console.log(error);
-        }
+        // try {
+        //     await openChat({
+        //         type: "user",
+        //         id: user?.userId,
+        //         message: "Xin Chào",
+        //     });
+        // } catch (error) {
+        //     // xử lý khi gọi api thất bại
+        //     console.log(error);
+        // }
     };
 
     const order = async (skip: number, user: UserDto, status: string) => {
@@ -263,7 +263,7 @@ export const AppProvider = ({ children }) => {
     useEffect(() => {
         if (user) {
             totalCart()
-            openChatScreen(user)
+            // openChatScreen(user)
         }
     }, [user])
     return (

@@ -62,6 +62,7 @@ const MyApp = () => {
                 <Route path="/setting/list-product-admin/create" element={<CreateProductAdmin></CreateProductAdmin>}></Route>
                 <Route path="/setting/list-voucher" element={<ListVoucherAdmin></ListVoucherAdmin>}></Route>
                 <Route path="/setting/list-voucher/create" element={<CreateVoucherAdmin></CreateVoucherAdmin>}></Route>
+                <Route path="/setting/list-voucher/update/:id" element={<CreateVoucherAdmin></CreateVoucherAdmin>}></Route>
                 <Route path="/setting/categories-admin" element={<CategoriesAdmin></CategoriesAdmin>}></Route>
                 <Route path="/setting/categories-admin/create" element={<CreateCategoryAdmin></CreateCategoryAdmin>}></Route>
                 <Route path="/setting/categories-admin/update/:id" element={<CreateCategoryAdmin></CreateCategoryAdmin>}></Route>
@@ -75,6 +76,8 @@ const MyApp = () => {
                 <Route path="/search" element={<Search></Search>}></Route>
                 <Route path="/notification-admin" element={<NotificationAdmin></NotificationAdmin>}></Route>
                 <Route path="/notification-admin/create" element={<CreateNotificationAdmin></CreateNotificationAdmin>}></Route>
+                <Route path="/notification-admin/update/:id" element={<CreateNotificationAdmin></CreateNotificationAdmin>}></Route>
+
               </AnimationRoutes>
               <BottomNavigationPage />
             </ZMPRouter>
