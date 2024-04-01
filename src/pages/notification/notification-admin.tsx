@@ -7,6 +7,7 @@ import { NotificationType } from "../../api/notification/type";
 import { API_URI, NOTIFICATION } from "../../api/api";
 import moment from "moment";
 import axios from "axios";
+import { requestDelete } from "../../api/apiRequest";
 
 interface AppcontentType {
 
@@ -26,8 +27,8 @@ export const NotificationAdmin = () => {
 
         try {
 
-            const res = await axios.delete(`${NOTIFICATION.DELETE}/${idNotification}`)
-            if (res.data.status === 200) {
+            const res = await requestDelete(`${NOTIFICATION.DELETE}/${idNotification}`)
+            if (res.status === 200) {
                 notification("")
             }
             setSheetVisible(false)

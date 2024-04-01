@@ -4,7 +4,6 @@ import { Header } from "../../components/headers/header";
 import { AppContext } from "../../context/AppContext";
 import { formatPrice } from "../../components/format-price";
 import { BodyListInfoOrderType, ItemOrderType, ListInfoOrderType, OrderType } from "../../api/order/type";
-import { getAllOrder } from "../../api/order/api";
 import { UserDto } from "../../api/user/type";
 import { InboxOutlined } from "@ant-design/icons";
 import { API_URI, ORDER } from "../../api/api";
@@ -22,12 +21,13 @@ interface AppcontentType {
     setIdOrder: React.Dispatch<React.SetStateAction<string>>,
     order: (skip: number, user: UserDto, status: string) => void,
     dataStatusOrder: OrderType[],
+    setDataStatusOrder: React.Dispatch<React.SetStateAction<OrderType[]>>
     setOrderCode: React.Dispatch<React.SetStateAction<string>>
 }
 
 export const StatusOrder = () => {
 
-    const { setShowBottomTab, user, setDataListInfoOrder, setTypeOrder, setStatusOrder, setIdOrder, order, dataStatusOrder, setOrderCode }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, user, setDataListInfoOrder, setTypeOrder, setStatusOrder, setIdOrder, order, dataStatusOrder, setOrderCode, setDataStatusOrder }: AppcontentType = useContext(AppContext);
     const { nameStatusOrder } = useParams()
     const nav = useNavigate()
     const listInnerRef: any = useRef();

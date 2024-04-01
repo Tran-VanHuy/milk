@@ -1,10 +1,11 @@
-export const API_URI = "http://192.168.1.6:3001/v1";
+export const API_URI = "http://192.168.1.17:3001/v1";
 
 export const USER = {
     CREATE: API_URI + "/user",
     FIND_ONE: API_URI + "/user/findOne",
     GET_ALL: API_URI + "/user",
-    SIGN_IN: API_URI + "/user/sign-in"
+    SIGN_IN: API_URI + "/user/sign-in",
+    CHANGE_NOTI: API_URI + "/user/change-noti"
 }
 
 export const ADDRESS = {
@@ -75,7 +76,8 @@ export const ORDER = {
     CHANGE_TYPE: API_URI + "/order/change-type",
     DETAIL: API_URI + "/order/detail",
     QUANTITY_TYPE: API_URI + "/order/quantity-status-order",
-    BOUGHT: API_URI + "/order/bought-product"
+    BOUGHT: API_URI + "/order/bought-product",
+    RATING_AND_SALE: API_URI + "/order/rating-and-sale"
 }
 
 export const CART = {

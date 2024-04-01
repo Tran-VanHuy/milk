@@ -72,7 +72,7 @@ const HomePage: React.FunctionComponent = () => {
           ))}
         </Swiper>
         <div className='relative bg-green-400 pb-2 mb-3'>
-          <div className='absolute -top-[5px] left-0 right-0 px-[20px]'>
+          <div className='absolute -top-[20px] left-0 right-0 px-[20px]'>
             <div className='flex bg-white rounded pl-2 pr-5 py-2 justify-between'>
               <div className='flex items-center'>
                 <ScanOutlined />
@@ -89,7 +89,7 @@ const HomePage: React.FunctionComponent = () => {
           </div>
           <div className='overflow-hidden overflow-x-auto'>
             <div className='pb-2'>
-              <div className='pt-[70px] grid grid-cols-12 gap-2  overflow-x-auto '>
+              <div className='pt-[60px] grid grid-cols-12 gap-2  overflow-x-auto '>
                 {dataCategoryProducts && dataCategoryProducts.length > 0 && dataCategoryProducts.map(item => (
                   <div className='col-span-3 text-center flex justify-center flex-col items-center' key={item._id} onClick={() => nav(`/list-product-category/${item.name}/${item._id}`)}>
                     <div>

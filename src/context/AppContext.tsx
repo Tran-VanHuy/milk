@@ -46,8 +46,6 @@ export const AppProvider = ({ children }) => {
     const [orderCode, setOrderCode] = useState<string>("")
     const [accessToken, setAccessToken] = useState<string>()
 
-
-
     const openChatScreen = async (user: UserDto) => {
         // try {
         //     await openChat({
@@ -175,17 +173,31 @@ export const AppProvider = ({ children }) => {
                 avatar: userInfo.avatar,
                 name: userInfo.name,
                 phone: number || "Chưa có",
-                role: "USER"
+                role: "USER",
+                notification: false
             }
             await createApiUser(body)
-            const user = await findOneUser(body.userId)
+            const res = await findOneUser(body.userId)
 
+            if (res.status === 200) {
+
+
+                if (res.data.notification !== user?.notification || user?.role !== res.data.role || res.data.address.length !== user?.address?.length) {
+                    setUser(res.data)
+                }
+            }
+
+        } catch (error) {
+            // xử lý khi gọi api thất bại
+            console.log(error);
+        }
+    };
+
+    const signIn = async () => {
+        try {
             if (user) {
-
-                setUser(user.data.data)
-
                 const body: BodySignInType = {
-                    userId: user.data.data.userId
+                    userId: user.userId
                 }
                 const signIn = await SignIn(body)
                 if (signIn?.status === 200) {
@@ -200,10 +212,12 @@ export const AppProvider = ({ children }) => {
             }
 
         } catch (error) {
-            // xử lý khi gọi api thất bại
-            console.log(error);
+
         }
-    };
+        if (user) {
+
+        }
+    }
 
     const categoryProducts = async (skip: number, limit: number, status: string) => {
 
@@ -259,6 +273,14 @@ export const AppProvider = ({ children }) => {
     useEffect(() => {
         getUser()
     }, [])
+
+    useEffect(() => {
+
+
+        if (user) {
+            signIn()
+        }
+    }, [user])
 
     useEffect(() => {
         if (user) {

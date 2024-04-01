@@ -19,7 +19,7 @@ interface AppcontentType {
 }
 export const Notificaiton = () => {
 
-    const { setShowBottomTab, notification, dataNotification, user, setTypeOrder, setStatusOrder, setIdOrder }: AppcontentType = useContext(AppContext);
+    const { setShowBottomTab, notification, dataNotification, user }: AppcontentType = useContext(AppContext);
     const nav = useNavigate();
     const [dataNotifiCationOrder, setDataNotificationOrder] = useState<NotifiCationOrderType[]>();
     const [nameAction, setNameAction] = useState<string>("Tin mới")
@@ -88,7 +88,7 @@ export const Notificaiton = () => {
                         <div className="py-2 px-4 bg-white" key={item._id}>
                             <div className="flex gap-3 border-b-[1px] pb-2 [&:last-child]:border-0">
                                 <img src={`${API_URI}/${item.image}`} alt="" className="w-[45px] h-[45px]" />
-                                <div onClick={() => nav(item?.link || `/product/${item.productId}`)}>
+                                <div className="flex-1" onClick={() => nav(item?.link || `/product/${item.productId}`)}>
                                     <p className="text-[14px] font-[500] line-clamp-2">{item.title}</p>
                                     <div className="text-[14px] text-gray-500 line-clamp-4">
                                         {item.shortContent}

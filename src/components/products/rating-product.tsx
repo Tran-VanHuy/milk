@@ -7,14 +7,14 @@ import { API_URI } from "../../api/api";
 import { Rating } from "../rating";
 type props = {
 
-    productId: string
+    productId: string,
+    mediumRating: number
 }
-export const RatingProduct = ({ productId }: props) => {
+export const RatingProduct = ({ productId, mediumRating }: props) => {
 
     const [skip, setSkip] = useState<number>(0)
     const [total, setTotal] = useState<number>(0)
     const [rating, setRating] = useState<number>(1)
-    const [mediumRating, setMediumRating] = useState<number>(0)
     const [visible, setVisible] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const [images, setImages] = useState<any>([]);
@@ -28,7 +28,6 @@ export const RatingProduct = ({ productId }: props) => {
             if (res.status === 200) {
                 let data = res.data
                 setTotal(res.total)
-                setMediumRating(res.mediumRating)
                 if (paing !== 0) {
                     if (dataRatingProduct && dataRatingProduct.length > 0) {
 
@@ -39,8 +38,8 @@ export const RatingProduct = ({ productId }: props) => {
                 setDataRatingProduct(data)
             }
         } catch (error) {
+            
             console.log({ error });
-
         }
     }
 

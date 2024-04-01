@@ -11,7 +11,7 @@ export const createApiUser = async (data: UserDto) => {
 export const findOneUser = async (userId: string) => {
 
     const res = await axios.get(`${USER.FIND_ONE}?userId=${userId}`)
-    return res;
+    return res.data;
 }
 
 export const getAllProvince = async (title: string, id?: string) => {

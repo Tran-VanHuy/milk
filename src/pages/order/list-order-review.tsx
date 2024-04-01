@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AddressDto, UserDto } from "../../api/user/type";
 import { Box, Header, Page, Sheet } from "zmp-ui";
 import { AppContext } from "../../context/AppContext";
-import { DeleteOutlined, EnvironmentOutlined, EyeOutlined, FieldTimeOutlined, InboxOutlined, MinusOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
+import { CopyOutlined, EnvironmentOutlined, FieldTimeOutlined, InboxOutlined, MinusOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { BodyChangeStatusOrderType, InfoOrder, ListInfoOrderType, OrderType } from "../../api/order/type";
 import { formatPrice } from "../../components/format-price";
 import { changeStatusOrder, createDataOrder } from "../../api/order/api";
 import { API_URI, ORDER } from "../../api/api";
 import axios from "axios";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { ToastContainer, toast } from 'react-toastify';
 
 interface AppcontentType {
 
@@ -32,13 +34,17 @@ type PriceOrder = {
 }
 
 export const ListOrderReview = () => {
-
     const { setShowBottomTab, dataAddressDefault, addressDefault, user, dataListInfoOrder, setStatusOrder, setDataOrder, typeOrder, statusOrder, idOrder, orderCode }: AppcontentType = useContext(AppContext);
 
     const [listorder, setListOrder] = useState<InfoOrder[]>()
     const [priceAllOrder, setPriceAllOrder] = useState<PriceOrder>()
     const [sheetVisible, setSheetVisible] = useState(false);
     const [dataAddress, setAddress] = useState<OrderType>()
+
+    const onCoppy = async () => {
+
+        toast.success("Liên kết mã đơn hàng thành công.")
+    }
 
     const onOrder = async () => {
 
@@ -171,6 +177,7 @@ export const ListOrderReview = () => {
 
     return (
         <Page className="pb-[125px]">
+            <ToastContainer />
             <Header title="Tổng quan đơn hàng" />
             <div className="pt-[44px]">
                 <div className="bg-white p-2 flex justify-between mb-2" onClick={() => { !dataAddress?.address && nav("/address") }}>
@@ -274,9 +281,15 @@ export const ListOrderReview = () => {
                             </div>
                         }
                         {
-                            typeOrder === 2 && <div className="flex justify-between text-gray-600">
+                            typeOrder === 2 && <div className="flex justify-between text-gray-600 items-center">
                                 <span>Mã (code)</span>
-                                <span>{orderCode}</span>
+                                <div className="flex items-center gap-2" >
+                                    <span>{orderCode}</span>
+                                    <CopyToClipboard text={orderCode} onCopy={() => onCoppy()}>
+                                        <CopyOutlined className="text-red-500" />
+                                    </CopyToClipboard>
+
+                                </div>
                             </div>
                         }
 
@@ -302,12 +315,12 @@ export const ListOrderReview = () => {
                     <b>{formatPrice(priceAllOrder?.priceDiscount)}</b>
                 </div>
 
-                {user.role === "ADMIN" ? typeOrder === 2 &&
-                    <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => { setSheetVisible(true) }}>Chuyển trạng thái</div>
-                    :
-                    typeOrder === 2 ? statusOrder === "ĐÃ ĐẶT HÀNG" ?
-                        <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onDelete()}>Hủy đơn hàng</div>
-                        : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => nav("/")}>Xác nhận</div> : <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onOrder()}>Đặt hàng</div>}
+                {user.role === "ADMIN" && typeOrder === 2 && <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => { setSheetVisible(true) }}>Chuyển trạng thái</div>}
+
+                {typeOrder === 1 && <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onOrder()}>Đặt hàng</div>}
+
+                {typeOrder === 2 && user.role !== "ADMIN" && <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => nav("/")}>Xác nhận</div>}
+
             </div>
             <Sheet
                 visible={sheetVisible}

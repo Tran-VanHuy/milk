@@ -12,7 +12,7 @@ export const requestGet = async (url: string) => {
 
     const accessToken = await getAccessToken()
 
-    const res = await axios.get(url, { headers: { Authorization: accessToken } })
+    const res = await axios.get(url, { headers: { Authorization: `Bearer ${accessToken}` } })
 
     return res.data;
 }

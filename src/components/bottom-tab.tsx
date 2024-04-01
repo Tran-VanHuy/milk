@@ -2,17 +2,31 @@ import React, { useContext, useEffect, useState } from "react";
 import { BottomNavigation, Icon } from "zmp-ui";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import { UserDto } from "../api/user/type";
+import { requestGet } from "../api/apiRequest";
+import { USER } from "../api/api";
 
 interface AppcontentType {
     // showBottomTab: React.Dispatch<React.SetStateAction<boolean>>;
     showBottomTab: boolean
-
+    user: UserDto
+    getUser: () => void
 }
 const BottomNavigationPage = () => {
 
-    const { showBottomTab }: AppcontentType = useContext(AppContext);
+    const { showBottomTab, user, getUser }: AppcontentType = useContext(AppContext);
     const nav = useNavigate()
     const [activeTab, setActiveTab] = useState("home");
+    const onTab = async (url: string) => {
+        
+        nav(url)
+        getUser()
+
+        if(url === "/notification"){
+
+            await requestGet(`${USER.CHANGE_NOTI}`)
+        }
+    }
     return (
         <>
             {showBottomTab === true && <div>
@@ -26,14 +40,14 @@ const BottomNavigationPage = () => {
                         label="Trang chủ"
                         icon={<Icon icon="zi-home" />}
                         activeIcon={<Icon icon="zi-home" />}
-                        onClick={() => nav("/")}
+                        onClick={() => onTab("/")}
                     />
                     <BottomNavigation.Item
                         label="Yêu thích"
                         key="favourite"
                         icon={<Icon icon="zi-heart" />}
                         activeIcon={<Icon icon="zi-heart" />}
-                        onClick={() => nav("/favourite")}
+                        onClick={() => onTab("/favourite")}
 
                     />
                     <BottomNavigation.Item
@@ -41,21 +55,22 @@ const BottomNavigationPage = () => {
                         key="discovery"
                         icon={<Icon icon="zi-more-grid" />}
                         activeIcon={<Icon icon="zi-more-grid" />}
-                        onClick={() => nav("/news")}
+                        onClick={() => onTab("/news")}
                     />
                     <BottomNavigation.Item
                         key="notification"
                         label="Thông báo"
-                        icon={<Icon icon="zi-notif" />}
+                        icon={<Icon icon="zi-notif" className={`${user?.notification === true ? 'text-red-500' : ''}`} />}
                         activeIcon={<Icon icon="zi-notif" />}
-                        onClick={() => nav("/notification")}
+                        onClick={() => onTab("/notification")}
+                        style={{color: user?.notification === true ? 'red' : '' }}
                     />
                     <BottomNavigation.Item
                         key="me"
                         label="Cá nhân"
                         icon={<Icon icon="zi-user" />}
                         activeIcon={<Icon icon="zi-user" />}
-                        onClick={() => nav("/profile")}
+                        onClick={() => onTab("/profile")}
 
                     />
                 </BottomNavigation>

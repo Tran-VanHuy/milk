@@ -7,6 +7,7 @@ export type UserDto = {
     phone: string,
     address?: AddressDto[]
     role: string
+    notification: boolean
 }
 
 export type AddressDto = {

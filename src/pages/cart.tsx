@@ -1,5 +1,5 @@
-import { DeleteOutlined, EllipsisOutlined, InboxOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import React, { useContext, useEffect, useState } from "react";
+import { DeleteOutlined, EllipsisOutlined, InboxOutlined } from "@ant-design/icons";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Box, Header, Page, Sheet } from "zmp-ui";
 import { AppContext } from "../context/AppContext";
 import { formatPrice } from "../components/format-price";
@@ -9,6 +9,8 @@ import { UserDto } from "../api/user/type";
 import { CartDto } from "../api/cart/type";
 import { useNavigate } from "react-router-dom";
 import { BodyListInfoOrderType, ListInfoOrderType } from "../api/order/type";
+import { requestGet } from "../api/apiRequest";
+import 'react-toastify/dist/ReactToastify.css';
 
 interface AppcontentType {
 
@@ -22,22 +24,41 @@ export const Cart = () => {
 
     const { setShowBottomTab, user, setDataListInfoOrder, totalCart, setTypeOrder }: AppcontentType = useContext(AppContext);
     const nav = useNavigate()
+    const listInnerRef: any = useRef();
 
     const [sheetVisible, setSheetVisible] = useState(false);
     const [dataCart, setDataCart] = useState<CartDto[]>();
     const [idCart, setIdCart] = useState<string>()
+    const [skip, setSkip] = useState<number>(0)
 
     let arrayDataOrder: CartDto[] = [];
+
+    const onScroll = () => {
+        if (listInnerRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+            if (scrollTop + clientHeight === scrollHeight) {
+                setSkip(skip + 1)
+                // This will be triggered after hitting the last element.
+                // API call should be made here while implementing pagination.
+            }
+        }
+    };
 
     const cart = async () => {
 
         try {
 
-            const res = await axios.get(`${CART.GET_ALL}?userId=${user.userId}`)
+            const res = await requestGet(`${CART.GET_ALL}?userId=${user.userId}&skip=${skip}&limit=7`)
 
-            if (res?.data?.status === 200) {
-
-                setDataCart(res.data.data)
+            if (res?.status === 200) {
+                let data = res.data
+                if (skip !== 0) {
+                    if (dataCart && dataCart.length > 0) {
+                        const paing: any = [...dataCart, res.data]
+                        data = paing.flat()
+                    }
+                }
+                setDataCart(data)
             }
         } catch (error) {
 
@@ -46,7 +67,17 @@ export const Cart = () => {
     }
 
     const onCheck = async (item: CartDto) => {
-        arrayDataOrder.push(item)
+
+        const includeData = arrayDataOrder.find(data => data._id === item._id)
+
+        if (includeData === undefined) {
+
+            arrayDataOrder.push(item)
+        } else {
+
+            const new_array = arrayDataOrder.filter(data => data._id !== item._id);
+            arrayDataOrder = new_array
+        }
     }
 
     const onBuy = async () => {
@@ -75,7 +106,7 @@ export const Cart = () => {
             const res = await axios.delete(`${CART.DELETE}?_id=${idCart}&userId=${user.userId}`)
             if (res.data.status === 200) {
                 setSheetVisible(false)
-                cart()
+                setDataCart(dataCart?.filter(item => item._id !== idCart))
                 totalCart()
             }
         } catch (error) {
@@ -87,17 +118,21 @@ export const Cart = () => {
     useEffect(() => {
 
         setShowBottomTab(false)
-        cart()
     }, [])
 
+    useEffect(() => {
+
+        cart()
+    }, [skip])
+
     return (
-        <Page>
+        <Page onScroll={onScroll} ref={listInnerRef}>
             <Header title="Giỏ hàng" />
             <div className="pt-[50px] flex flex-col gap-2 pb-[130px]">
-                {dataCart && dataCart.length > 0 ? dataCart.map(item => (
+                {dataCart && dataCart.length > 0 ? dataCart.map((item, index) => (
                     <div className="flex p-2 bg-white items-center gap-2" key={item._id}>
                         <div>
-                            <input type="radio" name="" id="" onChange={() => onCheck(item)} />
+                            <input type="checkbox" name={`checkbox-${index}`} id={`checkbox-${index}`} onChange={() => onCheck(item)} />
                         </div>
                         <div className="flex-1 flex gap-2 justify-between">
 
@@ -134,10 +169,6 @@ export const Cart = () => {
                 </div>}
 
                 {dataCart && dataCart.length > 0 && <div className="px-2 grid grid-cols-1 gap-2 bg-white absolute bottom-0 w-full pb-[40px] pt-[20px] border-t-[1px]">
-                    {/* <div className="flex justify-between text-[16px]">
-                        <b>Tổng</b>
-                        <b>{formatPrice(10000)}</b>
-                    </div> */}
                     <div className=" bg-red-500 text-center py-2 rounded text-white font-bold" onClick={() => onBuy()}>Đặt hàng</div>
                 </div>}
 

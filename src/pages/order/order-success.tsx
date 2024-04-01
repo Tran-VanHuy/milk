@@ -34,7 +34,7 @@ export const OrderSuccess = () => {
                     <p className="text-[12px] text-gray-500">{dataOrder?.type}</p>
                 </div>
                 {dataOrder && dataOrder?.orders && dataOrder?.orders.length > 0 && dataOrder.orders.map(item => (
-                    <div>
+                    <div key = {item._id}>
                         <p className="text-[14px] font-[500] ">{item.name}</p>
                         <div className="pr-2 border-b-[1px] pb-2 mb-2">
                             <div className="flex justify-between items-center">

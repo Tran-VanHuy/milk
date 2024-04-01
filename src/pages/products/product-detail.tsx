@@ -9,13 +9,14 @@ import { formatPrice } from "../../components/format-price";
 import { VoucherType } from "../../api/voucher/type";
 import { UserDto } from "../../api/user/type";
 import axios from "axios";
-import { ADDRESS, API_URI, CART, FAVOURITE } from "../../api/api";
+import { ADDRESS, API_URI, CART, FAVOURITE, ORDER } from "../../api/api";
 import { AddressDto } from "../../api/address/type";
 import { BodyInfo } from "../../api/order/type";
 import { BodyCart } from "../../api/cart/type";
 import { BodyCheckFavourite } from "../../api/favourite/type";
 import FlyingButton from 'react-flying-item'
 import { RatingProduct } from "../../components/products/rating-product";
+import { requestGet } from "../../api/apiRequest";
 
 interface AppcontentType {
 
@@ -29,6 +30,12 @@ interface AppcontentType {
     setDataInfoOrder: React.Dispatch<React.SetStateAction<BodyInfo>>,
     getUser: () => void
     totalCart: () => void
+}
+
+export type RatingAndSaleType = {
+    mediumRating: number
+    sale: 7
+    totalRating: 25
 }
 export const ProductDetail = () => {
 
@@ -49,6 +56,23 @@ export const ProductDetail = () => {
     const [idSZ, setIdSZ] = useState<string>();
     const [dataCheckFavourite, setDataCheckFavourite] = useState<boolean>(false)
     const [error, setError] = useState<boolean>(true)
+    const [dataRatingAndSale, setDataRatingAndSale] = useState<RatingAndSaleType>();
+
+    const ratingAndSale = async () => {
+
+        try {
+
+            const res = await requestGet(`${ORDER.RATING_AND_SALE}?productId=${id}`)
+            if (res.status === 200) {
+
+                setDataRatingAndSale(res.data)
+            }
+        } catch (error) {
+
+            console.log({ error });
+
+        }
+    }
 
     const onFavourite = async () => {
 
@@ -117,7 +141,7 @@ export const ProductDetail = () => {
         }
         setIdSZ(data._id);
         setDataItemSZProduct(data);
-    
+
     }
 
     const onBuyProducts = async (action: string) => {
@@ -253,7 +277,7 @@ export const ProductDetail = () => {
             productDetail(id)
             voucher(id, "true")
             checkFavourite()
-
+            ratingAndSale()
         }
     }, [])
     return (
@@ -285,9 +309,10 @@ export const ProductDetail = () => {
                         <div className="pt-1 flex justify-between items-center">
                             <div className="flex items-center gap-2">
                                 <StarOutlined className="text-[12px] text-yellow-500" />
-                                <span className="text-[12px] font-[500]">{dataProductDetail?.point} /5 <span className="text-blue-600 font-normal">(10.6k)</span></span>
+                                <span className="text-[12px] font-[500]">{dataRatingAndSale?.mediumRating || 0} /5 <span className="text-blue-600 font-normal">({dataRatingAndSale?.totalRating
+                                    || 0})</span></span>
                                 <div className="text-[8px]">|</div>
-                                <p className="text-[14px] text-gray-500">Đã bán <span className="text-black font-[500]">{dataProductDetail?.sale || 0}</span></p>
+                                <p className="text-[14px] text-gray-500">Đã bán <span className="text-black font-[500]">{dataRatingAndSale?.sale || 0}</span></p>
                             </div>
                             {dataCheckFavourite ? <HeartFilled className="text-red-500" /> : <HeartOutlined onClick={() => onFavourite()} />}
                         </div>
@@ -342,10 +367,10 @@ export const ProductDetail = () => {
                             <span className="text-[14px] text-gray-500 font-[500]">{formatPrice(dataProductDetail?.transportFee || 0)}</span>
                         </div>
                         <div className="text-[14px] font-[500]">Từ Đan Phượng đến {address?.commune}</div>
-                        <div className="text-[14px] font-[500]">Ngày giao hàng dự kiến: {dataProductDetail?.deliveryDate === 0 ? "Trong ngày" : `${dataProductDetail?.deliveryDate} ngày  `} <span className="text-[10px] text-red-500">(có thể thay đổi)</span></div>
+                        <div className="text-[14px] font-[500]">Ngày giao hàng dự kiến: {dataProductDetail?.deliveryDate === 0 ? "Trong ngày" : `${dataProductDetail?.deliveryDate} ngày  `} <span className="text-[10px] text-red-500">(có thể khác so với dự kiến)</span></div>
                     </div>
                 </div>
-                <RatingProduct productId={id!} />
+                <RatingProduct productId={id!} mediumRating={dataRatingAndSale?.mediumRating!} />
                 <div className="p-2 bg-white mb-3">
                     <div className="px-2 flex justify-between items-center mb-2">
                         <span className="text-[16px] font-[700]">Xem thêm sản phẩm khác</span>
