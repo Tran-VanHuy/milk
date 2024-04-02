@@ -1,4 +1,4 @@
-export const API_URI = "http://192.168.1.17:3001/v1";
+export const API_URI = "http://192.168.1.12:3001/v1";
 
 export const USER = {
     CREATE: API_URI + "/user",
