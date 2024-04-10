@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Page, Swiper } from 'zmp-ui';
-import { ShoppingCartOutlined, MessageOutlined, SearchOutlined, QrcodeOutlined, WalletOutlined, DollarOutlined, ScanOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, MessageOutlined, SearchOutlined, QrcodeOutlined, WalletOutlined, DollarOutlined, ScanOutlined, UserOutlined } from "@ant-design/icons";
 import { Product } from '../components/products/product';
 import { Header } from '../components/headers/header';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,7 @@ import { CategoryProducts } from '../api/category-product/type';
 import { BannerDto } from '../api/banner/type';
 import { AdsDto } from '../api/ads/type';
 import { API_URI } from '../api/api';
+import { Avatar } from 'antd';
 
 interface AppcontentType {
 
@@ -58,19 +59,38 @@ const HomePage: React.FunctionComponent = () => {
   useEffect
   return (
     <Page className='pb-[50px]' onScroll={onScroll} ref={listInnerRef}>
-      <Header showNav={false} />
-      <div className='pt-[52px]'>
-        <Swiper>
-          {dataBanner && dataBanner.length > 0 && dataBanner.map(item => (
-            <Swiper.Slide key={item._id}>
-              <img
-                className="slide-img h-[250px] w-full"
-                src={`${API_URI}/${item.name}`}
-                alt={`${item._id}`}
-              />
-            </Swiper.Slide>
-          ))}
-        </Swiper>
+      {/* <Header showNav={false} /> */}
+      <div className='fixed w-full py-2 z-10 px-[15px] flex justify-between gap-[20px] items-center bg-white bg-opacity-80'>
+        <div className='flex gap-2 items-center'>
+          <Avatar size={40} icon={<img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-1/406899010_122099126408136396_5840920013932669763_n.jpg?stp=cp6_dst-jpg_p200x200&_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=qb_c2qtCOLEAb7ygji8&_nc_ht=scontent.fhan2-3.fna&oh=00_AfDTsJjIRgMi72FIPrP9vrGogyIVoxdpbersdJIRouROew&oe=661BDA02' />} />
+          <div>
+            <p className='text-[14px] font-[500]'>Tạp hóa xin chào,</p>
+            <p className='text-[12px] font-[400]'>Ngày mới tốt lành</p>
+          </div>
+        </div>
+      </div>
+      <div className='px-[20px] mt-[70px]'>
+        <div className='relative ' onClick={() => nav("/search")}>
+          <div className='absolute top-0 bottom-0 left-2 flex items-center justify-center'>
+            <SearchOutlined />
+          </div>
+          <input type="text" placeholder="Tìm kiếm sản phẩm" className='py-2 pl-[30px] pr-2 w-full bg-white rounded-full' onClick={() => nav("/search")} />
+        </div>
+      </div>
+      <div className='pt-[20px]'>
+        <div className='px-[20px] mb-[30px]'>
+          <Swiper className=''>
+            {dataBanner && dataBanner.length > 0 && dataBanner.map(item => (
+              <Swiper.Slide key={item._id}>
+                <img
+                  className="slide-img h-[200px] w-full rounded-3xl object-cover"
+                  src={`${API_URI}/${item.name}`}
+                  alt={`${item._id}`}
+                />
+              </Swiper.Slide>
+            ))}
+          </Swiper>
+        </div>
         <div className='relative bg-green-400 pb-2 mb-3'>
           <div className='absolute -top-[20px] left-0 right-0 px-[20px]'>
             <div className='flex bg-white rounded pl-2 pr-5 py-2 justify-between'>
