@@ -156,7 +156,7 @@ export const StatusOrder = () => {
                             {item.orders?.map(order => (
                                 <div className="mb-3" key={order._id}>
                                     <div className="flex gap-2 text-[14px]">
-                                        <div className="w-[90px] h-[85px]">
+                                        <div className="w-[90px] h-[85px] md:w-[180px] md:h-[170px]">
                                             <img src={`${API_URI}/${order.images}`} alt="" className="w-full h-full" />
                                         </div>
                                         <div className="flex flex-col justify-between flex-1">

@@ -76,7 +76,7 @@ export const Search = () => {
                 <div className="bg-white text-red-600 px-2 mb-2 py-1 font">
                    <b> Gợi ý sản phẩm</b>
                 </div>
-                <div className="max-h-[450px] overflow-auto">
+                <div className="max-h-[450px] md:max-h-[400px] overflow-auto">
                     <ProductSuggestions />
                 </div>
             </div>

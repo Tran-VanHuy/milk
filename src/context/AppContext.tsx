@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { getAccessToken, getPhoneNumber, getUserID, getUserInfo, setStorage } from "zmp-sdk";
+import { closeApp, favoriteApp, getAccessToken, getPhoneNumber, getUserID, getUserInfo, setStorage } from "zmp-sdk";
 import { SignIn, createApiUser, findOneUser } from "../api/user/user";
 import { BodySignInType, UserDto } from "../api/user/type";
 import { CategoryProducts } from "../api/category-product/type";
@@ -45,18 +45,45 @@ export const AppProvider = ({ children }) => {
     const [dataStatusOrder, setDataStatusOrder] = useState<OrderType[]>()
     const [orderCode, setOrderCode] = useState<string>("")
     const [accessToken, setAccessToken] = useState<string>()
+    const [totalProduct, setTotalProduct] = useState<number>(0)
+    const [loadIndex, setLoadIndex] = useState<boolean>(true)
 
-    const openChatScreen = async (user: UserDto) => {
-        // try {
-        //     await openChat({
-        //         type: "user",
-        //         id: user?.userId,
-        //         message: "Xin Chào",
-        //     });
-        // } catch (error) {
-        //     // xử lý khi gọi api thất bại
-        //     console.log(error);
-        // }
+    const loadingPageIndex = () => {
+
+        setTimeout(() => {
+            setLoadIndex(false)
+        }, 1000);
+    }
+
+    const closeMiniApp = async () => {
+        try {
+            await closeApp({});
+        } catch (error) {
+            // xử lý khi gọi api thất bại
+            console.log(error);
+        }
+    };
+
+    const favorite = async () => {
+        try {
+            await favoriteApp();
+        } catch (error) {
+            // xử lý khi gọi api thất bại
+            console.log(error);
+        }
+    };
+
+    const openChatScreen = async () => {
+        try {
+            await openChat({
+                type: "user",
+                id: "4702972467155092276",
+                message: "Xin Chào",
+            });
+        } catch (error) {
+            // xử lý khi gọi api thất bại
+            console.log(error);
+        }
     };
 
     const order = async (skip: number, user: UserDto, status: string) => {
@@ -234,20 +261,22 @@ export const AppProvider = ({ children }) => {
     const products = async (skip: number, limit: number, status: string, category?: string) => {
 
         try {
-            const res = await getAllProducts(skip, limit, status, (category || ""))
+            if (totalProduct !== dataProducts?.length) {
+                const res = await getAllProducts(skip, limit, status, (category || ""))
 
-            if (res?.status === 200) {
+                if (res?.status === 200) {
+                    setTotalProduct(res.total)
+                    let data = res.data
+                    if (skip !== 0) {
 
-                let data = res.data
-                if (skip !== 0) {
-
-                    if (dataProducts && dataProducts?.length > 0) {
-                        const paging: any = [...dataProducts, res.data]
-                        data = paging.flat()
+                        if (dataProducts && dataProducts?.length > 0) {
+                            const paging: any = [...dataProducts, res.data]
+                            data = paging.flat()
+                        }
                     }
-                }
 
-                setDataProducts(data)
+                    setDataProducts(data)
+                }
             }
 
         } catch (error) {
@@ -272,6 +301,7 @@ export const AppProvider = ({ children }) => {
 
     useEffect(() => {
         getUser()
+        loadingPageIndex()
     }, [])
 
     useEffect(() => {
@@ -328,7 +358,11 @@ export const AppProvider = ({ children }) => {
             dataStatusOrder,
             orderCode,
             setOrderCode,
-            accessToken
+            accessToken,
+            openChatScreen,
+            favorite,
+            closeMiniApp,
+            loadIndex
         }}>
             {children}
         </AppContext.Provider>

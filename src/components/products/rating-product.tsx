@@ -1,16 +1,26 @@
 import { StarOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, ImageViewer } from "zmp-ui";
 import { getAllRating } from "../../api/rating/api";
 import { MediaType, RatingType } from "../../api/rating/type";
-import { API_URI } from "../../api/api";
+import { API_URI, RATING } from "../../api/api";
 import { Rating } from "../rating";
+import { UserDto } from "../../api/user/type";
+import { AppContext } from "../../context/AppContext";
+import { requestPost } from "../../api/apiRequest";
 type props = {
 
     productId: string,
     mediumRating: number
 }
+
+interface AppcontentType {
+
+    user: UserDto
+}
 export const RatingProduct = ({ productId, mediumRating }: props) => {
+
+    const { user }: AppcontentType = useContext(AppContext);
 
     const [skip, setSkip] = useState<number>(0)
     const [total, setTotal] = useState<number>(0)
@@ -19,6 +29,8 @@ export const RatingProduct = ({ productId, mediumRating }: props) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [images, setImages] = useState<any>([]);
     const [dataRatingProduct, setDataRatingProduct] = useState<RatingType[]>()
+    const [idRating, setIdRating] = useState<string>();
+    const [contentReply, setContentReply] = useState<string>();
 
     const ratingProduct = async (paing: number) => {
 
@@ -38,7 +50,7 @@ export const RatingProduct = ({ productId, mediumRating }: props) => {
                 setDataRatingProduct(data)
             }
         } catch (error) {
-            
+
             console.log({ error });
         }
     }
@@ -51,6 +63,26 @@ export const RatingProduct = ({ productId, mediumRating }: props) => {
             key: `${index}`,
         }))
         setImages(mapMedia)
+    }
+
+    const onReplay = async () => {
+
+        try {
+
+            const body = {
+                id: idRating,
+                reply: contentReply
+            }
+
+            const res = await requestPost(RATING.REPLY, body);
+            if (res.status === 200) {
+
+                const changeData = dataRatingProduct?.map((item) => res.data._id === item._id ? res.data : item)
+                setDataRatingProduct(changeData)
+            }
+        } catch (error) {
+
+        }
     }
 
     useEffect(() => {
@@ -108,6 +140,27 @@ export const RatingProduct = ({ productId, mediumRating }: props) => {
                                         </Box>
                                     ))}
                                 </div>
+                                {user && user.role === "ADMIN" && <p className="text-[14px] text-gray-500 mt-1" onClick={() => setIdRating(item._id)}>{item.reply ? "Đã trả lời" : "Trả lời"}</p>}
+                                {item._id === idRating && user && user.role === "ADMIN" &&
+                                    <div>
+                                        {
+                                            !item.reply ? <div className="relative flex items-center">
+                                                <textarea name="" id="" rows={1} className="w-full p-2 border-[1px] bg-gray-100 pr-[55px]" placeholder="Trả lời đánh giá" onChange={(e) => setContentReply(e.target.value)}></textarea>
+
+                                                <button className="absolute right-0 bottom-0 top-0 bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded text-[12px]" onClick={() => onReplay()}>
+                                                    Trả lời
+                                                </button>
+                                            </div> :
+                                                <div className="bg-gray-100 px-1 py-2">
+                                                    <p className="text-[14px] text-gray-500">Trả lời từ người bán: {item.reply}</p>
+                                                </div>
+                                        }
+
+                                    </div>
+                                }
+                                {item?.reply && user && user.role !== "ADMIN" && <div className="bg-gray-100 px-1 py-2 mt-1">
+                                    <p className="text-[14px] text-gray-500">Trả lời từ người bán: {item.reply}</p>
+                                </div>}
 
                             </div>
                         )) : null}

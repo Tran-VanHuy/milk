@@ -1,4 +1,4 @@
-export const API_URI = "http://192.168.1.12:3001/v1";
+export const API_URI = "http://192.168.1.6:3001/v1";
 
 export const USER = {
     CREATE: API_URI + "/user",
@@ -110,5 +110,6 @@ export const NOTIFICATION = {
 export const RATING = {
 
     CREATE: API_URI + "/rating",
-    GET_ALL: API_URI + "/rating"
+    GET_ALL: API_URI + "/rating",
+    REPLY: API_URI + "/rating/reply"
 }

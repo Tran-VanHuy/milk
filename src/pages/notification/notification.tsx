@@ -87,7 +87,7 @@ export const Notificaiton = () => {
                     dataNotification.map(item => (
                         <div className="py-2 px-4 bg-white" key={item._id}>
                             <div className="flex gap-3 border-b-[1px] pb-2 [&:last-child]:border-0">
-                                <img src={`${API_URI}/${item.image}`} alt="" className="w-[45px] h-[45px]" />
+                                <img src={`${API_URI}/${item.image}`} alt="" className="w-[45px] h-[45px] md:w-[90px] md:h-[90px]" />
                                 <div className="flex-1" onClick={() => nav(item?.link || `/product/${item.productId}`)}>
                                     <p className="text-[14px] font-[500] line-clamp-2">{item.title}</p>
                                     <div className="text-[14px] text-gray-500 line-clamp-4">
@@ -106,7 +106,7 @@ export const Notificaiton = () => {
                     dataNotifiCationOrder.map(item => (
                         <div className="py-2 px-4 border-b-[1px] pb-2 [&:last-child]:border-0 bg-white" key={item._id}>
                             <div className="flex gap-3 " onClick={() => onDetailNotiOrder(item._id)}>
-                                <img src={`${item.image}`} alt="" className="w-[45px] h-[45px]" />
+                                <img src={`${item.image}`} alt="" className="w-[45px] h-[45px] md:w-[90px] md:h-[90px]" />
                                 <div className="flex-1">
                                     {item.readed ? <p className="text-[14px] font-[500] line-clamp-2">{item.title}</p> : <p className="text-[14px] text-red-500 font-[500] line-clamp-2">{item.title}</p>}
                                     <div className="text-[14px] text-gray-500 line-clamp-4">

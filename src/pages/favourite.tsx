@@ -64,7 +64,7 @@ export const Favourite = () => {
                     {dataFavourite && dataFavourite.length > 0 && dataFavourite.map(item => (
                         <div className="pl-2 pr-4 pt-5 border-b-[1px] pb-4 [&:last-child]:pb-4" key={item._id}>
                             <div className="flex gap-2">
-                                <img src={`${API_URI}/${item.product.images[0].url}`} alt="" className="w-[80px] h-[80px] rounded-lg" />
+                                <img src={`${API_URI}/${item.product.images[0].url}`} alt="" className="w-[80px] h-[80px] md:w-[150px] md:h-[150px] rounded-lg" />
                                 <div className="flex flex-col justify-between flex-1">
                                     <p className="text-gray-500 font-[500] line-clamp-2" onClick={() => nav(`/product/${item.product._id}`)}>{item.product.name}</p>
                                     <div className="flex justify-between items-center">

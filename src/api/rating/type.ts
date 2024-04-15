@@ -30,4 +30,5 @@ export type RatingType = {
     content: string
     rating: number
     ItemOrderId: string
+    reply: string
 }

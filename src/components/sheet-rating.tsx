@@ -85,7 +85,7 @@ export const SheetRating = ({sheetVisible, setSheetVisible, dataContentRating }:
         >
             <Box p={4} className="custom-bottom-sheet" flex flexDirection="column">
                 <div className="flex gap-3 mb-3">
-                    <div className="w-[50px] h-[50px]" >
+                    <div className="w-[50px] h-[50px] md:w-[100px] md:h-[100px]" >
                         <img src={`${API_URI}/${dataContentRating?.images}`} alt="" className="w-full h-full" />
                     </div>
                     <div className="flex-1">

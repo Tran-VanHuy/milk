@@ -204,7 +204,7 @@ export const ListOrderReview = () => {
                     <div key={item._id}>
                         <div className="bg-white p-2 mb-[1px]">
                             <div className="flex gap-2 mb-3">
-                                <img src={`${API_URI}/${item.images}`} alt="" width={85} height={85} className="rounded" />
+                                <img src={`${API_URI}/${item.images}`} alt="" width={85} height={85} className="rounded w-[85px] h-[85px] md:w-[180px] md:h-[170px]" />
                                 <div className="flex-1  flex flex-col justify-between">
                                     <div>
                                         <p className="line-clamp-1 text-gray-600 font-[400]">{item?.name}</p>

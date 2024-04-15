@@ -288,7 +288,7 @@ export const ProductDetail = () => {
                     {dataProductDetail?.images?.map((item) => (
                         <Swiper.Slide key={item.uid}>
                             <img
-                                className="slide-img h-[350px] w-full object-cover"
+                                className="slide-img h-[350px] md:h-[500px] w-full object-cover"
                                 src={`${API_URI}/${item.name}`}
                                 alt="slide-1"
                             />
@@ -380,7 +380,7 @@ export const ProductDetail = () => {
                         {dataProducts && dataProducts.length > 0 ?
                             dataProducts.map(item => (
                                 <div key={item._id} onClick={() => nav(`/product/${item._id}`)}>
-                                    <div className="w-[75px] h-[75px]">
+                                    <div className="w-[75px] h-[75px] md:w-[150px] md:h-[150px]">
                                         <img src={`${API_URI}/${item.images[0].name}`} alt="" className="rounded-xl w-full h-full" />
                                     </div>
                                     <span className="text-[14px] font-bold">{formatPrice(item.price)}</span>
